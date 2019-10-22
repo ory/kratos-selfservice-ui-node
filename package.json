@@ -5,8 +5,9 @@
   "main": "src/index.ts",
   "scripts": {
     "build": "tsc",
-    "start": "npm run build && node lib/index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "ts-node-dev --respawn src/index.ts",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "format": "prettier --parser typescript --no-semi --single-quote --trailing-comma es5 --write src/**.ts"
   },
   "repository": {
     "type": "git",
@@ -20,8 +21,17 @@
   "homepage": "https://github.com/ory/hive-selfservice-ui-node#readme",
   "dependencies": {
     "@types/express": "^4.17.1",
+    "@types/express-handlebars": "0.0.33",
     "@types/node": "^12.11.1",
+    "@types/node-fetch": "^2.5.2",
     "express": "^4.17.1",
+    "express-handlebars": "^3.1.0",
+    "node-fetch": "^2.6.0",
+    "normalize.css": "^8.0.1",
+    "prettier": "^1.18.2",
     "typescript": "^3.6.4"
+  },
+  "devDependencies": {
+    "ts-node-dev": "^1.0.0-pre.43"
   }
 }

@@ -5,6 +5,7 @@
   "main": "src/index.ts",
   "scripts": {
     "build": "tsc",
+    "serve": "node lib/index.js",
     "start": "ts-node-dev --respawn src/index.ts",
     "test": "echo \"Error: no test specified\" && exit 1",
     "format": "prettier --parser typescript --no-semi --single-quote --trailing-comma es5 --write src/**.ts"

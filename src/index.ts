@@ -40,7 +40,6 @@ const authHandler = (type: 'login' | 'registration') => (
   }
 
   fetchConfig(type, request).then(request => {
-    console.log(JSON.stringify(request, null, 2))
     const {
       config: {
         fields: { csrf_token, identifier, 'traits.email': email },

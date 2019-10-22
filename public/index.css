@@ -1,0 +1,130 @@
+@import url('https://fonts.googleapis.com/css?family=Open+Sans:400,400i,700&display=swap');
+@import "normalize.css";
+
+html, body {
+    height: 100%;
+}
+
+body {
+    background: linear-gradient(180deg, #FF1F1F 0%, #DDA5FF 100%), #FFFFFF;
+    font-family: 'Open Sans', sans-serif;
+    font-size: 16px;
+    color: white;
+}
+
+.container {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    padding: 1.5rem;
+    text-align: center;
+}
+
+.container form {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+}
+
+.container h1 {
+    margin-bottom: 4rem;
+    font-size: 4rem;
+}
+
+.container .hive-errors:not(:empty) {
+    margin-bottom: 1em;
+    text-align: left;
+}
+
+.container .hive-errors p {
+    margin: 1em 0;
+}
+
+.container label input {
+    border-radius: 2em;
+    background-color: black;
+    border-width: 0;
+    color: white;
+    padding: 0.875em 1.5em;
+    font-size: inherit;
+    margin-bottom: 1.5em;
+    line-height: 1.25em;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.container input::placeholder {
+    visibility: hidden;
+}
+
+.password-visibility-toggle {
+    position: absolute;
+    top: calc(0.875em + 0.5 * 1.25em - 0.5 * 0.75em);
+    right: 1em;
+    height: 0.75em;
+    width: 1em;
+    cursor: pointer;
+}
+
+.password-visibility-toggle path {
+    fill: #888;
+    transition: fill 0.1s ease-in-out;
+}
+
+input[type="text"] ~ .password-visibility-toggle path {
+    fill: white;
+}
+
+.container input, .container button {
+    outline: none;
+}
+
+.container label {
+    position: relative;
+}
+
+.container label span {
+    position: absolute;
+    color: #AAA;
+    left: 1.5em;
+    font-size: 1em;
+    top: 0.875em;
+    transition: font-size 0.1s ease-in-out, top 0.1s ease-in-out, color 0.1s ease-in-out;
+}
+
+.container label input:not(:placeholder-shown) ~ span {
+    font-size: 0.75em;
+    top: -1.25em;
+    color: white;
+}
+
+.container button {
+    border-radius: 2em;
+    text-transform: uppercase;
+    background-color: white;
+    color: black;
+    border-width: 0;
+    padding: 0.875em 1em;
+    transition: background-color 0.1s ease-in-out;
+    margin-top: 4.375em;
+    cursor: pointer;
+}
+
+.container button:hover {
+    background-color: #EEE;
+}
+
+.container a {
+    text-transform: uppercase;
+    color: white;
+    margin-top: 2.125em;
+    transition: color 0.1s ease-in-out;
+}
+
+.container a:hover {
+    color: black;
+}

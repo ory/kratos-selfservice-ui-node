@@ -6,6 +6,7 @@ import qs from 'querystring'
 const app = express()
 
 export const hive = {
+  browser: process.env.HIVE_BROWSER_URL || process.env.HIVE_PUBLIC_URL || '',
   public: process.env.HIVE_PUBLIC_URL || '',
 }
 
@@ -25,7 +26,7 @@ app.engine(
 )
 
 const redirectOnFail = (res: Response, type: 'login' | 'registration') => {
-  res.redirect(`${hive.public}/auth/browser/${type}`)
+  res.redirect(`${hive.browser}/auth/browser/${type}`)
 }
 
 const authHandler = (type: 'login' | 'registration') => (

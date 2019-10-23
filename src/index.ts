@@ -6,7 +6,7 @@ import qs from 'querystring'
 const app = express()
 
 export const hive = {
-  public: process.env.HIVE_PUTLIC_URL || '',
+  public: process.env.HIVE_PUBLIC_URL || '',
 }
 
 app.set('view engine', 'hbs')

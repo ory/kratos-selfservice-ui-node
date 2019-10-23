@@ -6,6 +6,7 @@ import qs from 'querystring'
 const app = express()
 
 export const hive = {
+  browser: process.env.HIVE_BROWSER_URL || '',
   public: process.env.HIVE_PUBLIC_URL || '',
 }
 

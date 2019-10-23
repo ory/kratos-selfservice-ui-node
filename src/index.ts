@@ -6,7 +6,7 @@ import qs from 'querystring'
 const app = express()
 
 export const hive = {
-  public: 'http://console.cloud.ory.local/.ory/hive/public',
+  public: process.env.HIVE_PUTLIC_URL || '',
 }
 
 app.set('view engine', 'hbs')
@@ -63,9 +63,17 @@ const authHandler = (type: 'login' | 'registration') => (
   })
 }
 
-app.get('/register', authHandler('registration'))
+app.get('/auth/registration', authHandler('registration'))
 
-app.get('/login', authHandler('login'))
+app.get('/auth/login', authHandler('login'))
+
+app.get('/', (req: Request, res: Response) => {
+  res.render('dashboard')
+})
+
+app.get('*', (_: Request, res: Response) => {
+  res.redirect('/')
+})
 
 const port = Number(process.env.PORT) || 3000
 

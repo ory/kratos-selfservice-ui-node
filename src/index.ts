@@ -12,7 +12,6 @@ app.set('view engine', 'hbs')
 app.use(express.static('public'))
 app.use(express.static('node_modules/normalize.css'))
 
-app.locals.baseUrl = config.baseUrl
 app.engine(
   'hbs',
   handlebars({
@@ -20,6 +19,9 @@ app.engine(
     layoutsDir: `${__dirname}/../views/layouts/`,
     partialsDir: `${__dirname}/../views/partials/`,
     defaultLayout: 'main',
+    helpers: {
+      baseUrl: () => config.baseUrl,
+    },
   })
 )
 

@@ -41,7 +41,7 @@ app.get('/auth/registration', authHandler('registration'))
 app.get('/auth/login', authHandler('login'))
 app.get('/error', errorHandler)
 app.get('/', protect, dashboard)
-app.get('/health', (_: Request, res: Response) => res.status(201))
+app.get('/health', (_: Request, res: Response) => res.send("ok"))
 
 app.get('*', (_: Request, res: Response) => {
     res.redirect('/')

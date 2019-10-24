@@ -27,6 +27,8 @@
     "@types/node-fetch": "^2.5.2",
     "express": "^4.17.1",
     "express-handlebars": "^3.1.0",
+    "express-jwt": "^5.3.1",
+    "jwks-rsa": "^1.6.0",
     "node-fetch": "^2.6.0",
     "normalize.css": "^8.0.1",
     "prettier": "^1.18.2",

@@ -14,10 +14,7 @@
         protected URLs, resources, ... is authorized to do so. When that's the case,
         the headers coming to your app will include the HTTP <code>Authorization</code> Header:
     </p>
-    <pre><code>HTTP 1.0 /whatever
-Authorization: blablabla
-Cookie: Or whatever
-    </code></pre>
+    <pre><code>{{headers}}</code></pre>
 
     <h2>Session without effort</h2>
     <p>
@@ -25,9 +22,7 @@ Cookie: Or whatever
         cryptographically signed by ORY. Once decoded, the session information is revealed. No REST requests needed. No SDKs required. Simple, fast, and secure.
     </p>
     <p>The session for the identity (user) you just signed up / in is:</p>
-    <pre><code>{
-  "some json code": "whatever"
-}</code></pre>
+    <pre><code>{{session}}</code></pre>
 
     <a href="{{logoutUrl}}">LOG OUT</a>
 </div>

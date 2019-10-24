@@ -1,13 +1,15 @@
 <div class="container">
     <h1>SecuredApp</h1>
+
     <div class="hive-errors">
         {{#each errors}}
             <p>{{ message }}</p>
         {{/each}}
     </div>
+
     <form action="{{ formAction }}" method="POST">
         <label>
-            <input name="identifier" type="email" value="{{ identifier }}" placeholder="E-Mail">
+            <input name="identifier" type="text" value="{{ identifier }}" placeholder="E-Mail">
             <span>E-Mail</span>
         </label>
         <label>
@@ -18,5 +20,6 @@
         <input name="csrf_token" type="hidden" value="{{ csrfToken }}">
         <button type="submit">Sign in</button>
     </form>
-    <a href="/register">Create new account</a>
+
+    <a href="/auth/register">Create new account</a>
 </div>

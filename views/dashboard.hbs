@@ -1,7 +1,33 @@
 <div class="container">
     <h1>
-
+        Welcome back, {username}!
     </h1>
 
-    <a href="{{logoutUrl}}">Log out</a>
+    <h2>Secure by default</h2>
+    <p>
+        Requests passing to your application (and this example) flow
+        through our proxy which you install using the <a href="#"><code>ory</code> command
+        line interface</a>.
+    </p>
+    <p>
+        The proxy ensures that any request attempting to access
+        protected URLs, resources, ... is authorized to do so. When that's the case,
+        the headers coming to your app will include the HTTP <code>Authorization</code> Header:
+    </p>
+    <pre><code>HTTP 1.0 /whatever
+Authorization: blablabla
+Cookie: Or whatever
+    </code></pre>
+
+    <h2>Session without effort</h2>
+    <p>
+        The token in that HTTP Authorization Header is a <a href="https://jwt.io/" target="_blank">JSON Web Token</a>,
+        cryptographically signed by ORY. Once decoded, the session information is revealed. No REST requests needed. No SDKs required. Simple, fast, and secure.
+    </p>
+    <p>The session for the identity (user) you just signed up / in is:</p>
+    <pre><code>{
+  "some json code": "whatever"
+}</code></pre>
+
+    <a href="{{logoutUrl}}">LOG OUT</a>
 </div>

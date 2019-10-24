@@ -7,7 +7,7 @@
     </div>
     <form action="{{ formAction }}" method="POST">
         <label>
-            <input name="traits.email" type="email" value="{{ email }}" placeholder="E-Mail">
+            <input name="traits.email" type="text" value="{{ email }}" placeholder="E-Mail">
             <span>E-Mail</span>
         </label>
         <label>
@@ -18,5 +18,5 @@
         <input name="csrf_token" type="hidden" value="{{ csrfToken }}">
         <button type="submit">Sign up</button>
     </form>
-    <a href="/login">Sign in with existing account</a>
+    <a href="/auth/login">Sign in with existing account</a>
 </div>

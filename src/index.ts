@@ -1,20 +1,18 @@
-import express, { Request, Response } from 'express'
+import express, { NextFunction, Request, Response } from 'express'
 import handlebars from 'express-handlebars'
-import fetchConfig from './fetchConfig'
-import qs from 'querystring'
+import { authHandler } from './auth'
+import errorHandler from './error'
+import dashboard from './dashboard'
+import config from './config'
 
 const app = express()
-
-export const hive = {
-  browser: process.env.HIVE_BROWSER_URL || process.env.HIVE_PUBLIC_URL || '',
-  public: process.env.HIVE_PUBLIC_URL || '',
-}
 
 app.set('view engine', 'hbs')
 
 app.use(express.static('public'))
 app.use(express.static('node_modules/normalize.css'))
 
+app.locals.baseUrl = config.baseUrl
 app.engine(
   'hbs',
   handlebars({
@@ -25,59 +23,23 @@ app.engine(
   })
 )
 
-const redirectOnFail = (res: Response, type: 'login' | 'registration') => {
-  res.redirect(`${hive.browser}/auth/browser/${type}`)
-}
-
-const authHandler = (type: 'login' | 'registration') => (
-  req: Request,
-  res: Response
-) => {
-  const { request } = qs.parse(req.url.substr(req.url.search('\\?') + 1))
-
-  if (!request) {
-    redirectOnFail(res, type)
-    return
-  }
-
-  fetchConfig(type, request).then(request => {
-    const {
-      config: {
-        fields: { csrf_token, identifier, 'traits.email': email },
-        action,
-        errors,
-      },
-    } = request.methods.password
-
-    if (!csrf_token) {
-      redirectOnFail(res, type)
-      return
-    }
-
-    res.render(type, {
-      formAction: action,
-      csrfToken: csrf_token.value,
-      identifier: identifier ? identifier.value : '',
-      errors,
-      email: email ? email.value : '',
-    })
-  })
-}
-
 app.get('/auth/registration', authHandler('registration'))
-
 app.get('/auth/login', authHandler('login'))
-
-app.get('/', (req: Request, res: Response) => {
-  res.render('dashboard')
-})
+app.get('/error', errorHandler)
+app.get('/', dashboard)
 
 app.get('*', (_: Request, res: Response) => {
   res.redirect('/')
 })
 
-const port = Number(process.env.PORT) || 3000
+app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
+  console.error(err.stack)
+  res.status(500).render('error', {
+    message: JSON.stringify(err, null, 2),
+  })
+})
 
+const port = Number(process.env.PORT) || 3000
 app.listen(port, () => {
-  console.log(`Listening on http://localhost:${port}`)
+  console.log(`Listening on http://0.0.0.0:${port}`)
 })

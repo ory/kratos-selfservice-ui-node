@@ -5,7 +5,7 @@ export default (req: Request, res: Response) => {
   const interestingHeaders = req.rawHeaders.reduce((p: string[], v: string, i) => i % 2 ? p : [...p, `${v}: ${req.rawHeaders[i+1]}`], [])
 
   res.render('dashboard', {
-    session: (req as any).user,
+    session: JSON.stringify((req as any).user, null, 2),
     headers: `
 GET ${req.path} HTTP/1.1
 

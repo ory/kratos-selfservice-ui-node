@@ -98,7 +98,7 @@ body {
     line-height: 160%;
 }
 
-.container p > code
+.container p > code {
     font-family: 'IBM Plex Mono', monospace;
     font-style: normal;
     font-weight: normal;

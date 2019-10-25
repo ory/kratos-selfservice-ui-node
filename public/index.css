@@ -3,7 +3,7 @@
 @import "normalize.css";
 
 html, body {
-    /*height: 100%;*/
+    min-height: 100vh;
 }
 
 body {
@@ -23,6 +23,7 @@ body {
 
 .auth {
     background: linear-gradient(180deg, #FF1F1F 0%, #DDA5FF 100%), #FFFFFF;
+    min-height: 100vh;
 }
 
 .content {

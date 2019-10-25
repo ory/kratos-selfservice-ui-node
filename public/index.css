@@ -35,6 +35,15 @@ body {
     font-weight: normal;
     font-size: 16px;
     line-height: 160%;
+    color: #470B25;
+}
+
+.content p {
+    font-family: 'Open Sans', sans-serif;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 16px;
+    line-height: 160%;
 }
 
 .content .header {
@@ -43,6 +52,7 @@ body {
     padding: 12px 24px;
     color: white;
     display: flex;
+    box-sizing: border-box;
 }
 
 .content .header .title {

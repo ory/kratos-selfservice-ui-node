@@ -15,3 +15,5 @@ This application can be configured using two environment variables:
     This could be for example `http://hive.my-app.com/`.
 - `BASE_URL`: The base url of this app. If served e.g. behind a proxy or via GitHub pages this would be the path, e.g.
     `/hive-selfservice-ui-node/`
+- `NODE_ENV=only-ui`: If setting environment variable `NODE_ENV` to `only-ui`, then all dependencies on
+    e.g. ORY Hive will be disabled and only the UI will be shown. Useful for developing CSS or HTML.

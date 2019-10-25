@@ -1,28 +1,33 @@
-<div class="container">
-    <h1>
-        Welcome!
-    </h1>
+<div class="content">
+    <div class="header">
+        <div class="title">SecureApp</div>
+        <div class="logout"><a href="{{logoutUrl}}">LOG OUT</a></div>
+    </div>
+    <div class="container">
+        <h1>Welcome!</h1>
+        <p>
+            Hello {{identity.traits.email}}, nice to have you!
+        </p>
+        <h2>Secure by default</h2>
+        <p>
+            Requests passing to your application (and this example) flow
+            through our proxy which you install using the <a href="#">ORY CLI</a>.
+        </p>
+        <p>
+            The proxy ensures that any request attempting to access
+            protected URLs, resources, ... is authorized to do so. When that's the case,
+            the headers coming to your app will include the HTTP <code>Authorization</code> Header:
+        </p>
+        <pre><code>{{headers}}</code></pre>
 
-    <h2>Secure by default</h2>
-    <p>
-        Requests passing to your application (and this example) flow
-        through our proxy which you install using the <a href="#"><code>ory</code> command
-        line interface</a>.
-    </p>
-    <p>
-        The proxy ensures that any request attempting to access
-        protected URLs, resources, ... is authorized to do so. When that's the case,
-        the headers coming to your app will include the HTTP <code>Authorization</code> Header:
-    </p>
-    <pre><code>{{headers}}</code></pre>
-
-    <h2>Session without effort</h2>
-    <p>
-        The token in that HTTP Authorization Header is a <a href="https://jwt.io/" target="_blank">JSON Web Token</a>,
-        cryptographically signed by ORY. Once decoded, the session information is revealed. No REST requests needed. No SDKs required. Simple, fast, and secure.
-    </p>
-    <p>The session for the identity (user) you just signed up / in is:</p>
-    <pre><code>{{session}}</code></pre>
-
-    <a href="{{logoutUrl}}">LOG OUT</a>
+        <h2>Session without effort</h2>
+        <p>
+            The token in that HTTP Authorization Header is a <a href="https://jwt.io/" target="_blank">JSON Web
+            Token</a>,
+            cryptographically signed by ORY. Once decoded, the session information is revealed. No REST requests needed.
+            No SDKs required. Simple, fast, and secure.
+        </p>
+        <p>The session for the identity (user) you just signed up / in is:</p>
+        <pre><code>{{session}}</code></pre>
+    </div>
 </div>

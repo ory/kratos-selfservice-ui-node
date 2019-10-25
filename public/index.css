@@ -1,32 +1,112 @@
 @import url('https://fonts.googleapis.com/css?family=Open+Sans:400,400i,700&display=swap');
+@import url('https://fonts.googleapis.com/css?family=Palanquin+Dark&display=swap');
 @import "normalize.css";
 
 html, body {
-    height: 100%;
+    /*height: 100%;*/
 }
 
 body {
-    background: linear-gradient(180deg, #FF1F1F 0%, #DDA5FF 100%), #FFFFFF;
     font-family: 'Open Sans', sans-serif;
     font-size: 16px;
     color: white;
 }
 
 .container {
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
     display: flex;
     flex-direction: column;
     align-items: stretch;
     padding: 1.5rem;
-    text-align: center;
     max-width: 360px;
+    margin: 0 auto;
 }
 
-.container pre{
+.auth {
+    background: linear-gradient(180deg, #FF1F1F 0%, #DDA5FF 100%), #FFFFFF;
+}
+
+.content {
+    color: rgba(219, 43, 86, 0.8);
+}
+
+.content {
+    font-family: 'Open Sans', sans-serif;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 16px;
+    line-height: 160%;
+}
+
+.content .header {
+    background: linear-gradient(180deg, #FF1F1F 0%, #DDA5FF 100%), #FFFFFF;
+    height: 68px;
+    padding: 12px 24px;
+    color: white;
+    display: flex;
+}
+
+.content .header .title {
+    font-style: normal;
+    font-weight: normal;
+    font-size: 20px;
+    line-height: 36px;
+    display: flex;
+    align-items: center;
+    text-align: center;
+    width: 50%;
+}
+
+.content .header .logout {
+    width: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+}
+
+.content .header .logout a,
+.content .header .logout a:link {
+    color: white;
+    text-decoration: none;
+    transition: ease 200ms;
+}
+
+.content .header .logout a:hover,
+.content .header .logout a:active {
+    color: rgba(200, 200, 200, 1);
+}
+
+.content .container {
+    font-style: normal;
+    font-weight: 600;
+    font-size: 14px;
+    line-height: 160%;
+}
+
+.container pre {
     text-align: left;
+    background: black;
+    color: white;
+    padding: 13px;
+    overflow: scroll;
+}
+
+.container pre code {
+    font-family: 'IBM Plex Mono', monospace;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 12px;
+    line-height: 160%;
+}
+
+.container p > code
+    font-family: 'IBM Plex Mono', monospace;
+    font-style: normal;
+    font-weight: normal;
+    line-height: 160%;
+    background: black;
+    color: white;
+    padding: 2px 4px;
+
 }
 
 .container form {
@@ -123,9 +203,14 @@ input[type="text"] ~ .password-visibility-toggle path {
     background-color: #EEE;
 }
 
-.container a {
+.auth .container a {
     color: white;
     margin-top: 2.125em;
+    transition: color 0.1s ease-in-out;
+}
+
+.content .container a {
+    color: rgba(219, 43, 86, 0.8);
     transition: color 0.1s ease-in-out;
 }
 

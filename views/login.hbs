@@ -1,25 +1,27 @@
-<div class="container">
-    <h1>SecuredApp</h1>
+<div class="auth">
+    <div class="container">
+        <h1>SecureApp</h1>
 
-    <div class="hive-errors">
-        {{#each errors}}
-            <p>{{ message }}</p>
-        {{/each}}
+        <div class="hive-errors">
+            {{#each errors}}
+                <p>{{ message }}</p>
+            {{/each}}
+        </div>
+
+        <form action="{{ formAction }}" method="POST">
+            <label>
+                <input name="identifier" type="text" value="{{ identifier }}" placeholder="E-Mail">
+                <span>E-Mail</span>
+            </label>
+            <label>
+                <input name="password" type="password" placeholder="Password">
+                <span>Password</span>
+                {{> passwordInputToggle }}
+            </label>
+            <input name="csrf_token" type="hidden" value="{{ csrfToken }}">
+            <button type="submit">SIGN IN</button>
+        </form>
+
+        <a href="{{baseUrl}}auth/registration">Create new account</a>
     </div>
-
-    <form action="{{ formAction }}" method="POST">
-        <label>
-            <input name="identifier" type="text" value="{{ identifier }}" placeholder="E-Mail">
-            <span>E-Mail</span>
-        </label>
-        <label>
-            <input name="password" type="password" placeholder="Password">
-            <span>Password</span>
-            {{> passwordInputToggle }}
-        </label>
-        <input name="csrf_token" type="hidden" value="{{ csrfToken }}">
-        <button type="submit">SIGN IN</button>
-    </form>
-
-    <a href="{{baseUrl}}auth/registration">Create new account</a>
 </div>

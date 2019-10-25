@@ -30,7 +30,6 @@
     "express-jwt": "^5.3.1",
     "jwks-rsa": "^1.6.0",
     "node-fetch": "^2.6.0",
-    "normalize.css": "^8.0.1",
     "prettier": "^1.18.2",
     "typescript": "^3.6.4"
   },

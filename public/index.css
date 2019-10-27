@@ -227,3 +227,7 @@ input[type="text"] ~ .password-visibility-toggle path {
 .container a:hover {
     color: black;
 }
+
+.auth .container h1 {
+    text-align: center;
+}

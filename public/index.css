@@ -126,7 +126,7 @@ body {
 }
 
 .container h1 {
-    margin-bottom: 4rem;
+    margin-bottom: 2rem;
     font-size: 4rem;
 }
 
@@ -228,6 +228,11 @@ input[type="text"] ~ .password-visibility-toggle path {
     color: black;
 }
 
-.auth .container h1 {
+.auth .container h2 {
+    margin-bottom: 2rem;
+}
+
+.auth .container h1,
+.auth .container h2 {
     text-align: center;
 }

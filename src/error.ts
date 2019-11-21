@@ -12,9 +12,9 @@ export default (req: Request, res: Response, next: NextFunction) => {
     return
   }
 
-  // This is the ORY Hive URL. If this app and ORY Hive are running
-  // on the same (e.g. Kubernetes) cluster, this should be ORY Hive's internal hostname.
-  const url = new URL(`${config.hive.public}/errors`)
+  // This is the ORY Kratos URL. If this app and ORY Kratos are running
+  // on the same (e.g. Kubernetes) cluster, this should be ORY Kratos's internal hostname.
+  const url = new URL(`${config.kratos.public}/errors`)
   url.searchParams.set('error', error)
 
   fetch(url.toString())

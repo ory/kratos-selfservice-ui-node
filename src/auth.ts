@@ -5,7 +5,7 @@ import fetch from 'node-fetch'
 
 // A simple express handler that shows the login / registration screen.
 // Argument "type" can either be "login" or "registration" and will
-// fetch the form data from ORY Hive's Public API.
+// fetch the form data from ORY Kratos's Public API.
 export const authHandler = (type: 'login' | 'registration') => (
   req: Request,
   res: Response,
@@ -17,19 +17,19 @@ export const authHandler = (type: 'login' | 'registration') => (
   // return data like the csrf_token and so on.
   if (!request) {
     console.log('No request found in URL, initializing auth flow.')
-    res.redirect(`${config.hive.browser}/auth/browser/${type}`)
+    res.redirect(`${config.kratos.browser}/auth/browser/${type}`)
     return
   }
 
-  // This is the ORY Hive URL. If this app and ORY Hive are running
-  // on the same (e.g. Kubernetes) cluster, this should be ORY Hive's internal hostname.
-  const url = new URL(`${config.hive.public}/auth/browser/requests/${type}`)
+  // This is the ORY Kratos URL. If this app and ORY Kratos are running
+  // on the same (e.g. Kubernetes) cluster, this should be ORY Kratos's internal hostname.
+  const url = new URL(`${config.kratos.public}/auth/browser/requests/${type}`)
   url.searchParams.set('request', request)
 
   fetch(url.toString())
     .then(response => {
       if (response.status == 404) {
-        res.redirect(`${config.hive.browser}/auth/browser/${type}`)
+        res.redirect(`${config.kratos.browser}/auth/browser/${type}`)
         return
       }
 

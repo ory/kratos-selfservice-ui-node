@@ -130,12 +130,12 @@ body {
     font-size: 4rem;
 }
 
-.container .hive-errors:not(:empty) {
+.container .kratos-errors:not(:empty) {
     margin-bottom: 1em;
     text-align: left;
 }
 
-.container .hive-errors p {
+.container .kratos-errors p {
     margin: 1em 0;
 }
 

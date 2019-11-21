@@ -43,6 +43,6 @@ ${interestingHeaders
   )
   .join('\n')}
 ...`,
-    logoutUrl: `${config.hive.browser}/auth/browser/logout`,
+    logoutUrl: `${config.kratos.browser}/auth/browser/logout`,
   })
 }

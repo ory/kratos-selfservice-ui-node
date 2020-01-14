@@ -1,48 +1,53 @@
-import { Request, Response } from 'express'
+import {Request, Response} from 'express'
 import config from './config'
+import jd from 'jwt-decode'
 
-const exampleJsonWebTokenClaims = `{
-  "authenticated_at": "0001-01-01T00:00:00Z",
-  "exp": 1571995718,
-  "expires_at": "2019-10-25T10:27:37.938173Z",
-  "iat": 1571995658,
-  "identity": {
-    "id": "1782dd88-639e-4321-b4f8-efd838bb21af",
-    "traits": {
-      "email": "asdf@sdfög.as"
-    },
-    "traits_schema_url": "http://backoffice.kernel.svc.cluster.local/presets/schemas/identity.email.schema.json"
-  },
-  "iss": "http://console.cloud.ory.local/",
-  "issued_at": "2019-10-25T09:27:37.938187Z",
-  "jti": "fec59b8f-42ad-4fd5-8ac7-1c21d86709e3",
-  "nbf": 1571995658,
-  "sid": "cd69ec39-f9bb-4ba9-b19d-e0389b05924b",
-  "sub": "1782dd88-639e-4321-b4f8-efd838bb21af"
-}`
+type UserRequest = Request & { user: any }
+
+const authInfo = (req: UserRequest) => {
+    const bearer = req.header("authorization")
+    if (bearer) {
+        // The header will be in format of `Bearer eyJhbGci...`. We therefore split at the whitespace to get the token
+        // itself only.
+        let token = bearer.split(" ")[1]
+        return {
+            raw: token,
+            claims: req.user
+        }
+    }
+
+    // In the demo mode, the token will not be available in the header. Instead, we'll use this example token:
+    const token = "eyJhbGciOiJSUzI1NiIsImtpZCI6ImEyYWE5NzM5LWQ3NTMtNGEwZC04N2VlLTYxZjEwMTA1MDI3NyIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1Nzg5MjU0MTMsImlhdCI6MTU3ODkyNTM1MywiaXNzIjoiaHR0cDovLzEyNy4wLjAuMTo0NDU1LyIsImp0aSI6ImM3NDhjYzc4LTJlOTAtNGVhNi1iNTdmLTA3YmI4YjNlNGUxYyIsIm5iZiI6MTU3ODkyNTM1Mywic2Vzc2lvbiI6eyJhdXRoZW50aWNhdGVkX2F0IjoiMDAwMS0wMS0wMVQwMDowMDowMFoiLCJleHBpcmVzX2F0IjoiMjAyMC0wMS0wOVQxOTozMDoxMC43MzM4NDRaIiwiaWRlbnRpdHkiOnsiaWQiOiJlM2IxZmM2MS0wMjMxLTQwODMtYjQ3MC0yODkwMDE2ZmY5ZmUiLCJ0cmFpdHMiOnsiZW1haWwiOiJoaWxhZnNkaG9pdWFmZHNAYXNkZi5kZSJ9LCJ0cmFpdHNfc2NoZW1hX3VybCI6ImZpbGU6Ly8vZXRjL2NvbmZpZy9rcmF0b3MvaWRlbnRpdHkudHJhaXRzLnNjaGVtYS5qc29uIn0sImlzc3VlZF9hdCI6IjIwMjAtMDEtMDlUMTg6MzA6MTAuNzMzOTMwNVoiLCJzaWQiOiI5NWQwMWNkYy1kMGY2LTQ1Y2MtODdlYi02NTA1ZTRkYTlkNTcifSwic3ViIjoiZTNiMWZjNjEtMDIzMS00MDgzLWI0NzAtMjg5MDAxNmZmOWZlIn0.JZVmc-EG-1k5RB7W4mouU6ycrRVJPimNUZXL59fwnIWKokhzV0itgYXm4eFV5VDYSt5S7VQgK7PmJFqYaaLtdz1yqqACH4E19VSanwB57mKCawePSvHIYnCnQW0E8vr9RavQPeluMfDS239FMow7-kq1ydkKVryhImfllW2pmAXC-0K9_0BE584u4RV7Ki0rGG2xhb8DelHpHurXStFRzi2BDW_J5xn1zlb9QyYEThX17KnXRJZkJpmTUgUBPGfUHSL6-267YgkIGKzVgCQ0dBFfAX4vDqL4qthNP3K9iS404jXLSrwYvTN6Y_xI-B-WCSqXX3PGBTnMgKB5pCsiPA"
+    return {
+        raw: token,
+        // We use `jwt-decoder` here to decode the token header and display it in the dashboard.
+        // BE AWARE THAT `jwt-decoder` DOES NOT VALIDATE THE TOKEN, it just decodes it. This method is not secure
+        // in a real-world scenario, but we use it here to decode and display the token header!
+        claims: jd(token)
+    }
+}
 
 export default (req: Request, res: Response) => {
-  const interestingHeaders = req.rawHeaders.reduce(
-    (p: string[], v: string, i) =>
-      i % 2 ? p : [...p, `${v}: ${req.rawHeaders[i + 1]}`],
-    []
-  )
+    const interestingHeaders = req.rawHeaders.reduce(
+        (p: string[], v: string, i) =>
+            i % 2 ? p : [...p, `${v}: ${req.rawHeaders[i + 1]}`],
+        []
+    )
 
-  res.render('dashboard', {
-    identity: ((req as any).user || JSON.parse(exampleJsonWebTokenClaims)).identity,
-    session: (req as any).user
-      ? JSON.stringify((req as any).user, null, 2)
-      : exampleJsonWebTokenClaims,
-    headers: `GET ${req.path} HTTP/1.1
+    const ai = authInfo(req as UserRequest)
+    res.render('dashboard', {
+        session: ai.claims.session,
+        token: ai,
+        headers: `GET ${req.path} HTTP/1.1
 
 ${interestingHeaders
-  .filter((header: string) =>
-    /User-Agent|Authorization|Content-Type|Host|Accept-Encoding|Accept-Language|Connection|X-Forwarded-For/.test(
-      header
-    )
-  )
-  .join('\n')}
+            .filter((header: string) =>
+                /User-Agent|Authorization|Content-Type|Host|Accept-Encoding|Accept-Language|Connection|X-Forwarded-For/.test(
+                    header
+                )
+            )
+            .join('\n')}
 ...`,
-    logoutUrl: `${config.kratos.browser}/auth/browser/logout`,
-  })
+        logoutUrl: `${config.kratos.browser}/auth/browser/logout`,
+    })
 }

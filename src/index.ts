@@ -3,6 +3,7 @@ import handlebars from 'express-handlebars'
 import {authHandler} from './auth'
 import errorHandler from './error'
 import dashboard from './dashboard'
+import debug from './debug'
 import config from './config'
 import jwks from 'jwks-rsa'
 import jwt from 'express-jwt'
@@ -22,7 +23,7 @@ app.set('view engine', 'hbs')
 
 app.use((req: Request, res: Response, next: NextFunction) => {
     res.locals.projectName = config.projectName;
-    res.locals.baseUrl =  config.baseUrl;
+    res.locals.baseUrl = config.baseUrl;
     next();
 })
 app.use(express.static('public'))
@@ -35,6 +36,10 @@ app.engine(
         layoutsDir: `${__dirname}/../views/layouts/`,
         partialsDir: `${__dirname}/../views/partials/`,
         defaultLayout: 'main',
+        helpers: {
+            json: (context: any) => JSON.stringify(context),
+            jsonPretty: (context: any) => JSON.stringify(context, null, 2),
+        }
     })
 )
 
@@ -55,6 +60,8 @@ if (process.env.NODE_ENV === 'only-ui') {
 }
 
 app.get('/health', (_: Request, res: Response) => res.send('ok'))
+
+app.get('/debug', debug)
 
 app.get('*', (_: Request, res: Response) => {
     res.redirect('/')

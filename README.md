@@ -1,5 +1,7 @@
 # kratos-selfservice-ui-node
 
+[![CircleCI](https://circleci.com/gh/ory/kratos-selfservice-ui-node.svg?style=badge)](https://circleci.com/gh/ory/kratos-selfservice-ui-node)
+
 This is an exemplary Self Service UI for ORY Kratos's Self Service features:
 
 - Registration

@@ -54,6 +54,7 @@ if (process.env.NODE_ENV === 'only-ui') {
     app.get('/error', (_: Request, res: Response) => res.render('error'))
 } else {
     app.get('/', protect, dashboard)
+    app.get('/dashboard', protect, dashboard)
     app.get('/auth/registration', authHandler('registration'))
     app.get('/auth/login', authHandler('login'))
     app.get('/error', errorHandler)

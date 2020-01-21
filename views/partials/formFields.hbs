@@ -1,14 +1,3 @@
 {{#each formFields}}
-    {{#if isHidden}}
-        <input name="{{name}}" type="hidden" value="{{value}}">
-    {{else}}
-        {{> kratosErrors}}
-        <label>
-            <input name="{{name}}" type="{{type}}" value="{{value}}" placeholder="{{title}}">
-            <span>{{title}}</span>
-            {{#if isPassword}}
-                {{> passwordInputToggle }}
-            {{/if}}
-        </label>
-    {{/if}}
+    {{> (whichFormInput type)}}
 {{/each}}

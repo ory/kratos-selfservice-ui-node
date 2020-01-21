@@ -1,8 +1,8 @@
-import {Config, ExtendedFormField} from 'types'
+import {Config} from 'types'
 import {NextFunction, Request, Response} from 'express'
 import config from './config'
 import fetch from 'node-fetch'
-import {getTitle, sortFormFields} from "./translations";
+import {sortFormFields} from "./translations";
 
 // A simple express handler that shows the login / registration screen.
 // Argument "type" can either be "login" or "registration" and will
@@ -50,14 +50,7 @@ export const authHandler = (type: 'login' | 'registration') => (
       } = request
 
       // inject handlebars helper keys
-      const formFields = Object.values(fields).map<ExtendedFormField>(field => ({
-        ...field,
-        ...{
-          isHidden: field.type === 'hidden',
-          isPassword: field.type === 'password',
-          title: getTitle(field.name, field.name)
-        },
-      })).sort(sortFormFields)
+      const formFields = Object.values(fields).sort(sortFormFields)
 
       res.render(type, {
         formAction: action,

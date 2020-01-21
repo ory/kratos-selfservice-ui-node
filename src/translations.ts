@@ -1,29 +1,29 @@
-import {ExtendedFormField} from "types";
+import {FormField} from "types";
 
 const translations = {
   password: {
     title: 'Password',
-    order: 2
+    position: 2
   },
   'traits.email': {
     title: 'E-Mail',
-    order: 1
+    position: 1
   },
   identifier: {
     title: 'E-Mail',
-    order: 0
+    position: 0
   }
 }
 
 type Translations = typeof translations
 
-const getTitle = (key: string, fallbackValue: string): string =>
-  key in translations ? translations[(key as keyof Translations)].title : fallbackValue
+const getTitle = (key: string): string =>
+  key in translations ? translations[(key as keyof Translations)].title : key
 
-const getOrder = (field: ExtendedFormField) =>
-  field.name in translations ? translations[field.name as keyof Translations].order : Infinity
+const getPosition = (field: FormField) =>
+  field.name in translations ? translations[field.name as keyof Translations].position : Infinity
 
-const sortFormFields = (first: ExtendedFormField, second: ExtendedFormField) =>
-  getOrder(first) - getOrder(second)
+const sortFormFields = (first: FormField, second: FormField) =>
+  getPosition(first) - getPosition(second)
 
 export {getTitle, sortFormFields}

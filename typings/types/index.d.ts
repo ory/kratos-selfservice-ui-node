@@ -22,12 +22,12 @@ declare module 'types' {
         methods: {
             password: RequestMethod<FormConfig>
             oidc: RequestMethod<FormConfig & {
-                providers: ConfigFormField[]
+                providers: FormField[]
             }>
         }
     }
 
-    type ConfigFormField = {
+    type FormField = {
         value?: string
         type: string
         required?: boolean
@@ -36,18 +36,12 @@ declare module 'types' {
         name: string
     }
 
-    type ExtendedFormField = ConfigFormField & {
-        isHidden: boolean
-        isPassword: boolean
-        title: string
-    }
-
     interface FormConfig {
         errors?: FormError[]
         action: string
         fields: FormFields
     }
 
-    type FormFields = { [key: string]: ConfigFormField }
+    type FormFields = { [key: string]: FormField }
 
 }

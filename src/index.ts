@@ -7,7 +7,7 @@ import debug from './debug'
 import config from './config'
 import jwks from 'jwks-rsa'
 import jwt from 'express-jwt'
-import {getTitle} from "./translations";
+import {getTitle, toFormInputPartialName} from "./translations";
 
 const protect = jwt({
   // Dynamically provide a signing key based on the kid in the header and the signing keys provided by the JWKS endpoint.
@@ -41,12 +41,7 @@ app.engine(
       json: (context: any) => JSON.stringify(context),
       jsonPretty: (context: any) => JSON.stringify(context, null, 2),
       getTitle,
-      whichFormInput: (type: string) =>
-        type === 'hidden' ?
-          'hiddenFormInput' :
-          type === 'password' ?
-            'passwordFormInput' :
-            'genericFormInput'
+      toFormInputPartialName
     }
   })
 )

@@ -26,4 +26,15 @@ const getPosition = (field: FormField) =>
 const sortFormFields = (first: FormField, second: FormField) =>
   getPosition(first) - getPosition(second)
 
-export {getTitle, sortFormFields}
+const toFormInputPartialName = (type: string) => {
+  switch (type) {
+    case 'hidden':
+      return 'hiddenFormInput'
+    case 'password':
+      return 'passwordFormInput'
+    default:
+      return 'genericFormInput'
+  }
+}
+
+export {getTitle, sortFormFields, toFormInputPartialName}

@@ -1,5 +1,7 @@
-<div class="kratos-errors">
-    {{#each errors}}
-        <p>{{ message }}</p>
-    {{/each}}
-</div>
+{{#if errors}}
+    <div class="kratos-errors">
+        {{#each errors}}
+            <p>{{ message }}</p>
+        {{/each}}
+    </div>
+{{/if}}

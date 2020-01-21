@@ -3,24 +3,13 @@
         <h1>{{projectName}}</h1>
         <h2>Sign up</h2>
 
-        <div class="kratos-errors">
-            {{#each errors}}
-                <p>{{ message }}</p>
-            {{/each}}
-        </div>
+        {{> formErrors}}
+
         <form action="{{ formAction }}" method="POST">
-            <label>
-                <input name="traits.email" type="text" value="{{ email }}" placeholder="E-Mail">
-                <span>E-Mail</span>
-            </label>
-            <label>
-                <input name="password" type="password" value="" placeholder="Password">
-                <span>Password</span>
-                {{> passwordInputToggle }}
-            </label>
-            <input name="csrf_token" type="hidden" value="{{ csrfToken }}">
+            {{> formFields}}
             <button type="submit">Sign Up</button>
         </form>
+
         <a href="{{baseUrl}}auth/login">Sign in with existing account</a>
     </div>
 </div>

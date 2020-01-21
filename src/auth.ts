@@ -1,7 +1,8 @@
-import { Config } from 'types'
-import { NextFunction, Request, Response } from 'express'
+import {Config} from 'types'
+import {NextFunction, Request, Response} from 'express'
 import config from './config'
 import fetch from 'node-fetch'
+import getTranslation from "./translations";
 
 // A simple express handler that shows the login / registration screen.
 // Argument "type" can either be "login" or "registration" and will
@@ -40,23 +41,27 @@ export const authHandler = (type: 'login' | 'registration') => (
         methods: {
           password: {
             config: {
-              fields: {
-                csrf_token: { value: csrf_token = '' } = {},
-                identifier: { value: identifier = '' } = {},
-                'traits.email': { value: email = '' } = {},
-              } = {},
+              fields = {},
               action,
               errors,
             },
           },
         },
       } = request
+      console.log(fields)
 
+      // inject hidden and title key
+      const formFields = Object.fromEntries(Object.entries(fields).map(([key, value]: [string, { [key: string]: any }]) => ([key, {
+        ...value,
+        ...{
+          isHidden: 'type' in value && value.type === 'hidden',
+          isPassword: 'type' in value && value.type === 'password',
+          title: 'name' in value ? getTranslation(value.name, value.name) : ''
+        },
+      }])))
       res.render(type, {
         formAction: action,
-        csrfToken: csrf_token,
-        identifier: identifier,
-        email: email,
+        formFields,
         errors,
       })
     })

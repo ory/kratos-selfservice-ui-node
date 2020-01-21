@@ -26,6 +26,7 @@ const getPosition = (field: FormField) =>
 const sortFormFields = (first: FormField, second: FormField) =>
   getPosition(first) - getPosition(second)
 
+// this helper function translates the html input type to the corresponding partial name
 const toFormInputPartialName = (type: string) => {
   switch (type) {
     case 'hidden':

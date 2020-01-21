@@ -49,7 +49,6 @@ export const authHandler = (type: 'login' | 'registration') => (
         },
       } = request
 
-      // inject handlebars helper keys
       const formFields = Object.values(fields).sort(sortFormFields)
 
       res.render(type, {

@@ -3,13 +3,9 @@
         <h1>{{projectName}}</h1>
         <h2>Sign up</h2>
 
-        <div class="kratos-errors">
-            {{#each errors}}
-                <p>{{ message }}</p>
-            {{/each}}
-        </div>
+        {{> kratosErrors}}
 
-        <form action="{{ formAction }}" method="{{ method }}">
+        <form action="{{ formAction }}" method="POST">
             {{> formFields}}
             <button type="submit">Sign Up</button>
         </form>

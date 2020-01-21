@@ -1,4 +1,4 @@
-import {Config, ConfigFormField, ExtendedFormField} from 'types'
+import {Config, ExtendedFormField} from 'types'
 import {NextFunction, Request, Response} from 'express'
 import config from './config'
 import fetch from 'node-fetch'
@@ -49,7 +49,7 @@ export const authHandler = (type: 'login' | 'registration') => (
         },
       } = request
 
-      // inject hidden and title key
+      // inject handlebars helper keys
       const formFields = Object.values(fields).map<ExtendedFormField>(field => ({
         ...field,
         ...{

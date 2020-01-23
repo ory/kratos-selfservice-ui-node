@@ -1,0 +1,36 @@
+.auth {
+    min-height: 100vh;
+    color: var(--primary-light);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.auth .brand, .auth .subheading {
+    margin: 1rem 0;
+    align-self: center;
+}
+
+.auth .subheading {
+    color: var(--base-text);
+}
+
+.auth a {
+    color: var(--base-text);
+    transition: color 0.1s ease-in-out;
+}
+
+.auth a:hover {
+    color: var(--base-white);
+}
+
+.auth .divider {
+    width: 100%;
+    border-color: var(--base-main);
+    margin: 2rem 0;
+}
+
+.auth .alternative-actions {
+    display: flex;
+    justify-content: space-between;
+}

@@ -1,7 +1,7 @@
 <div class="auth">
     <div class="container">
-        <h1>{{projectName}}</h1>
-        <h2>Sign up</h2>
+        {{> brand}}
+        <h5 class="subheading">Welcome to SecureApp! Fill the form below:</h5>
 
         {{> formErrors}}
 
@@ -10,6 +10,10 @@
             <button type="submit">Sign Up</button>
         </form>
 
-        <a href="{{baseUrl}}auth/login">Sign in with existing account</a>
+        <hr class="divider">
+
+        <div class="alternative-actions">
+            <a href="{{baseUrl}}auth/login">Already have an account? Log in instead</a>
+        </div>
     </div>
 </div>

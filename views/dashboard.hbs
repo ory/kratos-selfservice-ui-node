@@ -1,15 +1,32 @@
 <div class="content">
     <div class="header">
-        <div class="title">{{projectName}}</div>
-        <div class="logout"><a href="{{logoutUrl}}">LOG OUT</a></div>
+        {{> brand}}
+        <div class="icon-actions">
+            <div class="settings">
+                <a href="/profile">
+                    {{> icon_gear}}
+                </a>
+            </div>
+            <div class="logout">
+                <a href="{{logoutUrl}}">
+                    {{> icon_sign_out}}
+                </a>
+            </div>
+            <div class="fork">
+                <a href="https://github.com/ory/kratos-selfservice-ui-node" target="_blank">
+                    {{> icon_repo_forked}}
+                    <div>Fork on<br>GitHub</div>
+                </a>
+            </div>
+        </div>
     </div>
     <div class="container">
-        <h1>Welcome!</h1>
+        <h4 class="greeting">Welcome back, <span class="user-identifier">{{session.identity.traits.email}}</span>!</h4>
+        <h5>This example app is secure by default</h5>
         <p>
             Hello, nice to have you! You signed up with this data:
         </p>
         <pre><code>{{jsonPretty session.identity.traits}}</code></pre>
-        <h2>Secure by default</h2>
         <p>
             Requests passing to your application (and this example) flow
             through our proxy which you install using the <a href="#">ORY CLI</a>.

@@ -1,76 +1,99 @@
-@import url('https://fonts.googleapis.com/css?family=Open+Sans:400,400i,700&display=swap');
-@import url('https://fonts.googleapis.com/css?family=Palanquin+Dark&display=swap');
+@import url('https://fonts.googleapis.com/css?family=IBM+Plex+Sans:300,400,500&display=swap');
+
+:root {
+    --base-white: #FFFFFF;
+    --base-light: #F0F0F1;
+    --base-text: #99999E;
+    --base-main: #5A5B6A;
+    --base-dark: #19191D;
+    --base-black: #000000;
+    --primary-light: #ECFDFE;
+    --primary-half: #95E1F9;
+    --primary-main: #3DACFC;
+    --primary-dark: #2E0473;
+    --red-strong: #F44336;
+    --green-strong: #43A047;
+}
 
 html, body {
     min-height: 100vh;
 }
 
 body {
-    font-family: 'Open Sans', sans-serif;
+    font-family: 'IBM Plex Sans', sans-serif;
     font-size: 16px;
-    color: white;
+    color: var(--base-light);
+    background: var(--base-dark);
 }
 
 .container {
     display: flex;
     flex-direction: column;
     align-items: stretch;
-    padding: 1.5rem;
-    max-width: 360px;
+    max-width: 40em;
     margin: 0 auto;
 }
 
-.auth {
-    background: linear-gradient(180deg, #FF1F1F 0%, #DDA5FF 100%), #FFFFFF;
-    min-height: 100vh;
+.logo {
+    pointer-events: none;
 }
 
 .content {
-    color: rgba(219, 43, 86, 0.8);
-}
-
-.content {
-    font-family: 'Open Sans', sans-serif;
     font-style: normal;
     font-weight: normal;
-    font-size: 16px;
     line-height: 160%;
-    color: #470B25;
 }
 
 .content p {
-    font-family: 'Open Sans', sans-serif;
     font-style: normal;
     font-weight: normal;
-    font-size: 16px;
     line-height: 160%;
 }
 
 .content .header {
-    background: linear-gradient(180deg, #FF1F1F 0%, #DDA5FF 100%), #FFFFFF;
-    height: 68px;
-    padding: 12px 24px;
-    color: white;
+    padding: 1.666rem 11.5rem;
     display: flex;
     box-sizing: border-box;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 0 8px rgba(255, 255, 255, 0.1);
+    border-bottom: 1px solid var(--primary-main);
 }
 
-.content .header .title {
-    font-style: normal;
-    font-weight: normal;
-    font-size: 20px;
-    line-height: 36px;
-    display: flex;
-    align-items: center;
-    text-align: center;
-    width: 50%;
+.content .header .icon-actions > div {
+    display: inline;
+    margin: 0 0.5rem;
 }
 
-.content .header .logout {
-    width: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
+.content .header .icon-actions .fork path {
+    fill: var(--primary-main);
+    transition: fill 0.1s ease-in-out;
+}
+
+.content .header .icon-actions .fork:hover path {
+    fill: var(--primary-light);
+}
+
+.content .header .icon-actions .fork a,
+.content .header .icon-actions .fork a:visited {
+    color: var(--primary-main);
+    text-decoration: none;
+    transition: color 0.1s ease-in-out;
+    font-size: 0.666em;
+    line-height: 1em;
+}
+
+.content .header .icon-actions .fork a div {
+    display: inline-block;
+}
+
+.content .header .icon-actions .fork a:hover {
+    color: var(--primary-light);
+}
+
+.content .header .logo {
+    height: 2rem;
+    margin: 0;
 }
 
 .content .header .logout a,
@@ -82,14 +105,17 @@ body {
 
 .content .header .logout a:hover,
 .content .header .logout a:active {
-    color: rgba(200, 200, 200, 1);
+    color: var(--primary-light);
 }
 
 .content .container {
     font-style: normal;
     font-weight: 600;
-    font-size: 14px;
     line-height: 160%;
+}
+
+.content .greeting .user-identifier {
+    color: var(--primary-main);
 }
 
 .container pre {
@@ -97,14 +123,13 @@ body {
     background: black;
     color: white;
     padding: 13px;
-    overflow: scroll;
+    overflow: auto;
 }
 
 .container pre code {
     font-family: 'IBM Plex Mono', monospace;
     font-style: normal;
     font-weight: normal;
-    font-size: 12px;
     line-height: 160%;
 }
 
@@ -116,18 +141,12 @@ body {
     background: black;
     color: white;
     padding: 2px 4px;
-
 }
 
 .container form {
     display: flex;
     flex-direction: column;
     align-items: stretch;
-}
-
-.container h1 {
-    margin-bottom: 2rem;
-    font-size: 4rem;
 }
 
 .container .kratos-errors:not(:empty) {
@@ -139,100 +158,11 @@ body {
     margin: 1em 0;
 }
 
-.container label input {
-    border-radius: 2em;
-    background-color: black;
-    border-width: 0;
-    color: white;
-    padding: 0.875em 1.5em;
-    font-size: inherit;
-    margin-bottom: 1.5em;
-    line-height: 1.25em;
-    width: 100%;
-    box-sizing: border-box;
-}
-
-.container input::placeholder {
-    visibility: hidden;
-}
-
-.password-visibility-toggle {
-    position: absolute;
-    top: calc(0.875em + 0.5 * 1.25em - 0.5 * 0.75em);
-    right: 1em;
-    height: 0.75em;
-    width: 1em;
-    cursor: pointer;
-}
-
-.password-visibility-toggle path {
-    fill: #888;
-    transition: fill 0.1s ease-in-out;
-}
-
-input[type="text"] ~ .password-visibility-toggle path {
-    fill: white;
-}
-
-.container input, .container button {
-    outline: none;
-}
-
-.container label {
-    position: relative;
-}
-
-.container label span {
-    position: absolute;
-    color: #AAA;
-    left: 1.5em;
-    font-size: 1em;
-    top: 0.875em;
-    transition: font-size 0.1s ease-in-out, top 0.1s ease-in-out, color 0.1s ease-in-out;
-}
-
-.container label input:not(:placeholder-shown) ~ span {
-    font-size: 0.75em;
-    top: -1.25em;
-    color: white;
-}
-
-.container button {
-    border-radius: 2em;
-    text-transform: uppercase;
-    background-color: white;
-    color: black;
-    border-width: 0;
-    padding: 0.875em 1em;
-    transition: background-color 0.1s ease-in-out;
-    margin-top: 4.375em;
-    cursor: pointer;
-}
-
-.container button:hover {
-    background-color: #EEE;
-}
-
-.auth .container a {
-    color: white;
-    margin-top: 2.125em;
-    transition: color 0.1s ease-in-out;
-}
-
 .content .container a {
-    color: rgba(219, 43, 86, 0.8);
+    color: var(--primary-main);
     transition: color 0.1s ease-in-out;
 }
 
 .container a:hover {
-    color: black;
-}
-
-.auth .container h2 {
-    margin-bottom: 2rem;
-}
-
-.auth .container h1,
-.auth .container h2 {
-    text-align: center;
+    color: var(--base-white);
 }

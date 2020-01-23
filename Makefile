@@ -8,6 +8,7 @@
 dev-kratos-quickstart:
 		(sleep 5 && open http://127.0.0.1:3000/auth/login &)
 		JWKS_URL=http://127.0.0.1:4456/.well-known/jwks.json \
+			NODE_ENV=only-ui \
 			KRATOS_PUBLIC_URL=http://127.0.0.1:4433/ \
             KRATOS_BROWSER_URL=http://127.0.0.1:4455/.ory/kratos/public \
             npm run start

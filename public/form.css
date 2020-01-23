@@ -1,0 +1,76 @@
+form input, form button {
+    outline: none;
+}
+
+form label {
+    position: relative;
+}
+
+form label span {
+    position: absolute;
+    color: var(--base-text);
+    top: 2em;
+    font-size: 1em;
+    left: 0.666em;
+    transition: font-size 0.1s ease-in-out, top 0.1s ease-in-out, color 0.1s ease-in-out;
+    pointer-events: none;
+}
+
+form label input:not(:placeholder-shown) ~ span {
+    font-size: 0.75em;
+    top: 1.5em;
+    left: 0.666em;
+    color: var(--base-text);
+}
+
+form button {
+    border-radius: 0.225em;
+    background-color: var(--primary-main);
+    color: var(--base-white);
+    border-width: 0;
+    padding: 0.875em 0.5em;
+    transition: background-color 0.1s ease-in-out, color 0.1s ease-in-out;
+    margin-top: 3rem;
+    cursor: pointer;
+}
+
+form button:hover {
+    background-color: var(--primary-half);
+    color: var(--primary-dark);
+}
+
+form label input {
+    border-radius: 0.166em;
+    background-color: var(--base-black);
+    border-width: 0;
+    color: var(--base-white);
+    padding: 0.875em 0.5em;
+    font-size: inherit;
+    margin: 1em 0;
+    line-height: 168%;
+    width: 100%;
+    box-sizing: border-box;
+    box-shadow: 0px 0px 8px rgba(255, 255, 255, 0.1);
+}
+
+form input::placeholder {
+    visibility: hidden;
+}
+
+.password-visibility-toggle path {
+    fill: var(--base-text);
+    transition: fill 0.1s ease-in-out;
+}
+
+.password-visibility-toggle {
+    position: absolute;
+    top: calc(1.875em + 0.5 * 1.25em - 0.5 * 0.75em);
+    right: 1em;
+    height: 0.75em;
+    width: 1em;
+    cursor: pointer;
+}
+
+input[type="text"] ~ .password-visibility-toggle path {
+    fill: white;
+}

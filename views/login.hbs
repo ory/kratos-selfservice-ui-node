@@ -1,15 +1,20 @@
 <div class="auth">
     <div class="container">
-        <h1>{{projectName}}</h1>
-        <h2>Log in</h2>
+        {{> brand}}
+        <h5 class="subheading">Welcome to this example login screen!</h5>
 
         {{> formErrors}}
 
         <form action="{{formAction}}" method="POST">
             {{> formFields}}
-            <button type="submit">SIGN IN</button>
+            <button type="submit">Sign In</button>
         </form>
 
-        <a href="{{baseUrl}}auth/registration">Create new account</a>
+        <hr class="divider">
+
+        <div class="alternative-actions">
+            <a href="{{baseUrl}}auth/registration">Recover password</a>
+            <a href="{{baseUrl}}auth/registration">Register new account</a>
+        </div>
     </div>
 </div>

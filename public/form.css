@@ -58,19 +58,23 @@ form input::placeholder {
 }
 
 .password-visibility-toggle path {
-    fill: var(--base-text);
-    transition: fill 0.1s ease-in-out;
+    fill: var(--base-white);
 }
 
 .password-visibility-toggle {
     position: absolute;
     top: calc(1.875em + 0.5 * 1.25em - 0.5 * 0.75em);
     right: 1em;
-    height: 0.75em;
     width: 1em;
     cursor: pointer;
 }
 
-input[type="text"] ~ .password-visibility-toggle path {
-    fill: white;
+input[type="text"] ~ .password-visibility-toggle .eye-closed,
+input[type="password"] ~ .password-visibility-toggle .eye-open {
+    display: inline;
+}
+
+input[type="password"] ~ .password-visibility-toggle .eye-closed,
+input[type="text"] ~ .password-visibility-toggle .eye-open  {
+    display: none;
 }

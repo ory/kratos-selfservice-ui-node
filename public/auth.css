@@ -6,12 +6,9 @@
     justify-content: center;
 }
 
-.auth .brand, .auth .subheading {
+.auth .subheading {
     margin: 1rem 0;
     align-self: center;
-}
-
-.auth .subheading {
     color: var(--base-text);
 }
 

@@ -1,35 +1,35 @@
 h1 {
     font-style: normal;
     font-weight: normal;
-    font-size: 6.333rem;
+    font-size: 96px;
     line-height: 126%;
 }
 
 h2 {
     font-style: normal;
     font-weight: 300;
-    font-size: 1.666rem;
+    font-size: 20px;
     line-height: 168%;
 }
 
 h3 {
     font-style: normal;
     font-weight: 300;
-    font-size: 3rem;
+    font-size: 36px;
     line-height: 126%;
 }
 
 h4 {
     font-style: normal;
     font-weight: 500;
-    font-size: 1.5rem;
+    font-size: 18px;
     line-height: 168%;
 }
 
 h5 {
     font-style: normal;
     font-weight: normal;
-    font-size: 1.166rem;
+    font-size: 14px;
     line-height: 168%;
 }
 

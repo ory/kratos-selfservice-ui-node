@@ -1,9 +1,10 @@
 <div class="auth">
     <div class="container">
         {{> icon_logo}}
-        <h5 class="subheading">Welcome to SecureApp! Use the form below to sign up:</h5>
+        <h5 class="subheading">Welcome to SecureApp! <br/>
+            Use the form below to sign up:</h5>
 
-        {{> formErrors}}
+        {{> formErrors className="overview-form-errors"}}
 
         <form action="{{ formAction }}" method="POST">
             {{> formFields}}

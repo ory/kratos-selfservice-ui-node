@@ -13,6 +13,18 @@ Additionally:
 
 - Dashboard (requires login)
 
+## Development
+
+To run this app with dummy data and no real connection to ORY Kratos, use:
+
+```shell script
+$ NODE_ENV=only-ui npm start
+```
+
+### Connect to ORY Kratos
+
+If you intend to run this app with ORY Kratos, the easiest way is to use the ORY Kratos Docker Compose Quickstart and build this image with `make docker` (that command builds the `oryd/kratos-selfservice-ui-node:latest` image) before running `docker-compose -f quickstart.yml up` (which uses `oryd/kratos-selfservice-ui-node:latest`) in the ORY Kratos project root. Make sure **not to run `docker pull oryd/kratos-selfservice-ui-node:latest`** before running `docker-compose` or your changes will be overwritten!
+
 ## Configuration
 
 This application can be configured using two environment variables:

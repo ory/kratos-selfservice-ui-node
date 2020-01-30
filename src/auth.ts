@@ -39,7 +39,6 @@ export const authHandler = (type: 'login' | 'registration') => (
       return response.json()
     })
     .then((request: Config) => {
-      console.log(request)
       const {
         methods: {
           password: {

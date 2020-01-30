@@ -49,6 +49,6 @@ ${interestingHeaders
   )
   .join('\n')}
 ...`,
-    logoutUrl: `${config.kratos.browser}/auth/browser/logout`,
+    logoutUrl: `${config.kratos.browser}/self-service/browser/flows/logout`,
   })
 }

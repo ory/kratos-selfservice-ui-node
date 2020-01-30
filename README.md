@@ -30,7 +30,9 @@ If you intend to run this app with ORY Kratos, the easiest way is to use the ORY
 This application can be configured using two environment variables:
 
 - `JWKS_URL` - The URL to be used to check if the signature of the incoming ID token is valid.
-- `KRATOS_PUBLIC_URL`: The URL where ORY Kratos's public API is located at. If this app and ORY Kratos
+- `KRATOS_ADMIN_URL`: The URL where ORY Kratos's Admin API is located at. If this app and ORY Kratos
+    are running in the same private network, this should be the private network address (e.g. `kratos-admin.svc.cluster.local`).
+- `KRATOS_PUBLIC_URL`: The URL where ORY Kratos's Public API is located at. If this app and ORY Kratos
     are running in the same private network, this should be the private network address (e.g. `kratos-public.svc.cluster.local`).
 - `KRATOS_BROWSER_URL`: The URL where ORY Kratos's public API is located at, when accessible from the public internet.
     This could be for example `http://kratos.my-app.com/`.

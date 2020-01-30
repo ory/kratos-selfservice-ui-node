@@ -2,6 +2,12 @@ form input, form button {
     outline: none;
 }
 
+form fieldset {
+    border: 0;
+    margin-bottom: 16;
+    padding: 0;
+}
+
 form label {
     position: relative;
 }
@@ -9,7 +15,7 @@ form label {
 form label span {
     position: absolute;
     color: var(--base-text);
-    top: 2em;
+    top: calc(0.875em / 2 - 6px);
     font-size: 1em;
     left: 0.666em;
     transition: font-size 0.1s ease-in-out, top 0.1s ease-in-out, color 0.1s ease-in-out;
@@ -18,8 +24,8 @@ form label span {
 
 form label input:not(:placeholder-shown) ~ span {
     font-size: 0.75em;
-    top: 1.5em;
-    left: 0.666em;
+    top: -0.9em;
+    left: 0.666rem;
     color: var(--base-text);
 }
 
@@ -44,17 +50,31 @@ form label input {
     background-color: var(--base-black);
     border-width: 0;
     color: var(--base-white);
-    padding: 0.875em 0.5em;
+    padding: 0.875em 0.666em;
     font-size: inherit;
-    margin: 1em 0;
     line-height: 168%;
     width: 100%;
     box-sizing: border-box;
-    box-shadow: 0px 0px 8px rgba(255, 255, 255, 0.1);
+    margin-bottom: 8px;
+    box-shadow: 0 0 8px rgba(255, 255, 255, 0.1);
+}
+
+fieldset .input-form-errors, .form-errors {
+    font-size: 14px;
+    margin-bottom: 24px;
+    padding: 0 2px;
+}
+
+fieldset .input-form-errors .message, .form-errors .message {
+    margin-bottom: 8px;
+}
+
+.global-form-errors {
+    margin: 0 8px;
 }
 
 form input::placeholder {
-    visibility: hidden;
+    color: transparent;
 }
 
 .password-visibility-toggle path {
@@ -63,7 +83,7 @@ form input::placeholder {
 
 .password-visibility-toggle {
     position: absolute;
-    top: calc(1.875em + 0.5 * 1.25em - 0.5 * 0.75em);
+    top: 0.2125rem;
     right: 1em;
     width: 1em;
     cursor: pointer;

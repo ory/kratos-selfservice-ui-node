@@ -1,8 +1,8 @@
-import {Config} from 'types'
-import {NextFunction, Request, Response} from 'express'
+import { Config } from 'types'
+import { NextFunction, Request, Response } from 'express'
 import config from './config'
 import fetch from 'node-fetch'
-import {sortFormFields} from "./translations";
+import { sortFormFields } from './translations'
 
 // A simple express handler that shows the login / registration screen.
 // Argument "type" can either be "login" or "registration" and will
@@ -40,11 +40,7 @@ export const authHandler = (type: 'login' | 'registration') => (
       const {
         methods: {
           password: {
-            config: {
-              fields = {},
-              action,
-              errors,
-            },
+            config: { fields = {}, action, errors },
           },
         },
       } = request

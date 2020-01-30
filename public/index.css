@@ -17,6 +17,7 @@
 
 html, body {
     min-height: 100vh;
+    text-rendering: geometricPrecision;
 }
 
 body {
@@ -30,12 +31,13 @@ body {
     display: flex;
     flex-direction: column;
     align-items: stretch;
-    max-width: 40em;
+    width: 300px;
     margin: 0 auto;
 }
 
 .logo {
     pointer-events: none;
+    margin: 0 auto 2rem 0;
 }
 
 .content {

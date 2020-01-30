@@ -1,13 +1,18 @@
-import express, {NextFunction, Request, Response} from 'express'
+import express, { NextFunction, Request, Response } from 'express'
 import handlebars from 'express-handlebars'
-import {authHandler} from './auth'
+import { authHandler } from './auth'
 import errorHandler from './error'
 import dashboard from './dashboard'
 import debug from './debug'
 import config from './config'
 import jwks from 'jwks-rsa'
 import jwt from 'express-jwt'
-import {getTitle, toFormInputPartialName} from "./translations";
+import {
+  getTitle,
+  sortFormFields,
+  toFormInputPartialName,
+} from './translations'
+import * as stubs from './stub/payloads'
 
 const protect = jwt({
   // Dynamically provide a signing key based on the kid in the header and the signing keys provided by the JWKS endpoint.
@@ -23,9 +28,9 @@ const app = express()
 app.set('view engine', 'hbs')
 
 app.use((req: Request, res: Response, next: NextFunction) => {
-  res.locals.projectName = config.projectName;
-  res.locals.baseUrl = config.baseUrl;
-  next();
+  res.locals.projectName = config.projectName
+  res.locals.baseUrl = config.baseUrl
+  next()
 })
 app.use(express.static('public'))
 app.use(express.static('node_modules/normalize.css'))
@@ -41,8 +46,8 @@ app.engine(
       json: (context: any) => JSON.stringify(context),
       jsonPretty: (context: any) => JSON.stringify(context, null, 2),
       getTitle,
-      toFormInputPartialName
-    }
+      toFormInputPartialName,
+    },
   })
 )
 
@@ -50,10 +55,22 @@ if (process.env.NODE_ENV === 'only-ui') {
   // Setting NODE_ENV to "only-ui" disables all integration and only shows the UI. Useful
   // when working on CSS or HTML things.
   app.get('/', dashboard)
-  app.get('/auth/registration', (_: Request, res: Response) =>
-    res.render('registration')
-  )
-  app.get('/auth/login', (_: Request, res: Response) => res.render('login'))
+  app.get('/auth/registration', (_: Request, res: Response) => {
+    const config = stubs.registration.methods.password.config
+    res.render('registration', {
+      formAction: config.action,
+      formFields: Object.values(config.fields).sort(sortFormFields),
+      errors: config.errors,
+    })
+  })
+  app.get('/auth/login', (_: Request, res: Response) => {
+    const config = stubs.login.methods.password.config
+    res.render('login', {
+      formAction: config.action,
+      formFields: Object.values(config.fields).sort(sortFormFields),
+      errors: config.errors,
+    })
+  })
   app.get('/error', (_: Request, res: Response) => res.render('error'))
 } else {
   app.get('/', protect, dashboard)

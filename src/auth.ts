@@ -18,25 +18,28 @@ export const authHandler = (type: 'login' | 'registration') => (
   // return data like the csrf_token and so on.
   if (!request) {
     console.log('No request found in URL, initializing auth flow.')
-    res.redirect(`${config.kratos.browser}/auth/browser/${type}`)
+    res.redirect(`${config.kratos.browser}/self-service/browser/flows/${type}`)
     return
   }
 
   // This is the ORY Kratos URL. If this app and ORY Kratos are running
   // on the same (e.g. Kubernetes) cluster, this should be ORY Kratos's internal hostname.
-  const url = new URL(`${config.kratos.public}/auth/browser/requests/${type}`)
+  const url = new URL(`${config.kratos.admin}/self-service/browser/flows/requests/${type}`)
   url.searchParams.set('request', request)
 
   fetch(url.toString())
     .then(response => {
       if (response.status == 404) {
-        res.redirect(`${config.kratos.browser}/auth/browser/${type}`)
+        res.redirect(`${config.kratos.browser}/self-service/browser/flows/${type}`)
         return
+      } else if (response.status != 200) {
+        return response.json().then(body => Promise.reject(body))
       }
 
       return response.json()
     })
     .then((request: Config) => {
+      console.log(request)
       const {
         methods: {
           password: {
@@ -53,5 +56,8 @@ export const authHandler = (type: 'login' | 'registration') => (
         errors,
       })
     })
-    .catch(err => next(err))
+    .catch(err => {
+      console.error(err)
+      next(err)
+    })
 }

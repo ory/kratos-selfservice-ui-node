@@ -31,8 +31,12 @@ body {
     display: flex;
     flex-direction: column;
     align-items: stretch;
-    width: 300px;
+    width: 600px;
     margin: 0 auto;
+}
+
+.auth .container {
+    width: 300px;
 }
 
 .logo {

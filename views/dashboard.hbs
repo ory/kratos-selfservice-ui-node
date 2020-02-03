@@ -1,25 +1,5 @@
 <div class="content">
-    <div class="header">
-        {{> icon_logo}}
-        <div class="icon-actions">
-            <div class="settings">
-                <a href="/profile">
-                    {{> icon_gear}}
-                </a>
-            </div>
-            <div class="logout">
-                <a href="{{logoutUrl}}">
-                    {{> icon_sign_out}}
-                </a>
-            </div>
-            <div class="fork">
-                <a href="https://github.com/ory/kratos-selfservice-ui-node" target="_blank">
-                    {{> icon_repo_forked}}
-                    <div>Fork on<br>GitHub</div>
-                </a>
-            </div>
-        </div>
-    </div>
+    {{> header}}
     <div class="container">
         <h4 class="greeting">Welcome back, <span class="user-identifier">{{session.identity.traits.email}}</span>!</h4>
         <h5>This example app is secure by default</h5>

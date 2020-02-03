@@ -13,7 +13,19 @@ declare module 'types' {
 
     export type Errors = Object[]
 
-    export interface Config {
+    export interface ProfileConfig {
+        id: string
+        expires_at: Date
+        issued_at: Date
+        request_url: string
+        form: {
+            action: string
+            method: string
+            fields: FormFields
+        }
+    }
+
+    export interface AuthConfig {
         id: string
         return_to: string
         issued_at: Date
@@ -42,6 +54,6 @@ declare module 'types' {
         fields: FormFields
     }
 
-    type FormFields = { [key: string]: FormField }
+    type FormFields = Array<FormField>
 
 }

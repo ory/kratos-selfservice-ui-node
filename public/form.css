@@ -1,3 +1,8 @@
+form {
+    line-height: 1.15;
+    font-weight: normal;
+}
+
 form input, form button {
     outline: none;
 }

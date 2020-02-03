@@ -13,6 +13,7 @@ import {
   toFormInputPartialName,
 } from './translations'
 import * as stubs from './stub/payloads'
+import profileHandler from "./profile";
 
 const protect = jwt({
   // Dynamically provide a signing key based on the kid in the header and the signing keys provided by the JWKS endpoint.
@@ -78,6 +79,7 @@ if (process.env.NODE_ENV === 'only-ui') {
   app.get('/auth/registration', authHandler('registration'))
   app.get('/auth/login', authHandler('login'))
   app.get('/error', errorHandler)
+  app.get('/profile', protect, profileHandler)
 }
 
 app.get('/health', (_: Request, res: Response) => res.send('ok'))
@@ -89,6 +91,7 @@ app.get('*', (_: Request, res: Response) => {
 })
 
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
+  console.error('error:::', err)
   console.error(err.stack)
   res.status(500).render('error', {
     message: JSON.stringify(err, null, 2),

@@ -1,0 +1,12 @@
+<div class="content">
+    {{> header}}
+    <div class="container">
+        <h4>User settings</h4>
+        <h5>Lorem Ipsum</h5>
+        <form action="{{action}}" method="{{method}}">
+            {{#each fields}}
+                {{> (toFormInputPartialName type)}}
+            {{/each}}
+        </form>
+    </div>
+</div>

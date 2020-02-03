@@ -1,6 +1,7 @@
 form {
     line-height: 1.15;
     font-weight: normal;
+    margin: 0.5rem 0;
 }
 
 form input, form button {
@@ -9,7 +10,7 @@ form input, form button {
 
 form fieldset {
     border: 0;
-    margin-bottom: 16;
+    margin-bottom: 1rem;
     padding: 0;
 }
 

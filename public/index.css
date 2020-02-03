@@ -118,6 +118,15 @@ body {
     font-style: normal;
     font-weight: 600;
     line-height: 160%;
+    margin-top: 4rem;
+}
+
+h4:first-child {
+    margin: 0;
+}
+
+h4 ~ h5 {
+    margin: -0.25rem 0 1rem 0;
 }
 
 .content .greeting .user-identifier {
@@ -137,6 +146,10 @@ body {
     font-style: normal;
     font-weight: normal;
     line-height: 160%;
+}
+
+.container p {
+    margin-bottom: 1rem;
 }
 
 .container p > code {

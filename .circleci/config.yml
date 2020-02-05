@@ -11,6 +11,7 @@ jobs:
             - v1-dependencies-{{ checksum "package-lock.json" }}
             - v1-dependencies-
       - run: npm ci
+      - run: ./link-npm-packages.sh
       - save_cache:
           paths:
             - node_modules
@@ -28,6 +29,7 @@ jobs:
             - v1-dependencies-{{ checksum "package-lock.json" }}
             - v1-dependencies-
       - run: npm ci
+      - run: ./link-npm-packages.sh
       - save_cache:
           paths:
             - node_modules

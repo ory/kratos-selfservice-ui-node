@@ -13,6 +13,7 @@ import {
   toFormInputPartialName,
 } from './translations'
 import * as stubs from './stub/payloads'
+import {FormField} from "@oryd/kratos-client";
 
 const protect = jwt({
   // Dynamically provide a signing key based on the kid in the header and the signing keys provided by the JWKS endpoint.
@@ -59,7 +60,7 @@ if (process.env.NODE_ENV === 'only-ui') {
     const config = stubs.registration.methods.password.config
     res.render('registration', {
       formAction: config.action,
-      formFields: Object.values(config.fields).sort(sortFormFields),
+      formFields: (config.fields as Array<FormField>).sort(sortFormFields),
       errors: config.errors,
     })
   })
@@ -67,7 +68,7 @@ if (process.env.NODE_ENV === 'only-ui') {
     const config = stubs.login.methods.password.config
     res.render('login', {
       formAction: config.action,
-      formFields: Object.values(config.fields).sort(sortFormFields),
+      formFields: (config.fields as Array<FormField>).sort(sortFormFields),
       errors: config.errors,
     })
   })

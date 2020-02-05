@@ -21,6 +21,7 @@
   },
   "homepage": "https://github.com/ory/kratos-selfservice-ui-node#readme",
   "dependencies": {
+    "@oryd/kratos-client": "0.1.0-alpha.1",
     "@types/express": "^4.17.1",
     "@types/express-handlebars": "0.0.33",
     "@types/jwt-decode": "^2.2.1",

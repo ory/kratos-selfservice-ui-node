@@ -10,6 +10,7 @@ jobs:
           keys:
             - v1-dependencies-{{ checksum "package-lock.json" }}
             - v1-dependencies-
+      - run: npm run check-format
       - run: npm ci
       - save_cache:
           paths:

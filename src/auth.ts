@@ -7,6 +7,7 @@ import {
   LoginRequest,
   RegistrationRequest,
 } from '@oryd/kratos-client'
+import {IncomingMessage} from "http";
 
 // A simple express handler that shows the login / registration screen.
 // Argument "type" can either be "login" or "registration" and will
@@ -29,7 +30,7 @@ export const authHandler = (type: 'login' | 'registration') => (
   }
 
   const authRequest: Promise<{
-    response: any
+    response: IncomingMessage
     body?: LoginRequest | RegistrationRequest
   }> =
     type === 'login'
@@ -38,19 +39,19 @@ export const authHandler = (type: 'login' | 'registration') => (
 
   authRequest
     .then(({ body, response }) => {
-      if (response.status == 404) {
+      if (response.statusCode == 404) {
         res.redirect(
           `${config.kratos.browser}/self-service/browser/flows/${type}`
         )
         return
-      } else if (response.status != 200) {
+      } else if (response.statusCode != 200) {
         return Promise.reject(body)
       }
 
       return body
     })
     .then((request?: LoginRequest | RegistrationRequest) => {
-      // would be nice to have optional chaining ;)
+      // would be nice to have optional chaining right ;)
       const fields: Array<FormField> | undefined = request
         ? request.methods
           ? request.methods.password

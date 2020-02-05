@@ -14,5 +14,8 @@
       "./typings"
     ],
     "esModuleInterop": true
-  }
+  },
+  "exclude": [
+    "kratos-client-master"
+  ]
 }

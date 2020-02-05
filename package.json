@@ -4,7 +4,7 @@
   "description": "A reference implementation of a selfservice UI for ORY Kratos in node.js",
   "main": "src/index.ts",
   "scripts": {
-    "build": "./link-npm-packages.sh; tsc",
+    "build": "tsc",
     "serve": "node lib/index.js",
     "start": "ts-node-dev --watch public,views --respawn src/index.ts",
     "test": "npm-run-all build",

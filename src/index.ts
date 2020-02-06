@@ -14,6 +14,7 @@ import {
 } from './translations'
 import * as stubs from './stub/payloads'
 import { FormField } from '@oryd/kratos-client'
+import profileHandler from "./profile";
 
 const protect = jwt({
   // Dynamically provide a signing key based on the kid in the header and the signing keys provided by the JWKS endpoint.
@@ -79,6 +80,7 @@ if (process.env.NODE_ENV === 'only-ui') {
   app.get('/auth/registration', authHandler('registration'))
   app.get('/auth/login', authHandler('login'))
   app.get('/error', errorHandler)
+  app.get('/profile', protect, profileHandler)
 }
 
 app.get('/health', (_: Request, res: Response) => res.send('ok'))

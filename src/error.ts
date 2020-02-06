@@ -1,9 +1,9 @@
 import { NextFunction, Request, Response } from 'express'
 import config from './config'
-import { ErrorContainer, PublicApi } from '@oryd/kratos-client'
+import {AdminApi, ErrorContainer, PublicApi} from '@oryd/kratos-client'
 import { IncomingMessage } from 'http'
 
-const publicKratos = new PublicApi(config.kratos.public)
+const adminApi = new AdminApi(config.kratos.admin)
 
 export default (req: Request, res: Response, next: NextFunction) => {
   const error = req.query.error
@@ -14,7 +14,7 @@ export default (req: Request, res: Response, next: NextFunction) => {
     return
   }
 
-  publicKratos
+  adminApi
     .getSelfServiceError(error)
     .then(
       ({

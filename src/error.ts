@@ -1,7 +1,5 @@
 import { NextFunction, Request, Response } from 'express'
 import config from './config'
-import fetch from 'node-fetch'
-import { Config, Errors } from 'types'
 import { ErrorContainer, PublicApi } from '@oryd/kratos-client'
 import { IncomingMessage } from 'http'
 

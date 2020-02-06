@@ -13,7 +13,7 @@ import {
   toFormInputPartialName,
 } from './translations'
 import * as stubs from './stub/payloads'
-import {FormField} from "@oryd/kratos-client";
+import { FormField } from '@oryd/kratos-client'
 
 const protect = jwt({
   // Dynamically provide a signing key based on the kid in the header and the signing keys provided by the JWKS endpoint.

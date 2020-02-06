@@ -7,7 +7,7 @@ import {
   LoginRequest,
   RegistrationRequest,
 } from '@oryd/kratos-client'
-import {IncomingMessage} from "http";
+import { IncomingMessage } from 'http'
 
 // A simple express handler that shows the login / registration screen.
 // Argument "type" can either be "login" or "registration" and will

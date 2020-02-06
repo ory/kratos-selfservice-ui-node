@@ -1,12 +1,19 @@
-import { Config } from 'types'
 import { NextFunction, Request, Response } from 'express'
 import config from './config'
-import fetch from 'node-fetch'
 import { sortFormFields } from './translations'
+import {
+  AdminApi,
+  FormField,
+  LoginRequest,
+  RegistrationRequest,
+} from '@oryd/kratos-client'
+import { IncomingMessage } from 'http'
 
 // A simple express handler that shows the login / registration screen.
 // Argument "type" can either be "login" or "registration" and will
 // fetch the form data from ORY Kratos's Public API.
+const adminEndpoint = new AdminApi(config.kratos.admin)
+
 export const authHandler = (type: 'login' | 'registration') => (
   req: Request,
   res: Response,
@@ -22,36 +29,66 @@ export const authHandler = (type: 'login' | 'registration') => (
     return
   }
 
-  // This is the ORY Kratos URL. If this app and ORY Kratos are running
-  // on the same (e.g. Kubernetes) cluster, this should be ORY Kratos's internal hostname.
-  const url = new URL(
-    `${config.kratos.admin}/self-service/browser/flows/requests/${type}`
-  )
-  url.searchParams.set('request', request)
+  const authRequest: Promise<{
+    response: IncomingMessage
+    body?: LoginRequest | RegistrationRequest
+  }> =
+    type === 'login'
+      ? adminEndpoint.getSelfServiceBrowserLoginRequest(request)
+      : adminEndpoint.getSelfServiceBrowserRegistrationRequest(request)
 
-  fetch(url.toString())
-    .then(response => {
-      if (response.status == 404) {
+  authRequest
+    .then(({ body, response }) => {
+      if (response.statusCode == 404) {
         res.redirect(
           `${config.kratos.browser}/self-service/browser/flows/${type}`
         )
         return
-      } else if (response.status != 200) {
-        return response.json().then(body => Promise.reject(body))
+      } else if (response.statusCode != 200) {
+        return Promise.reject(body)
       }
 
-      return response.json()
+      return body
     })
-    .then((request: Config) => {
-      const {
-        methods: {
-          password: {
-            config: { fields = {}, action, errors },
-          },
-        },
-      } = request
+    .then((request?: LoginRequest | RegistrationRequest) => {
+      // would be nice to have optional chaining right ;)
+      const fields: Array<FormField> | undefined = request
+        ? request.methods
+          ? request.methods.password
+            ? request.methods.password.config
+              ? 'fields' in request.methods.password.config
+                ? request.methods.password.config['fields']
+                : undefined
+              : undefined
+            : undefined
+          : undefined
+        : undefined
+      const action = request
+        ? request.methods
+          ? request.methods.password
+            ? request.methods.password.config
+              ? 'action' in request.methods.password.config
+                ? request.methods.password.config['action']
+                : undefined
+              : undefined
+            : undefined
+          : undefined
+        : undefined
+      const errors = request
+        ? request.methods
+          ? request.methods.password
+            ? request.methods.password.config
+              ? 'errors' in request.methods.password.config
+                ? request.methods.password.config['errors']
+                : undefined
+              : undefined
+            : undefined
+          : undefined
+        : undefined
 
-      const formFields = Object.values(fields).sort(sortFormFields)
+      const formFields = fields
+        ? (fields as Array<FormField>).sort(sortFormFields)
+        : []
 
       res.render(type, {
         formAction: action,

@@ -1,7 +1,9 @@
 import { NextFunction, Request, Response } from 'express'
 import config from './config'
-import fetch from 'node-fetch'
-import { Config, Errors } from 'types'
+import { AdminApi, ErrorContainer } from '@oryd/kratos-client'
+import { IncomingMessage } from 'http'
+
+const adminApi = new AdminApi(config.kratos.admin)
 
 export default (req: Request, res: Response, next: NextFunction) => {
   const error = req.query.error
@@ -12,25 +14,38 @@ export default (req: Request, res: Response, next: NextFunction) => {
     return
   }
 
-  // This is the ORY Kratos URL. If this app and ORY Kratos are running
-  // on the same (e.g. Kubernetes) cluster, this should be ORY Kratos's internal hostname.
-  const url = new URL(`${config.kratos.public}/errors`)
-  url.searchParams.set('error', error)
+  adminApi
+    .getSelfServiceError(error)
+    .then(
+      ({
+        body,
+        response,
+      }: {
+        body: ErrorContainer
+        response: IncomingMessage
+      }) => {
+        if (response.statusCode == 404) {
+          // The error could not be found, redirect back to home.
+          res.redirect(`/`)
+          return
+        }
 
-  fetch(url.toString())
-    .then(response => {
-      if (response.status == 404) {
-        // The error could not be found, redirect back to home.
-        res.redirect(`/`)
-        return
+        return body
+      }
+    )
+    .then((errorContainer = {}) => {
+      if ('errors' in errorContainer) {
+        res.status(500).render('error', {
+          message: JSON.stringify(errorContainer.errors, null, 2),
+        })
+        return Promise.resolve()
       }
 
-      return response.json()
-    })
-    .then((errors: Errors) => {
-      res.status(500).render('error', {
-        message: JSON.stringify(errors, null, 2),
-      })
+      return Promise.reject(
+        `expected errorContainer to contain "errors" but got ${JSON.stringify(
+          errorContainer
+        )}`
+      )
     })
     .catch(err => next(err))
 }

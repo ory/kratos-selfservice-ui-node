@@ -8,7 +8,8 @@
     "serve": "node lib/index.js",
     "start": "ts-node-dev --watch public,views --respawn src/index.ts",
     "test": "npm-run-all build",
-    "format": "prettier --parser typescript --no-semi --single-quote --trailing-comma es5 --write src/**.ts"
+    "format": "prettier --parser typescript --no-semi --single-quote --trailing-comma es5 --write src/**.ts",
+    "check-format": "prettier --parser typescript --no-semi --single-quote --trailing-comma es5 --check src/**.ts"
   },
   "repository": {
     "type": "git",
@@ -33,10 +34,10 @@
     "jwks-rsa": "^1.6.0",
     "jwt-decode": "^2.2.0",
     "node-fetch": "^2.6.0",
-    "prettier": "^1.18.2",
     "typescript": "^3.6.4"
   },
   "devDependencies": {
+    "prettier": "^1.18.2",
     "npm-run-all": "^4.1.5",
     "ts-node-dev": "^1.0.0-pre.43"
   }

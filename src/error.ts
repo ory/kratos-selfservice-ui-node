@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from 'express'
 import config from './config'
-import {AdminApi, ErrorContainer, PublicApi} from '@oryd/kratos-client'
+import { AdminApi, ErrorContainer } from '@oryd/kratos-client'
 import { IncomingMessage } from 'http'
 
 const adminApi = new AdminApi(config.kratos.admin)

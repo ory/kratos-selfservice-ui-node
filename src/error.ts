@@ -1,19 +1,51 @@
-import {Request, Response} from 'express'
+import { NextFunction, Request, Response } from 'express'
 import config from './config'
-import {Errors} from 'types'
-import {withResource} from "./helpers";
+import { AdminApi, ErrorContainer } from '@oryd/kratos-client'
+import { IncomingMessage } from 'http'
 
-const renderWithError = (req: Request, res: Response) => (errors: Errors) => {
-  console.log('got errors from remote:', errors)
-  res.status(500).render('error', {
-    message: JSON.stringify(errors, null, 2),
-  })
+const adminApi = new AdminApi(config.kratos.admin)
+
+export default (req: Request, res: Response, next: NextFunction) => {
+  const error = req.query.error
+
+  if (!error) {
+    // No error was send, redirecting back to home.
+    res.redirect(`/`)
+    return
+  }
+
+  adminApi
+    .getSelfServiceError(error)
+    .then(
+      ({
+        body,
+        response,
+      }: {
+        body: ErrorContainer
+        response: IncomingMessage
+      }) => {
+        if (response.statusCode == 404) {
+          // The error could not be found, redirect back to home.
+          res.redirect(`/`)
+          return
+        }
+
+        return body
+      }
+    )
+    .then((errorContainer = {}) => {
+      if ('errors' in errorContainer) {
+        res.status(500).render('error', {
+          message: JSON.stringify(errorContainer.errors, null, 2),
+        })
+        return Promise.resolve()
+      }
+
+      return Promise.reject(
+        `expected errorContainer to contain "errors" but got ${JSON.stringify(
+          errorContainer
+        )}`
+      )
+    })
+    .catch(err => next(err))
 }
-
-export default withResource({
-  url: new URL(`${config.kratos.admin}/self-service/errors`),
-  resourceName: 'error',
-  redirectToOnNotFound: '/',
-  onNoResource: (req, res) => res.redirect('/'),
-  renderWithResource: renderWithError
-})

@@ -1,4 +1,4 @@
-import { FormField } from 'types'
+import { FormField } from '@oryd/kratos-client'
 
 const translations = {
   password: {
@@ -21,7 +21,7 @@ const getTitle = (key: string): string =>
   key in translations ? translations[key as keyof Translations].title : key
 
 const getPosition = (field: FormField) =>
-  field.name in translations
+  field.name && field.name in translations
     ? translations[field.name as keyof Translations].position
     : Infinity
 

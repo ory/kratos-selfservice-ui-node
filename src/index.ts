@@ -14,7 +14,7 @@ import {
 } from './translations'
 import * as stubs from './stub/payloads'
 import { FormField } from '@oryd/kratos-client'
-import profileHandler from "./profile";
+import profileHandler from './profile'
 
 const protect = jwt({
   // Dynamically provide a signing key based on the kid in the header and the signing keys provided by the JWKS endpoint.

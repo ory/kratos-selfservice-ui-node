@@ -1,5 +1,5 @@
 import { Request, Response } from 'express'
-import config from './config'
+import config from '../config'
 import jd from 'jwt-decode'
 
 type UserRequest = Request & { user: any }

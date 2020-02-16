@@ -1,9 +1,9 @@
 import express, { NextFunction, Request, Response } from 'express'
 import handlebars from 'express-handlebars'
-import { authHandler } from './auth'
-import errorHandler from './error'
-import dashboard from './dashboard'
-import debug from './debug'
+import { authHandler } from './routes/auth'
+import errorHandler from './routes/error'
+import dashboard from './routes/dashboard'
+import debug from './routes/debug'
 import config from './config'
 import jwks from 'jwks-rsa'
 import jwt from 'express-jwt'
@@ -14,7 +14,8 @@ import {
 } from './translations'
 import * as stubs from './stub/payloads'
 import { FormField } from '@oryd/kratos-client'
-import profileHandler from './profile'
+import profileHandler from './routes/profile'
+import verifyHandler from './routes/verify'
 
 const protect = jwt({
   // Dynamically provide a signing key based on the kid in the header and the signing keys provided by the JWKS endpoint.
@@ -81,6 +82,7 @@ if (process.env.NODE_ENV === 'only-ui') {
   app.get('/auth/login', authHandler('login'))
   app.get('/error', errorHandler)
   app.get('/profile', protect, profileHandler)
+  app.get('/verify', protect, verifyHandler)
 }
 
 app.get('/health', (_: Request, res: Response) => res.send('ok'))

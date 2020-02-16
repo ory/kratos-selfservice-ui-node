@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from 'express'
-import config from './config'
-import { sortFormFields } from './translations'
+import config from '../config'
+import { sortFormFields } from '../translations'
 import {
   AdminApi,
   FormField,
@@ -21,7 +21,7 @@ export const authHandler = (type: 'login' | 'registration') => (
 ) => {
   const request = req.query.request
 
-  // The request is used to identify the login and registraion request and
+  // The request is used to identify the login and registration request and
   // return data like the csrf_token and so on.
   if (!request) {
     console.log('No request found in URL, initializing auth flow.')
@@ -51,41 +51,13 @@ export const authHandler = (type: 'login' | 'registration') => (
       return body
     })
     .then((request?: LoginRequest | RegistrationRequest) => {
-      // would be nice to have optional chaining right ;)
-      const fields: Array<FormField> | undefined = request
-        ? request.methods
-          ? request.methods.password
-            ? request.methods.password.config
-              ? 'fields' in request.methods.password.config
-                ? request.methods.password.config['fields']
-                : undefined
-              : undefined
-            : undefined
-          : undefined
-        : undefined
-      const action = request
-        ? request.methods
-          ? request.methods.password
-            ? request.methods.password.config
-              ? 'action' in request.methods.password.config
-                ? request.methods.password.config['action']
-                : undefined
-              : undefined
-            : undefined
-          : undefined
-        : undefined
-      const errors = request
-        ? request.methods
-          ? request.methods.password
-            ? request.methods.password.config
-              ? 'errors' in request.methods.password.config
-                ? request.methods.password.config['errors']
-                : undefined
-              : undefined
-            : undefined
-          : undefined
-        : undefined
-
+      const fields: Array<FormField> | undefined = request?.methods?.password?.config
+                    ? 'fields' in request.methods.password.config
+                        ? request.methods.password.config['fields']
+                        : undefined
+                    : undefined
+      const action = request?.methods?.password?.config?['action'] : undefined
+      const errors = request?.methods?.password?.config?['errors'] : undefined
       const formFields = fields
         ? (fields as Array<FormField>).sort(sortFormFields)
         : []

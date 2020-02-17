@@ -13,6 +13,10 @@ const translations = {
     title: 'E-Mail',
     position: 0,
   },
+  to_verify: {
+    title: 'Your email address',
+    position: 0,
+  },
 }
 
 type Translations = typeof translations

@@ -82,7 +82,7 @@ if (process.env.NODE_ENV === 'only-ui') {
   app.get('/auth/login', authHandler('login'))
   app.get('/error', errorHandler)
   app.get('/profile', protect, profileHandler)
-  app.get('/verify', protect, verifyHandler)
+  app.get('/verify', verifyHandler)
 }
 
 app.get('/health', (_: Request, res: Response) => res.send('ok'))

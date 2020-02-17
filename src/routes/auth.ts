@@ -1,13 +1,13 @@
-import { NextFunction, Request, Response } from 'express'
+import {NextFunction, Request, Response} from 'express'
 import config from '../config'
-import { sortFormFields } from '../translations'
+import {sortFormFields} from '../translations'
 import {
   AdminApi,
   FormField,
   LoginRequest,
   RegistrationRequest,
 } from '@oryd/kratos-client'
-import { IncomingMessage } from 'http'
+import {IncomingMessage} from 'http'
 
 // A simple express handler that shows the login / registration screen.
 // Argument "type" can either be "login" or "registration" and will
@@ -38,7 +38,7 @@ export const authHandler = (type: 'login' | 'registration') => (
       : adminEndpoint.getSelfServiceBrowserRegistrationRequest(request)
 
   authRequest
-    .then(({ body, response }) => {
+    .then(({body, response}) => {
       if (response.statusCode == 404) {
         res.redirect(
           `${config.kratos.browser}/self-service/browser/flows/${type}`
@@ -51,16 +51,14 @@ export const authHandler = (type: 'login' | 'registration') => (
       return body
     })
     .then((request?: LoginRequest | RegistrationRequest) => {
-      const fields: Array<FormField> | undefined = request?.methods?.password?.config
-                    ? 'fields' in request.methods.password.config
-                        ? request.methods.password.config['fields']
-                        : undefined
-                    : undefined
-      const action = request?.methods?.password?.config?['action'] : undefined
-      const errors = request?.methods?.password?.config?['errors'] : undefined
-      const formFields = fields
-        ? (fields as Array<FormField>).sort(sortFormFields)
-        : []
+      if (!request) {
+        res.redirect(`${config.kratos.browser}/self-service/browser/flows/${type}`)
+        return
+      }
+
+      const formFields = request.methods.password.config?.fields.sort(sortFormFields)
+      const action = request.methods.password.config?.action
+      const errors = request.methods.password.config?.errors
 
       res.render(type, {
         formAction: action,

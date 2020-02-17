@@ -2,6 +2,9 @@
     {{> header}}
     <div class="container">
         <h4>Resend verification code</h4>
+
+        {{> formErrors className="overview-form-errors"}}
+
         <form action="{{action}}" method="{{method}}">
             {{#each fields}}
                 {{> (toFormInputPartialName type)}}

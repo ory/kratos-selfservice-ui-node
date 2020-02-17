@@ -12,7 +12,7 @@ export default (req: Request, res: Response, next: NextFunction) => {
   // return data like the csrf_token and so on.
   if (!request) {
     console.log('No request found in URL, initializing verify flow.')
-    res.redirect(`${config.kratos.browser}/self-service/browser/flows/verification/init/email`)
+    res.redirect(`${config.kratos.browser}/self-service/browser/flows/verification/email`)
     return
   }
 
@@ -21,7 +21,7 @@ export default (req: Request, res: Response, next: NextFunction) => {
     .then(({body, response}: { response: IncomingMessage, body?: any }) => {
         if (response.statusCode == 404) {
           res.redirect(
-            `${config.kratos.browser}/self-service/browser/flows/verification/init/email`
+            `${config.kratos.browser}/self-service/browser/flows/verification/email`
           )
           return
         } else if (response.statusCode != 200) {
@@ -31,6 +31,7 @@ export default (req: Request, res: Response, next: NextFunction) => {
         return body
       }
     ).then((request: any) => {
-    res.render('profile', request.form)
-  }).catch((err: any) => next(err))
+      res.render('verify', request.form)
+    }
+  ).catch((err: any) => next(err))
 }

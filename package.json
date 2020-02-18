@@ -26,6 +26,7 @@
     "@types/express": "^4.17.2",
     "@types/express-handlebars": "0.0.33",
     "@types/jwt-decode": "^2.2.1",
+    "@types/morgan": "^1.7.37",
     "@types/node": "^12.12.27",
     "@types/node-fetch": "^2.5.4",
     "express": "^4.17.1",
@@ -33,6 +34,7 @@
     "express-jwt": "^5.3.1",
     "jwks-rsa": "^1.6.2",
     "jwt-decode": "^2.2.0",
+    "morgan": "^1.9.1",
     "node-fetch": "^2.6.0",
     "typescript": "^3.7.5"
   },

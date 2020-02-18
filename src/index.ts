@@ -16,6 +16,7 @@ import * as stubs from './stub/payloads'
 import { FormField } from '@oryd/kratos-client'
 import profileHandler from './routes/profile'
 import verifyHandler from './routes/verify'
+import morgan from 'morgan'
 
 const protect = jwt({
   // Dynamically provide a signing key based on the kid in the header and the signing keys provided by the JWKS endpoint.
@@ -27,7 +28,9 @@ const protect = jwt({
   algorithms: ['RS256'],
 })
 
+
 const app = express()
+app.use(morgan('tiny'))
 app.set('view engine', 'hbs')
 
 app.use((req: Request, res: Response, next: NextFunction) => {
@@ -86,7 +89,6 @@ if (process.env.NODE_ENV === 'only-ui') {
 }
 
 app.get('/health', (_: Request, res: Response) => res.send('ok'))
-
 app.get('/debug', debug)
 
 app.get('*', (_: Request, res: Response) => {

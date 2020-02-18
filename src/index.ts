@@ -28,7 +28,6 @@ const protect = jwt({
   algorithms: ['RS256'],
 })
 
-
 const app = express()
 app.use(morgan('tiny'))
 app.set('view engine', 'hbs')

@@ -39,7 +39,7 @@ export const authHandler = (type: 'login' | 'registration') => (
 
   authRequest
     .then(({body, response}) => {
-      if (response.statusCode == 404) {
+      if (response.statusCode == 404 || response.statusCode == 410 || response.statusCode == 403) {
         res.redirect(
           `${config.kratos.browser}/self-service/browser/flows/${type}`
         )

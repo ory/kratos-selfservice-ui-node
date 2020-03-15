@@ -18,7 +18,7 @@ const profileHandler = (req: Request, res: Response, next: NextFunction) => {
   commonApi
     .getSelfServiceBrowserProfileManagementRequest(request)
     .then(({ body, response }) => {
-      if (response.statusCode === 404) {
+      if (response.statusCode == 404 || response.statusCode == 410 || response.statusCode == 403) {
         res.redirect(
           `${config.kratos.browser}/self-service/browser/flows/profile`
         )

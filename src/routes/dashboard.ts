@@ -5,22 +5,24 @@ import jd from 'jwt-decode'
 type UserRequest = Request & { user: any }
 
 const authInfo = (req: UserRequest) => {
-  const bearer = req.header('authorization')
-  if (bearer) {
-    // The header will be in format of `Bearer eyJhbGci...`. We therefore split at the whitespace to get the token
-    // itself only.
-    let token = bearer.split(' ')[1]
-    return {
-      raw: token,
-      claims: req.user,
+  if (config.withOathkeeper) {
+    const bearer = req.header('authorization')
+    if (bearer) {
+      // The header will be in format of `Bearer eyJhbGci...`. We therefore split at the whitespace to get the token
+      // itself only.
+      let token = bearer.split(' ')[1]
+      return {
+        raw: token,
+        claims: req.user,
+      }
     }
-  }
-
-  const session = req.cookies.ory_kratos_session
-  if (session) {
-    return {
-      raw: session,
-      claims: req.user,
+  } else {
+    const session = req.cookies.ory_kratos_session
+    if (session) {
+      return {
+        raw: session,
+        claims: req.user,
+      }
     }
   }
 

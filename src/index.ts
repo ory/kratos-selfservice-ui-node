@@ -44,7 +44,7 @@ const protectProxy = (req: Request, res: Response, next: NextFunction) => {
   res.redirect('/auth/login')
 }
 
-const protect = config.kratos.browser ? protectOathKeeper : protectProxy
+const protect = config.withOathkeeper ? protectOathKeeper : protectProxy
 
 const app = express()
 app.use(morgan('tiny'))
@@ -109,7 +109,7 @@ if (process.env.NODE_ENV === 'only-ui') {
 app.get('/health', (_: Request, res: Response) => res.send('ok'))
 app.get('/debug', debug)
 
-if (!config.kratos.browser) {
+if (!config.withOathkeeper) { // ExpressJS proxies Kratos public API
   app.use('/self-service', function(req: Request, res: Response) {
     const url = config.kratos.public + '/self-service' + req.url
     req.pipe(request(url, { followRedirect: false })).pipe(res)

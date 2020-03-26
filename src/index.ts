@@ -1,5 +1,7 @@
+import cookieParser from 'cookie-parser'
 import express, { NextFunction, Request, Response } from 'express'
 import handlebars from 'express-handlebars'
+import request from 'request'
 import { authHandler } from './routes/auth'
 import errorHandler from './routes/error'
 import dashboard from './routes/dashboard'
@@ -13,12 +15,12 @@ import {
   toFormInputPartialName,
 } from './translations'
 import * as stubs from './stub/payloads'
-import { FormField } from '@oryd/kratos-client'
+import { FormField, PublicApi } from '@oryd/kratos-client'
 import profileHandler from './routes/profile'
 import verifyHandler from './routes/verify'
 import morgan from 'morgan'
 
-const protect = jwt({
+const protectOathKeeper = jwt({
   // Dynamically provide a signing key based on the kid in the header and the signing keys provided by the JWKS endpoint.
   secret: jwks.expressJwtSecret({
     cache: true,
@@ -28,8 +30,25 @@ const protect = jwt({
   algorithms: ['RS256'],
 })
 
+
+const publicEndpoint = new PublicApi(config.kratos.public)
+const protectProxy = (req: Request, res: Response, next: NextFunction) => {
+  const session = req.cookies.ory_kratos_session
+  if (session) {
+    return publicEndpoint.whoami(req).then(({body, response}) => {
+      req.user = { session: body }
+      return next()
+    })
+  }
+
+  res.redirect('/auth/login')
+}
+
+const protect = config.kratos.browser ? protectOathKeeper : protectProxy
+
 const app = express()
 app.use(morgan('tiny'))
+app.use(cookieParser())
 app.set('view engine', 'hbs')
 
 app.use((req: Request, res: Response, next: NextFunction) => {
@@ -89,6 +108,13 @@ if (process.env.NODE_ENV === 'only-ui') {
 
 app.get('/health', (_: Request, res: Response) => res.send('ok'))
 app.get('/debug', debug)
+
+if (!config.kratos.browser) {
+  app.use('/self-service', function(req: Request, res: Response) {
+    const url = config.kratos.public + '/self-service' + req.url
+    req.pipe(request(url, { followRedirect: false })).pipe(res)
+  })
+}
 
 app.get('*', (_: Request, res: Response) => {
   res.redirect('/')

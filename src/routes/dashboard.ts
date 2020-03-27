@@ -5,7 +5,7 @@ import jd from 'jwt-decode'
 type UserRequest = Request & { user: any }
 
 const authInfo = (req: UserRequest) => {
-  if (config.withOathkeeper) {
+  if (config.securityMode === 'JWT') {
     const bearer = req.header('authorization')
     if (bearer) {
       // The header will be in format of `Bearer eyJhbGci...`. We therefore split at the whitespace to get the token

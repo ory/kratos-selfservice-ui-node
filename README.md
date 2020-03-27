@@ -42,9 +42,9 @@ This application can be configured using two environment variables:
 
 - `JWKS_URL`: The URL to be used to check if the signature of the incoming ID token is valid.
 
-### Without Oathkeeper (Cookie)
+### Standalone (Cookie)
 
-- `KRATOS_WITH_OATHKEEPER`: This flag indicates that this app is used without Oathkeeper. In that case, the server proxies directly Kratos public API. `KRATOS_BROWSER_URL` have to be set to this application base URL.
+- `SECURITY_MODE`: If this is set to `COOKIE`, then this app is used without Oathkeeper and rely on cookies (default value is `JWT`). In that case, the ExpressJS server proxies Kratos public API under `/self-service/`.
 
 ### Front development
 

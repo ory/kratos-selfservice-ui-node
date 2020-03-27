@@ -37,14 +37,16 @@ const protectProxy = (req: Request, res: Response, next: NextFunction) => {
   if (session) {
     return publicEndpoint.whoami(req).then(({body, response}) => {
       req.user = { session: body }
-      return next()
+      next()
+    }).catch(() => {
+      res.redirect('/auth/login')
     })
   }
 
   res.redirect('/auth/login')
 }
 
-const protect = config.withOathkeeper ? protectOathKeeper : protectProxy
+const protect = config.securityMode === 'JWT' ? protectOathKeeper : protectProxy
 
 const app = express()
 app.use(morgan('tiny'))
@@ -109,7 +111,7 @@ if (process.env.NODE_ENV === 'only-ui') {
 app.get('/health', (_: Request, res: Response) => res.send('ok'))
 app.get('/debug', debug)
 
-if (!config.withOathkeeper) { // ExpressJS proxies Kratos public API
+if (config.securityMode === 'COOKIE') { // ExpressJS proxies Kratos public API
   app.use('/self-service', function(req: Request, res: Response) {
     const url = config.kratos.public + '/self-service' + req.url
     req.pipe(request(url, { followRedirect: false })).pipe(res)
@@ -130,4 +132,5 @@ app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
 const port = Number(process.env.PORT) || 3000
 app.listen(port, () => {
   console.log(`Listening on http://0.0.0.0:${port}`)
+  console.log(`Security mode: ${config.securityMode}`)
 })

@@ -29,6 +29,7 @@
     "@types/morgan": "^1.7.37",
     "@types/node": "^12.12.27",
     "@types/node-fetch": "^2.5.4",
+    "cookie-parser": "^1.4.5",
     "express": "^4.17.1",
     "express-handlebars": "^3.1.0",
     "express-jwt": "^5.3.1",
@@ -36,6 +37,7 @@
     "jwt-decode": "^2.2.0",
     "morgan": "^1.9.1",
     "node-fetch": "^2.6.0",
+    "request": "^2.88.2",
     "typescript": "^3.7.5"
   },
   "devDependencies": {

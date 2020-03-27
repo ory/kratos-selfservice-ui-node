@@ -6,5 +6,6 @@ export default {
   },
   baseUrl: (process.env.BASE_URL || '/').replace(/\/+$/, '') + '/',
   jwksUrl: process.env.JWKS_URL || '/',
+  securityMode: process.env.SECURITY_MODE || 'JWT',
   projectName: process.env.PROJECT_NAME || 'SecureApp',
 }

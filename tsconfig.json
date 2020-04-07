@@ -14,5 +14,6 @@
       "./typings"
     ],
     "esModuleInterop": true
-  }
+  },
+  "exclude": ["contrib"]
 }

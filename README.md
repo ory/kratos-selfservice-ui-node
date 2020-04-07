@@ -25,6 +25,35 @@ $ NODE_ENV=only-ui npm start
 
 If you intend to run this app with ORY Kratos, the easiest way is to use the ORY Kratos Docker Compose Quickstart and build this image with `make docker` (that command builds the `oryd/kratos-selfservice-ui-node:latest` image) before running `docker-compose -f quickstart.yml up` (which uses `oryd/kratos-selfservice-ui-node:latest`) in the ORY Kratos project root. Make sure **not to run `docker pull oryd/kratos-selfservice-ui-node:latest`** before running `docker-compose` or your changes will be overwritten!
 
+### Generate TypeScript SDK
+
+If you've made changes to the ORY Kratos API you may want to manually generate the TypeScript SDK
+in order for URLs and payloads to work as expected. It is expected that you start this guide from
+this project's root, wherever you checked it out. You also need to have the
+[`openapi-generator` installed](https://openapi-generator.tech/docs/installation).
+
+```shell script
+# Set path to kratos:
+kratos_dir=/path/to/kratos
+(cd $kratos_dir; make sdk)
+cp $kratos_dir/docs/api.swagger.json ./contrib/sdk/api.swagger.json
+openapi-generator generate -i "./contrib/sdk/api.swagger.json" \
+    -g typescript-node \
+    -o "./contrib/sdk/generated" \
+    --git-user-id ory \
+    --git-repo-id sdk \
+    --git-host github.com \
+    -c ./contrib/sdk/typescript.yml
+(cd ./contrib/sdk/generated; npm i; npm run build)
+cp -r ./contrib/sdk/generated/* node_modules/@oryd/kratos-client
+# do your work
+# ...
+# build docker image:
+#   docker build -t oryd/kratos-selfservice-ui-node:latest . --build-arg LINK=true
+rm -rf node_modules/@oryd/kratos-client/
+npm i
+```
+
 ## Configuration
 
 This application can be configured using two environment variables:

@@ -14,7 +14,7 @@ import {
 } from './translations'
 import * as stubs from './stub/payloads'
 import { FormField } from '@oryd/kratos-client'
-import profileHandler from './routes/profile'
+import settingsHandler from './routes/settings'
 import verifyHandler from './routes/verify'
 import morgan from 'morgan'
 
@@ -52,6 +52,7 @@ app.engine(
       jsonPretty: (context: any) => JSON.stringify(context, null, 2),
       getTitle,
       toFormInputPartialName,
+      logoutUrl: (context: any) => `${config.kratos.browser}/self-service/browser/flows/logout`,
     },
   })
 )
@@ -76,6 +77,9 @@ if (process.env.NODE_ENV === 'only-ui') {
       errors: config.errors,
     })
   })
+  app.get('/settings', (_: Request, res: Response) => {
+    res.render('settings', stubs.settings)
+  })
   app.get('/error', (_: Request, res: Response) => res.render('error'))
 } else {
   app.get('/', protect, dashboard)
@@ -83,7 +87,7 @@ if (process.env.NODE_ENV === 'only-ui') {
   app.get('/auth/registration', authHandler('registration'))
   app.get('/auth/login', authHandler('login'))
   app.get('/error', errorHandler)
-  app.get('/profile', protect, profileHandler)
+  app.get('/settings', protect, settingsHandler)
   app.get('/verify', verifyHandler)
 }
 

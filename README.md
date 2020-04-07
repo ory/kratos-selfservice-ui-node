@@ -58,7 +58,6 @@ npm i
 
 This application can be configured using two environment variables:
 
-- `JWKS_URL` - The URL to be used to check if the signature of the incoming ID token is valid.
 - `KRATOS_ADMIN_URL`: The URL where ORY Kratos's Admin API is located at. If this app and ORY Kratos
     are running in the same private network, this should be the private network address (e.g. `kratos-admin.svc.cluster.local`).
 - `KRATOS_PUBLIC_URL`: The URL where ORY Kratos's Public API is located at. If this app and ORY Kratos
@@ -67,5 +66,16 @@ This application can be configured using two environment variables:
     This could be for example `http://kratos.my-app.com/`.
 - `BASE_URL`: The base url of this app. If served e.g. behind a proxy or via GitHub pages this would be the path, e.g.
     `/kratos-selfservice-ui-node/`
+
+### With Oathkeeper (JWT)
+
+- `JWKS_URL`: The URL to be used to check if the signature of the incoming ID token is valid.
+
+### Standalone (Cookie)
+
+- `SECURITY_MODE`: If this is set to `COOKIE`, then this app is used without Oathkeeper and rely on cookies (default value is `JWT`). In that case, the ExpressJS server proxies Kratos public API under `/self-service/`.
+
+### Front development
+
 - `NODE_ENV=only-ui`: If setting environment variable `NODE_ENV` to `only-ui`, then all dependencies on
     e.g. ORY Kratos will be disabled and only the UI will be shown. Useful for developing CSS or HTML.

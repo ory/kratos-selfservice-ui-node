@@ -1,12 +1,12 @@
 import cookieParser from 'cookie-parser'
-import express, {Request, NextFunction, Response} from 'express'
+import express, { Request, NextFunction, Response } from 'express'
 import handlebars from 'express-handlebars'
 import request from 'request'
-import {authHandler} from './routes/auth'
+import { authHandler } from './routes/auth'
 import errorHandler from './routes/error'
 import dashboard from './routes/dashboard'
 import debug from './routes/debug'
-import config, {SECURITY_MODE_JWT, SECURITY_MODE_STANDALONE} from './config'
+import config, { SECURITY_MODE_JWT, SECURITY_MODE_STANDALONE } from './config'
 import jwks from 'jwks-rsa'
 import jwt from 'express-jwt'
 import {
@@ -15,7 +15,7 @@ import {
   toFormInputPartialName,
 } from './translations'
 import * as stubs from './stub/payloads'
-import {FormField, PublicApi} from '@oryd/kratos-client'
+import { FormField, PublicApi } from '@oryd/kratos-client'
 import settingsHandler from './routes/settings'
 import verifyHandler from './routes/verify'
 import morgan from 'morgan'
@@ -37,8 +37,8 @@ const protectProxy = (req: Request, res: Response, next: NextFunction) => {
   // if the session is invalid.
   publicEndpoint
     .whoami(req as { headers: { [name: string]: string } })
-    .then(({body, response}) => {
-      (req as Request & { user: any }).user = {session: body}
+    .then(({ body, response }) => {
+      ;(req as Request & { user: any }).user = { session: body }
       next()
     })
     .catch(() => {
@@ -46,7 +46,8 @@ const protectProxy = (req: Request, res: Response, next: NextFunction) => {
     })
 }
 
-const protect = config.securityMode === SECURITY_MODE_JWT ? protectOathKeeper : protectProxy
+const protect =
+  config.securityMode === SECURITY_MODE_JWT ? protectOathKeeper : protectProxy
 
 const app = express()
 app.use(morgan('tiny'))
@@ -73,7 +74,8 @@ app.engine(
       jsonPretty: (context: any) => JSON.stringify(context, null, 2),
       getTitle,
       toFormInputPartialName,
-      logoutUrl: (context: any) => `${config.kratos.browser}/self-service/browser/flows/logout`,
+      logoutUrl: (context: any) =>
+        `${config.kratos.browser}/self-service/browser/flows/logout`,
     },
   })
 )
@@ -118,9 +120,9 @@ app.get('/debug', debug)
 if (config.securityMode === SECURITY_MODE_STANDALONE) {
   // If this security mode is enabled, we redirect all requests matching `/self-service` to ORY Kratos
   app.use('/.ory/kratos/public/', (req: Request, res: Response) => {
-    const url = config.kratos.public + req.url.replace('/.ory/kratos/public','')
-    req.pipe(request(url,
-      {followRedirect: false})).pipe(res)
+    const url =
+      config.kratos.public + req.url.replace('/.ory/kratos/public', '')
+    req.pipe(request(url, { followRedirect: false })).pipe(res)
   })
 }
 

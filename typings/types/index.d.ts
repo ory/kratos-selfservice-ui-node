@@ -1,1 +1,2 @@
-declare module 'types' {}
+declare module 'types' {
+}

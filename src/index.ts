@@ -1,12 +1,12 @@
 import cookieParser from 'cookie-parser'
-import express, { NextFunction, Request, Response } from 'express'
+import express, {Request, NextFunction, Response} from 'express'
 import handlebars from 'express-handlebars'
 import request from 'request'
-import { authHandler } from './routes/auth'
+import {authHandler} from './routes/auth'
 import errorHandler from './routes/error'
 import dashboard from './routes/dashboard'
 import debug from './routes/debug'
-import config from './config'
+import config, {SECURITY_MODE_JWT, SECURITY_MODE_STANDALONE} from './config'
 import jwks from 'jwks-rsa'
 import jwt from 'express-jwt'
 import {
@@ -15,7 +15,7 @@ import {
   toFormInputPartialName,
 } from './translations'
 import * as stubs from './stub/payloads'
-import { FormField, PublicApi } from '@oryd/kratos-client'
+import {FormField, PublicApi} from '@oryd/kratos-client'
 import settingsHandler from './routes/settings'
 import verifyHandler from './routes/verify'
 import morgan from 'morgan'
@@ -30,23 +30,23 @@ const protectOathKeeper = jwt({
   algorithms: ['RS256'],
 })
 
-
 const publicEndpoint = new PublicApi(config.kratos.public)
 const protectProxy = (req: Request, res: Response, next: NextFunction) => {
-  const session = req.cookies.ory_kratos_session
-  if (session) {
-    return publicEndpoint.whoami(req).then(({body, response}) => {
-      req.user = { session: body }
+  // When using ORY Oathkeeper, the redirection is done by ORY Oathkeeper.
+  // Since we're checking for the session ourselves here, we redirect here
+  // if the session is invalid.
+  publicEndpoint
+    .whoami(req as { headers: { [name: string]: string } })
+    .then(({body, response}) => {
+      (req as Request & { user: any }).user = {session: body}
       next()
-    }).catch(() => {
+    })
+    .catch(() => {
       res.redirect('/auth/login')
     })
-  }
-
-  res.redirect('/auth/login')
 }
 
-const protect = config.securityMode === 'JWT' ? protectOathKeeper : protectProxy
+const protect = config.securityMode === SECURITY_MODE_JWT ? protectOathKeeper : protectProxy
 
 const app = express()
 app.use(morgan('tiny'))
@@ -115,10 +115,12 @@ if (process.env.NODE_ENV === 'only-ui') {
 app.get('/health', (_: Request, res: Response) => res.send('ok'))
 app.get('/debug', debug)
 
-if (config.securityMode === 'COOKIE') { // ExpressJS proxies Kratos public API
-  app.use('/self-service', function(req: Request, res: Response) {
-    const url = config.kratos.public + '/self-service' + req.url
-    req.pipe(request(url, { followRedirect: false })).pipe(res)
+if (config.securityMode === SECURITY_MODE_STANDALONE) {
+  // If this security mode is enabled, we redirect all requests matching `/self-service` to ORY Kratos
+  app.use('/.ory/kratos/public/', (req: Request, res: Response) => {
+    const url = config.kratos.public + req.url.replace('/.ory/kratos/public','')
+    req.pipe(request(url,
+      {followRedirect: false})).pipe(res)
   })
 }
 

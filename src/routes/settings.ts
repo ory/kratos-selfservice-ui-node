@@ -15,7 +15,7 @@ const settingsHandler = (req: Request, res: Response, next: NextFunction) => {
   }
 
   commonApi
-    .getSelfServiceBrowsersettingsManagementRequest(request)
+    .getSelfServiceBrowserSettingsRequest(request)
     .then(({body, response}) => {
       if (response.statusCode == 404 || response.statusCode == 410 || response.statusCode == 403) {
         res.redirect(
@@ -29,7 +29,6 @@ const settingsHandler = (req: Request, res: Response, next: NextFunction) => {
       return Promise.resolve(body)
     })
     .then(request => {
-      console.log('request',{request})
       if (request) {
         res.render('settings', request)
         return

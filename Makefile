@@ -1,8 +1,9 @@
-.PHONY: all
 
+.PHONY: docker
 docker:
 		docker build -t oryd/kratos-selfservice-ui-node:latest .
 
+.PHONY: build-sdk
 build-sdk:
 		(cd $$KRATOS_DIR; make sdk)
 		cp $$KRATOS_DIR/.schema/api.swagger.json ./contrib/sdk/api.swagger.json
@@ -17,10 +18,12 @@ build-sdk:
 		rm -rf node_modules/@oryd/kratos-client/*
 		cp -r ./contrib/sdk/generated/* node_modules/@oryd/kratos-client
 
+.PHONY: build-sdk-docker
 build-sdk-docker:
 		build-sdk
 		docker build -t oryd/kratos-selfservice-ui-node:latest . --build-arg LINK=true
 
+.PHONY: clean-sdk
 clean-sdk:
 		rm -rf node_modules/@oryd/kratos-client/
 		npm i

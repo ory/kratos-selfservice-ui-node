@@ -19,8 +19,7 @@ build-sdk:
 		cp -r ./contrib/sdk/generated/* node_modules/@oryd/kratos-client
 
 .PHONY: build-sdk-docker
-build-sdk-docker:
-		build-sdk
+build-sdk-docker: build-sdk
 		docker build -t oryd/kratos-selfservice-ui-node:latest . --build-arg LINK=true
 
 .PHONY: clean-sdk

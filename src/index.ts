@@ -42,7 +42,7 @@ const protectProxy = (req: Request, res: Response, next: NextFunction) => {
       next()
     })
     .catch(() => {
-      res.redirect('/auth/login')
+      res.redirect(config.baseUrl + 'auth/login')
     })
 }
 
@@ -127,7 +127,7 @@ if (config.securityMode === SECURITY_MODE_STANDALONE) {
 }
 
 app.get('*', (_: Request, res: Response) => {
-  res.redirect('/')
+  res.redirect(config.baseUrl)
 })
 
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {

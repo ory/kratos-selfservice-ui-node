@@ -1,7 +1,7 @@
 export const SECURITY_MODE_STANDALONE = 'cookie'
 export const SECURITY_MODE_JWT = 'jwt'
 
-const baseUrl = (process.env.BASE_URL || '/').replace(/\/+$/, '') + '/'
+const baseUrl = (process.env.BASE_URL || '').replace(/\/+$/, '')
 
 let securityMode = SECURITY_MODE_JWT
 let browserUrl = process.env.KRATOS_BROWSER_URL || ''
@@ -10,7 +10,7 @@ switch ((process.env.SECURITY_MODE || '').toLowerCase()) {
   case 'cookie':
   case 'standalone':
     securityMode = SECURITY_MODE_STANDALONE
-    browserUrl = baseUrl + '.ory/kratos/public/'
+    browserUrl = baseUrl + '/.ory/kratos/public/'
     break
   case 'jwt':
   case 'oathkeeper':

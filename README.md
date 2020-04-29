@@ -28,7 +28,8 @@ This application can be configured using two environment variables:
   this app and ORY Kratos are running in the same private network, this should
   be the private network address (e.g. `kratos-public.svc.cluster.local`).
 - `BASE_URL` (optional): The base url of this app. If served e.g. behind a proxy or via
-  GitHub pages this would be the path, e.g. `/kratos-selfservice-ui-node/`
+  GitHub pages this would be the path, e.g. `https://mywebsite.com/kratos-selfservice-ui-node/`.
+  **Must be absolute!**
 
 ### Network Setup
 

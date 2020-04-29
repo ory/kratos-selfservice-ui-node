@@ -26,7 +26,7 @@ export default (req: Request, res: Response, next: NextFunction) => {
       }) => {
         if (response.statusCode == 404) {
           // The error could not be found, redirect back to home.
-          res.redirect(config.baseUrl )
+          res.redirect(config.baseUrl)
           return
         }
 

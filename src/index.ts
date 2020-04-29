@@ -1,12 +1,12 @@
 import cookieParser from 'cookie-parser'
-import express, { Request, NextFunction, Response } from 'express'
+import express, {Request, NextFunction, Response} from 'express'
 import handlebars from 'express-handlebars'
 import request from 'request'
-import { authHandler } from './routes/auth'
+import {authHandler} from './routes/auth'
 import errorHandler from './routes/error'
 import dashboard from './routes/dashboard'
 import debug from './routes/debug'
-import config, { SECURITY_MODE_JWT, SECURITY_MODE_STANDALONE } from './config'
+import config, {SECURITY_MODE_JWT, SECURITY_MODE_STANDALONE} from './config'
 import jwks from 'jwks-rsa'
 import jwt from 'express-jwt'
 import {
@@ -15,7 +15,7 @@ import {
   toFormInputPartialName,
 } from './translations'
 import * as stubs from './stub/payloads'
-import { FormField, PublicApi } from '@oryd/kratos-client'
+import {FormField, PublicApi} from '@oryd/kratos-client'
 import settingsHandler from './routes/settings'
 import verifyHandler from './routes/verify'
 import morgan from 'morgan'
@@ -37,12 +37,12 @@ const protectProxy = (req: Request, res: Response, next: NextFunction) => {
   // if the session is invalid.
   publicEndpoint
     .whoami(req as { headers: { [name: string]: string } })
-    .then(({ body, response }) => {
-      ;(req as Request & { user: any }).user = { session: body }
+    .then(({body, response}) => {
+      ;(req as Request & { user: any }).user = {session: body}
       next()
     })
     .catch(() => {
-      res.redirect(config.baseUrl + 'auth/login')
+      res.redirect(config.baseUrl + '/auth/login')
     })
 }
 
@@ -57,6 +57,7 @@ app.set('view engine', 'hbs')
 app.use((req: Request, res: Response, next: NextFunction) => {
   res.locals.projectName = config.projectName
   res.locals.baseUrl = config.baseUrl
+  res.locals.pathPrefix = config.baseUrl ? '' : '/'
   next()
 })
 app.use(express.static('public'))
@@ -122,7 +123,7 @@ if (config.securityMode === SECURITY_MODE_STANDALONE) {
   app.use('/.ory/kratos/public/', (req: Request, res: Response) => {
     const url =
       config.kratos.public + req.url.replace('/.ory/kratos/public', '')
-    req.pipe(request(url, { followRedirect: false })).pipe(res)
+    req.pipe(request(url, {followRedirect: false})).pipe(res)
   })
 }
 

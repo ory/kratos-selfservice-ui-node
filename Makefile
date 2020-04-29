@@ -1,3 +1,4 @@
+rand := $$RANDOM
 
 .PHONY: docker
 docker:
@@ -17,6 +18,14 @@ build-sdk:
 		(cd ./contrib/sdk/generated; npm i; npm run build)
 		rm -rf node_modules/@oryd/kratos-client/*
 		cp -r ./contrib/sdk/generated/* node_modules/@oryd/kratos-client
+
+.PHONY: publish-sdk
+publish-sdk: build-sdk
+		(cd ./contrib/sdk/generated/; \
+			npm --no-git-tag-version version v0.0.0-next.$(rand) && \
+			npm publish)
+		rm -rf node_modules/@oryd/kratos-client/*
+		npm i @oryd/kratos-client@0.0.0-next.$(rand)
 
 .PHONY: build-sdk-docker
 build-sdk-docker: build-sdk

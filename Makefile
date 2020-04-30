@@ -8,7 +8,7 @@ docker:
 build-sdk:
 		(cd $$KRATOS_DIR; make sdk)
 		cp $$KRATOS_DIR/.schema/api.swagger.json ./contrib/sdk/api.swagger.json
-		openapi-generator generate -i "./contrib/sdk/api.swagger.json" \
+		npx @openapitools/openapi-generator-cli generate -i "./contrib/sdk/api.swagger.json" \
 			-g typescript-node \
 			-o "./contrib/sdk/generated" \
 			--git-user-id ory \

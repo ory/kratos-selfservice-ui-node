@@ -1,4 +1,4 @@
-rand := $$RANDOM
+rand := $(shell openssl rand -hex 6)
 
 .PHONY: docker
 docker:

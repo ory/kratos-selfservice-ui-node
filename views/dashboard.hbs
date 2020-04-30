@@ -1,8 +1,8 @@
 <div class="content">
     {{> header}}
     <div class="container">
-        <h4 class="greeting">Welcome back, <span class="user-identifier">{{session.identity.traits.email}}</span>!</h4>
-        <h5>This example app is secure by default</h5>
+        <h2 class="greeting">Welcome back, <span class="user-identifier">{{session.identity.traits.email}}</span>!</h2>
+        <h3>This example app is secure by default</h3>
         <p>
             Hello, nice to have you! You signed up with this data:
         </p>
@@ -18,7 +18,7 @@
         </p>
         <pre><code>{{headers}}</code></pre>
 
-        <h2>Session without effort</h2>
+        <h3>Session without effort</h3>
         <p>
             The token in that HTTP Authorization Header is a <a href="https://jwt.io/" target="_blank">JSON Web
             Token</a>,

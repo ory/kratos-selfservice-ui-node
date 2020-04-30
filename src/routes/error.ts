@@ -10,7 +10,7 @@ export default (req: Request, res: Response, next: NextFunction) => {
 
   if (!error) {
     // No error was send, redirecting back to home.
-    res.redirect(`/`)
+    res.redirect(config.baseUrl)
     return
   }
 
@@ -26,7 +26,7 @@ export default (req: Request, res: Response, next: NextFunction) => {
       }) => {
         if (response.statusCode == 404) {
           // The error could not be found, redirect back to home.
-          res.redirect(`/`)
+          res.redirect(config.baseUrl)
           return
         }
 

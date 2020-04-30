@@ -1,13 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    {{#if baseUrl}}
+    <base href="{{baseUrl}}/"/>
+    {{/if}}
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css">
     <meta charset="utf-8">
     <title>{{projectName}}</title>
-    <link rel="stylesheet" href="{{baseUrl}}index.css">
-    <link rel="stylesheet" href="{{baseUrl}}typography.css">
-    <link rel="stylesheet" href="{{baseUrl}}form.css">
-    <link rel="stylesheet" href="{{baseUrl}}auth.css">
+    <link rel="stylesheet" href="{{pathPrefix}}index.css">
+    <link rel="stylesheet" href="{{pathPrefix}}typography.css">
+    <link rel="stylesheet" href="{{pathPrefix}}form.css">
+    <link rel="stylesheet" href="{{pathPrefix}}auth.css">
 </head>
 <body>
 

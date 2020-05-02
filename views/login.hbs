@@ -3,12 +3,17 @@
         {{> icon_logo}}
         <h5 class="subheading">Welcome to this example login screen!</h5>
 
-        {{> formErrors className="overview-form-errors"}}
+        {{#if password}}
+            <div id="login-password">
+                {{> form submitLabel="Sign in" form=password}}
+            </div>
+        {{/if}}
 
-        <form action="{{formAction}}" method="POST">
-            {{> formFields}}
-            <button type="submit">Sign In</button>
-        </form>
+        {{#if oidc}}
+            <div id="login-oidc">
+                {{> form form=oidc}}
+            </div>
+        {{/if}}
 
         <hr class="divider">
 

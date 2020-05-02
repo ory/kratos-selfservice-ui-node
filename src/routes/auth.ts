@@ -56,14 +56,9 @@ export const authHandler = (type: 'login' | 'registration') => (
         return
       }
 
-      const formFields = request.methods.password.config?.fields.sort(sortFormFields)
-      const action = request.methods.password.config?.action
-      const errors = request.methods.password.config?.errors
-
       res.render(type, {
-        formAction: action,
-        formFields,
-        errors,
+        password: request.methods.password.config,
+        oidc: request.methods.oidc.config,
       })
     })
     .catch(err => {

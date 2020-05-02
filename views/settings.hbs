@@ -7,31 +7,19 @@
             <p>Your changes have been saved!</p>
         {{/if}}
 
-        <div id="user-profile">
-            <h3>Profile</h3>
-            {{> formErrors className="overview-form-errors" errors=methods.profile.config.errors}}
+        {{#if profile}}
+            <div id="user-profile">
+                <h3>Profile</h3>
+                {{> form submitLabel="Save" form=profile}}
+            </div>
+        {{/if}}
 
-            <form action="{{methods.profile.config.action}}" method="{{methods.profile.config.method}}">
-                {{#each methods.profile.config.fields}}
-                    {{> (toFormInputPartialName type)}}
-                {{/each}}
-                <button type="submit">Save</button>
-            </form>
-        </div>
-
-        <hr width="100%"/>
-
-        <div id="user-password">
-            <h3>Password</h3>
-
-            {{> formErrors className="overview-form-errors" errors=methods.password.config.errors}}
-
-            <form action="{{methods.password.config.action}}" method="{{methods.password.config.method}}">
-                {{#each methods.password.config.fields}}
-                    {{> (toFormInputPartialName type)}}
-                {{/each}}
-                <button type="submit">Save</button>
-            </form>
-        </div>
+        {{#if password}}
+            <hr width="100%"/>
+            <div id="user-password">
+                <h3>Password</h3>
+                {{> form submitLabel="Save" form=password}}
+            </div>
+        {{/if}}
     </div>
 </div>

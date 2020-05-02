@@ -30,7 +30,11 @@ const settingsHandler = (req: Request, res: Response, next: NextFunction) => {
     })
     .then(request => {
       if (request) {
-        res.render('settings', request)
+        res.render('settings', {
+          password: request.methods.password.config,
+          profile: request.methods.profile.config,
+          updateSuccessful: request.updateSuccessful
+        })
         return
       }
 

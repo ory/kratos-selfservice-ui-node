@@ -56,10 +56,17 @@ export const authHandler = (type: 'login' | 'registration') => (
         return
       }
 
-      res.render(type, {
-        password: request.methods.password.config,
-        oidc: request.methods.oidc.config,
-      })
+      let password = request.methods.password.config
+      let oidc = request.methods.oidc.config
+      switch (request.active) {
+        case 'password':
+          oidc = undefined // if password is active hide this
+          break
+        case 'oidc':
+          password = undefined // if oidc is active hide this
+          break
+      }
+      res.render(type, {oidc, password})
     })
     .catch(err => {
       console.error(err)

@@ -39,6 +39,8 @@ const toFormInputPartialName = (type: string) => {
       return 'hiddenFormInput'
     case 'password':
       return 'passwordFormInput'
+    case 'submit':
+      return 'buttonFormInput'
     default:
       return 'genericFormInput'
   }

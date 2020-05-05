@@ -57,7 +57,14 @@ export const authHandler = (type: 'login' | 'registration') => (
       }
 
       let password = request.methods.password.config
-      let oidc = request.methods.oidc.config
+      let oidc = request.methods.oidc?.config
+
+      if (password && password.fields) {
+        // We want the form fields to be sorted so that the email address is first, the
+        // password second, and so on.
+        password.fields = password.fields.sort(sortFormFields)
+      }
+
       switch (request.active) {
         case 'password':
           oidc = undefined // if password is active hide this

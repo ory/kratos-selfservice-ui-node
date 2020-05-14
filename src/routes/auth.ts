@@ -56,24 +56,23 @@ export const authHandler = (type: 'login' | 'registration') => (
         return
       }
 
-      let password = request.methods.password.config
-      let oidc = request.methods.oidc?.config
-
-      if (password && password.fields) {
+      if (request.methods.password.config?.fields) {
         // We want the form fields to be sorted so that the email address is first, the
         // password second, and so on.
-        password.fields = password.fields.sort(sortFormFields)
+        request.methods.password.config.fields = request.methods.password.config.fields.sort(sortFormFields)
       }
 
-      switch (request.active) {
-        case 'password':
-          oidc = undefined // if password is active hide this
-          break
-        case 'oidc':
-          password = undefined // if oidc is active hide this
-          break
+      // This helper returns a request method config (e.g. for the password flow).
+      // If active is set and not the given request method key, it wil be omitted.
+      // This prevents the user from e.g. signing up with email but still seeing
+      // other sign up form elements when an input is incorrect.
+      const methodConfig = (key: string) => {
+        if (request?.active === key || !request?.active) {
+          return request?.methods[key]?.config
+        }
       }
-      res.render(type, {oidc, password})
+
+      res.render(type, {oidc:methodConfig("oidc"), password:methodConfig("password")})
     })
     .catch(err => {
       console.error(err)

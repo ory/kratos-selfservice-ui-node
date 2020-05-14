@@ -21,5 +21,13 @@
                 {{> form submitLabel="Save" form=password}}
             </div>
         {{/if}}
+
+        {{#if oidc}}
+            <hr width="100%"/>
+            <div id="user-oidc">
+                <h3>Social Sign In</h3>
+                {{> form submitLabel="Save" form=oidc}}
+            </div>
+        {{/if}}
     </div>
 </div>

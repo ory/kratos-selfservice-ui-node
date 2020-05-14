@@ -29,10 +29,13 @@ const settingsHandler = (req: Request, res: Response, next: NextFunction) => {
       return Promise.resolve(body)
     })
     .then(request => {
+      const methodConfig = (key: string) => request?.methods[key]?.config
+
       if (request) {
         res.render('settings', {
-          password: request.methods.password.config,
-          profile: request.methods.profile.config,
+          password: methodConfig("password"),
+          profile: methodConfig("profile"),
+          oidc: methodConfig("oidc"),
           updateSuccessful: request.updateSuccessful
         })
         return

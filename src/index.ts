@@ -71,6 +71,7 @@ app.engine(
     partialsDir: `${__dirname}/../views/partials/`,
     defaultLayout: 'main',
     helpers: {
+      ...require('handlebars-helpers')(),
       json: (context: any) => JSON.stringify(context),
       jsonPretty: (context: any) => JSON.stringify(context, null, 2),
       getTitle,

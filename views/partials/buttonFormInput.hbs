@@ -1,3 +1,11 @@
 <button name="{{name}}" type="{{type}}" value="{{value}}" {{#if disabled}}disabled{{/if}}>
-    Continue with {{value}}
+    {{#if (eq name 'provider')}}
+        Continue with {{value}}
+    {{else if (eq name 'link')}}
+        Link {{value}}
+    {{else if (eq name 'unlink')}}
+        Unlink {{value}}
+    {{else}}
+        {{value}}
+    {{/if}}
 </button>

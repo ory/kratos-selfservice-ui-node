@@ -5,9 +5,15 @@ WORKDIR /usr/src/app
 
 ARG LINK=no
 
-COPY . /usr/src/app
+COPY package.json .
+COPY package-lock.json .
+
 RUN npm ci
+
+COPY . /usr/src/app
+
 RUN if [ "$LINK" == "true" ] ; then cp -r ./contrib/sdk/generated/* node_modules/@oryd/kratos-client/; (cd node_modules/@oryd/kratos-client; rm -rf node_modules; npm run build) ; fi
+
 RUN npm run build
 
 ENTRYPOINT npm run serve

@@ -121,7 +121,7 @@ app.get('/debug', debug)
 
 if (config.securityMode === SECURITY_MODE_STANDALONE) {
   // If this security mode is enabled, we redirect all requests matching `/self-service` to ORY Kratos
-  app.use('/.ory/kratos/public/', (req: Request, res: Response) => {
+  app.use('/.ory/kratos/public/', (req: Request, res: Response, next: NextFunction) => {
     const url =
       config.kratos.public + req.url.replace('/.ory/kratos/public', '')
     req

@@ -127,7 +127,7 @@ if (config.securityMode === SECURITY_MODE_STANDALONE) {
     req
       .pipe(
         request(url, { followRedirect: false })
-          .on('error', err => console.error)
+          .on('error', next)
       )
       .pipe(res)
   })

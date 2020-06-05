@@ -36,13 +36,13 @@ const sortFormFields = (first: FormField, second: FormField) =>
 const toFormInputPartialName = (type: string) => {
   switch (type) {
     case 'hidden':
-      return 'hiddenFormInput'
+      return 'form_input_hidden'
     case 'password':
-      return 'passwordFormInput'
+      return 'form_input_password'
     case 'submit':
-      return 'buttonFormInput'
+      return 'form_field_button'
     default:
-      return 'genericFormInput'
+      return 'form_input_default'
   }
 }
 

@@ -1,6 +1,6 @@
-{{> formErrors className="overview-form-errors" errors=form.errors}}
+{{> form_messages className="overview-form-errors" errors=form.errors}}
 <form action="{{form.action}}" method="{{form.method}}">
-    {{> formFields fields=form.fields }}
+    {{> form_fields fields=form.fields }}
     {{#if submitLabel}}
         <button type="submit">{{submitLabel}}</button>
     {{/if}}

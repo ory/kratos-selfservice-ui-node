@@ -1,4 +1,4 @@
-{{> form_messages className="overview-form-errors" errors=form.errors}}
+{{> form_errors className="overview-form-errors" errors=form.errors}}
 <form action="{{form.action}}" method="{{form.method}}">
     {{> form_fields fields=form.fields }}
     {{#if submitLabel}}

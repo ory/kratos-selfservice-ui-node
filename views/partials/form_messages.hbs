@@ -1,5 +1,5 @@
-<div class="form-errors {{className}}">
-    {{~#each errors~}}
-        <div class="message">{{message}}</div>
+<div class="form-messages {{className}}">
+    {{~#each messages~}}
+        <div class="{{type}}">{{text}}</small></div>
     {{~/each~}}
 </div>

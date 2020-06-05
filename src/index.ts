@@ -18,6 +18,7 @@ import * as stubs from './stub/payloads'
 import { FormField, PublicApi } from '@oryd/kratos-client'
 import settingsHandler from './routes/settings'
 import verifyHandler from './routes/verification'
+import recoveryHandler from './routes/recovery'
 import morgan from 'morgan'
 
 const protectOathKeeper = jwt({
@@ -112,6 +113,7 @@ if (process.env.NODE_ENV === 'stub') {
   app.get('/error', errorHandler)
   app.get('/settings', protect, settingsHandler)
   app.get('/verify', verifyHandler)
+  app.get('/recovery', recoveryHandler)
 }
 
 app.get('/health', (_: Request, res: Response) => res.send('ok'))
@@ -119,16 +121,16 @@ app.get('/debug', debug)
 
 if (config.securityMode === SECURITY_MODE_STANDALONE) {
   // If this security mode is enabled, we redirect all requests matching `/self-service` to ORY Kratos
-  app.use('/.ory/kratos/public/', (req: Request, res: Response, next: NextFunction) => {
-    const url =
-      config.kratos.public + req.url.replace('/.ory/kratos/public', '')
-    req
-      .pipe(
-        request(url, { followRedirect: false })
-          .on('error', next)
-      )
-      .pipe(res)
-  })
+  app.use(
+    '/.ory/kratos/public/',
+    (req: Request, res: Response, next: NextFunction) => {
+      const url =
+        config.kratos.public + req.url.replace('/.ory/kratos/public', '')
+      req
+        .pipe(request(url, { followRedirect: false }).on('error', next))
+        .pipe(res)
+    }
+  )
 }
 
 app.get('*', (_: Request, res: Response) => {

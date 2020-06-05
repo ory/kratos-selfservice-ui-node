@@ -15,7 +15,7 @@
         {{/if}}
 
         {{#if password}}
-            <hr width="100%"/>
+            <hr />
             <div id="user-password">
                 <h3>Password</h3>
                 {{> form submitLabel="Save" form=password}}
@@ -23,7 +23,7 @@
         {{/if}}
 
         {{#if oidc}}
-            <hr width="100%"/>
+            <hr />
             <div id="user-oidc">
                 <h3>Social Sign In</h3>
                 {{> form form=oidc}}

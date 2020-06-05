@@ -2,7 +2,6 @@
     <label>
         <input name="{{name}}" type="{{type}}" value="{{value}}" placeholder="{{getTitle name}}" {{#if disabled}}disabled{{/if}}>
         <span>{{getTitle name}}</span>
-        {{> passwordInputToggle }}
     </label>
-    {{> formErrors className="input-form-errors"}}
+    {{> form_messages className="input-form-errors"}}
 </fieldset>

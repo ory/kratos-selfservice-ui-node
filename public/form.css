@@ -65,18 +65,17 @@ form label input {
     box-shadow: 0 0 8px rgba(255, 255, 255, 0.1);
 }
 
-fieldset .input-form-errors, .form-errors {
+fieldset .input-form-messages, .form-messages {
     font-size: 14px;
     margin-bottom: 24px;
     padding: 0 2px;
 }
 
-fieldset .input-form-errors .message, .form-errors .message {
+fieldset .input-form-messages .info,
+fieldset .input-form-messages .error,
+.form-messages .info,
+.form-messages .error {
     margin-bottom: 8px;
-}
-
-.global-form-errors {
-    margin: 0 8px;
 }
 
 form input::placeholder {
@@ -91,6 +90,7 @@ form input::placeholder {
     position: absolute;
     top: 0.2125rem;
     right: 1em;
+    height: 1em;
     width: 1em;
     cursor: pointer;
 }

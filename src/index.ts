@@ -17,7 +17,7 @@ import {
 import * as stubs from './stub/payloads'
 import { FormField, PublicApi } from '@oryd/kratos-client'
 import settingsHandler from './routes/settings'
-import verifyHandler from './routes/verify'
+import verifyHandler from './routes/verification'
 import morgan from 'morgan'
 
 const protectOathKeeper = jwt({
@@ -82,24 +82,22 @@ app.engine(
   })
 )
 
-if (process.env.NODE_ENV === 'only-ui') {
+if (process.env.NODE_ENV === 'stub') {
   // Setting NODE_ENV to "only-ui" disables all integration and only shows the UI. Useful
   // when working on CSS or HTML things.
   app.get('/', dashboard)
   app.get('/auth/registration', (_: Request, res: Response) => {
     const config = stubs.registration.methods.password.config
     res.render('registration', {
-      formAction: config.action,
-      formFields: (config.fields as Array<FormField>).sort(sortFormFields),
-      errors: config.errors,
+      password: stubs.registration.methods.password.config,
+      oidc: stubs.registration.methods.oidc.config,
     })
   })
   app.get('/auth/login', (_: Request, res: Response) => {
     const config = stubs.login.methods.password.config
     res.render('login', {
-      formAction: config.action,
-      formFields: (config.fields as Array<FormField>).sort(sortFormFields),
-      errors: config.errors,
+      password: stubs.login.methods.password.config,
+      oidc: stubs.login.methods.oidc.config,
     })
   })
   app.get('/settings', (_: Request, res: Response) => {

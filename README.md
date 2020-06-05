@@ -75,7 +75,7 @@ e.g. `https://my-oathkeeper-api/.well-known/jwks.json`.
 To run this app with dummy data and no real connection to ORY Kratos, use:
 
 ```shell script
-$ NODE_ENV=only-ui npm start
+$ NODE_ENV=stub npm start
 ```
 
 ### Test with ORY Kratos

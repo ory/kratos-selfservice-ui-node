@@ -3,6 +3,8 @@
         {{> icon_logo}}
         <h5 class="subheading">Welcome to this example login screen!</h5>
 
+        {{> messages messages=messages className="global"}}
+
         {{#if password}}
             <div id="login-password">
                 {{> form submitLabel="Sign in" form=password}}

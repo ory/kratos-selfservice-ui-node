@@ -33,6 +33,7 @@ const settingsHandler = (req: Request, res: Response, next: NextFunction) => {
 
       if (request) {
         res.render('settings', {
+          ...request,
           password: methodConfig("password"),
           profile: methodConfig("profile"),
           oidc: methodConfig("oidc"),

@@ -3,5 +3,5 @@
         <input name="{{name}}" type="{{type}}" value="{{value}}" placeholder="{{getTitle name}}" {{#if disabled}}disabled{{/if}}>
         <span>{{getTitle name}}</span>
     </label>
-    {{> form_errors className="input-form-errors"}}
+    {{> messages }}
 </fieldset>

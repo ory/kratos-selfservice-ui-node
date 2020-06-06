@@ -31,7 +31,9 @@ export default (req: Request, res: Response, next: NextFunction) => {
         return body
       }
     ).then((request: any) => {
-      res.render('verification', request.form)
+      res.render('verification', {
+        ...request
+      })
     }
   ).catch((err: any) => next(err))
 }

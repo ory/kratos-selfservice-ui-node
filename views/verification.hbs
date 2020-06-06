@@ -3,10 +3,10 @@
     <div class="container">
         <h4>Resend verification code</h4>
 
-        {{> form_errors errors=errors className="overview-form-errors"}}
+        {{> messages messages=messages className="global"}}
 
-        <form action="{{action}}" method="{{method}}">
-            {{#each fields}}
+        <form action="{{form.action}}" method="{{form.method}}">
+            {{#each form.fields}}
                 {{> (toFormInputPartialName type)}}
             {{/each}}
             <button type="submit">Resend verification code</button>

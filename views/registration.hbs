@@ -4,6 +4,8 @@
         <h5 class="subheading">Welcome to SecureApp! <br/>
             Use the form below to sign up:</h5>
 
+        {{> messages messages=messages className="global"}}
+
         {{#if password}}
             <div id="registration-password">
                 {{> form submitLabel="Sign up" form=password}}

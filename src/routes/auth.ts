@@ -72,7 +72,11 @@ export const authHandler = (type: 'login' | 'registration') => (
         }
       }
 
-      res.render(type, {oidc:methodConfig("oidc"), password:methodConfig("password")})
+      res.render(type, {
+        ...request,
+        oidc:methodConfig("oidc"),
+        password:methodConfig("password"),
+      })
     })
     .catch(err => {
       console.error(err)

@@ -37,7 +37,6 @@ const settingsHandler = (req: Request, res: Response, next: NextFunction) => {
           password: methodConfig("password"),
           profile: methodConfig("profile"),
           oidc: methodConfig("oidc"),
-          updateSuccessful: request.updateSuccessful
         })
         return
       }

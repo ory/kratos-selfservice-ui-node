@@ -1,0 +1,51 @@
+<div class="auth">
+    <div class="container">
+        {{> icon_logo}}
+        <h5 class="subheading">Welcome to the example consent page!</h5>
+        <form action="/consent" method="POST">
+            <p style="margin-bottom: 15px">Hi {{user}}, application <strong>{{client.client_name}}</strong> wants access resources on your behalf and to:</p>
+            {{#if challenge}}
+                <div style="margin-bottom: 8px">Hydra Challenge</div>
+                <label id="login-challenge">
+                    <input name="challenge" value={{challenge}}></input>
+                    {{!-- {{> form submitLabel="challenge" form=challenge}} --}}
+                </label>
+            {{/if}}
+
+            {{#if csrfToken}}
+                <div style="margin-bottom: 8px">CSRF Token</div>
+                <label id="login-csrfToken">
+                    <input name="_csrf" value={{csrfToken}}></input>
+                    {{!-- {{> form form=_csrfToken}} --}}
+                </label>
+            {{/if}}
+
+            <div style="margin-bottom: 15px; margin-top: 8px" >Scopes</div>
+            {{#each requested_scope as |scope|}}
+                <div style="margin-bottom: 5px">
+                    <input style="display: inline-block; margin-right: 3px" type="checkbox" id={{scope}} value={{scope}} name="grant_scope"></input>
+                    <div style="display: inline-block">{{scope}}</div>
+                </div>
+            {{/each}}
+            <ul>
+                {{#if client.policy_url}}
+                    <li id="login-csrfToken">
+                        <a href={{client.policy_url}}>Policy</a>
+                    </li>
+                {{/if}}
+                {{#if client.tos_uri}}
+                    <li id="login-csrfToken">
+                        <a href={{client.tos_uri}}>Teams of Service</a>
+                    </li>
+                {{/if}} 
+            </ul>
+            <div>
+                <input type="checkbox" id="remember" value="1" name="remember"></input>
+                <div style="display: inline-block; margin-right: 3px">Do not ask me again</div>
+            </div>
+
+            <Button type="submit" id="accept" name="submit" value="Allow access">Allow access</Button>
+            <Button style="margin-top: 15px" type="submit" id="accept" name="submit" value="Deny access">Deny access</Button>
+        </form>
+    </div>
+</div>

@@ -6,8 +6,28 @@
 
         {{> messages messages=messages className="global"}}
 
+        {{#if challenge}}
+            <form>
+                <div style="margin-bottom: 8px">Hydra Challenge</div>
+                <label id="login-challenge">
+                    <input name="challenge" value={{challenge}}></input>
+                </label>
+            </form>
+        {{/if}}
+
+        {{#if id}}
+            <form>
+                <div style="margin-bottom: 8px">Kratos Request Id</div>
+                <label id="login-request">
+                    <input name="id" value={{id}}></input>
+                </label>
+            </form>
+        {{/if}}
+        
+    
         {{#if password}}
             <div id="registration-password">
+                <div style="margin-bottom: 8px">Register</div>
                 {{> form submitLabel="Sign up" form=password}}
             </div>
         {{/if}}

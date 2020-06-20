@@ -3,8 +3,10 @@ import express, { Request, NextFunction, Response } from 'express'
 import handlebars from 'express-handlebars'
 import request from 'request'
 import { authHandler } from './routes/auth'
+import { getConsent, postConsent } from './routes/consent'
 import errorHandler from './routes/error'
 import dashboard from './routes/dashboard'
+import home from './routes/home'
 import debug from './routes/debug'
 import config, { SECURITY_MODE_JWT, SECURITY_MODE_STANDALONE } from './config'
 import jwks from 'jwks-rsa'
@@ -20,6 +22,7 @@ import settingsHandler from './routes/settings'
 import verifyHandler from './routes/verification'
 import recoveryHandler from './routes/recovery'
 import morgan from 'morgan'
+import bodyParser from 'body-parser'
 
 const protectOathKeeper = jwt({
   // Dynamically provide a signing key based on the kid in the header and the signing keys provided by the JWKS endpoint.
@@ -105,11 +108,23 @@ if (process.env.NODE_ENV === 'stub') {
     res.render('settings', stubs.settings)
   })
   app.get('/error', (_: Request, res: Response) => res.render('error'))
+  app.get('/consent', (_: Request, res: Response) => {
+    const config = stubs.registration.methods.password.config
+    res.render('consent', {
+      csrfToken: 'no CSRF!',
+      challenge: "challenge",
+      requested_scope: ["scope1", "scope2"],
+      user: "response.subject",
+      client: "response.client",
+    });
+  })
 } else {
-  app.get('/', protect, dashboard)
+  app.get('/', protect, home)
   app.get('/dashboard', protect, dashboard)
   app.get('/auth/registration', authHandler('registration'))
   app.get('/auth/login', authHandler('login'))
+  app.get('/consent', protect, getConsent, errorHandler)
+  app.post('/consent', protect, bodyParser.urlencoded({ extended: true }), postConsent)
   app.get('/error', errorHandler)
   app.get('/settings', protect, settingsHandler)
   app.get('/verify', verifyHandler)

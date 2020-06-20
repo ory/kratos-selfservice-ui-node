@@ -1,0 +1,115 @@
+version: '3.7'
+
+services:
+  # --------------------------------------------------------------------------------------------
+  postgresd:
+    image: postgres:9.6
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=pguser
+      - POSTGRES_PASSWORD=secret
+      - POSTGRES_MULTIPLE_DATABASES=kratos,hydra
+    volumes:
+      - ./pg-init:/docker-entrypoint-initdb.d
+    networks:
+      - intranet
+  # --------------------------------------------------------------------------------------------
+  hydra-migrate:
+    image: oryd/hydra:1.4.8
+    depends_on:
+      - postgresd
+    environment:
+      - DSN=postgres://pguser:secret@postgresd:5432/hydra?sslmode=disable
+    command:
+      migrate sql -e --yes
+    restart: on-failure
+    networks:
+      - intranet
+  # --------------------------------------------------------------------------------------------
+  hydra:
+    image: oryd/hydra:1.4.8
+    depends_on:
+      - hydra-migrate
+    ports:
+      - "4444:4444" # Public port
+      - "4445:4445" # Admin port
+      - "5555:5555" # Port for hydra token user
+    command:
+      serve all --dangerous-force-http
+    restart: on-failure # TODO figure out why we need this (incorporate health check into hydra migrate command?)
+    environment:
+      - LOG_LEAK_SENSITIVE_VALUES=true
+      - URLS_SELF_ISSUER=http://localhost:4444
+      - URLS_SELF_PUBLIC=http://localhost:4444
+      - URLS_CONSENT=http://localhost:3000/consent
+      - URLS_LOGIN=http://localhost:3000/auth/login
+      - URLS_LOGOUT=http://localhost:3000/logout
+      - SECRETS_SYSTEM=youReallyNeedToChangeThis
+      - OIDC_SUBJECT_IDENTIFIERS_SUPPORTED_TYPES=public,pairwise
+      - OIDC_SUBJECT_IDENTIFIERS_PAIRWISE_SALT=youReallyNeedToChangeThis
+      - DSN=postgres://pguser:secret@postgresd:5432/hydra?sslmode=disable
+    networks:
+      - intranet
+  # --------------------------------------------------------------------------------------------
+  kratos-migrate:
+    image: oryd/kratos:latest
+    depends_on:
+      - postgresd
+    environment:
+      - DSN=postgres://pguser:secret@postgresd:5432/kratos?sslmode=disable
+    volumes:
+      -
+        type: bind
+        source: ./config/kratos/email-password
+        target: /etc/config/kratos
+    command:
+      -c /etc/config/kratos/.kratos.yml migrate sql -e --yes
+    restart: on-failure
+    networks:
+      - intranet
+  # --------------------------------------------------------------------------------------------
+  kratos:
+    image: oryd/kratos:latest
+    depends_on:
+      - kratos-migrate
+    ports:
+      - "4433:4433" # public
+      - "4434:4434" # admin
+    environment:
+      - DSN=postgres://pguser:secret@postgresd:5432/kratos?sslmode=disable
+    command:
+      serve -c /etc/config/kratos/.kratos.yml --dev
+    volumes:
+      -
+        type: bind
+        source: ./config/kratos/email-password
+        target: /etc/config/kratos
+    restart: unless-stopped
+    networks:
+      - intranet
+  # --------------------------------------------------------------------------------------------
+  login-ui:
+    image: oryd/kratos-hydra-ui-node:latest
+    environment:
+      - HYDRA_ADMIN_URL=http://hydra:4445
+      - KRATOS_PUBLIC_URL=http://kratos:4433/
+      - KRATOS_ADMIN_URL=http://kratos:4434/
+      - SECURITY_MODE=standalone
+      - PORT=3000
+    ports:
+      - "3000:3000"
+    networks:
+      - intranet
+    restart: on-failure
+  # --------------------------------------------------------------------------------------------
+  mailslurper:
+    image: oryd/mailslurper:latest-smtps
+    ports:
+      - "4436:4436"
+      - "4437:4437"
+    networks:
+      - intranet
+  # --------------------------------------------------------------------------------------------
+networks:
+  intranet:

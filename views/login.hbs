@@ -5,25 +5,6 @@
 
         {{> messages messages=messages className="global"}}
         
-        {{#if challenge}}
-            <form>
-                <div style="margin-bottom: 8px">Hydra Challenge</div>
-                <label id="login-challenge">
-                    <input name="challenge" value={{challenge}}></input>
-                </label>
-            </form>
-        {{/if}}
-
-        {{#if id}}
-            <form>
-                <div style="margin-bottom: 8px">Kratos Request Id</div>
-                <label id="login-request">
-                    <input name="id" value={{id}}></input>
-                </label>
-            </form>
-        {{/if}}
-        
-        
         {{#if password}}
             <div id="login-password">
                 <div style="margin-bottom: 8px">Login</div>
@@ -41,7 +22,7 @@
 
         <div class="alternative-actions">
             <!-- <a href="auth/registration">Recover password</a> -->
-            <a href="{{pathPrefix}}auth/registration?login_challenge={{challenge}}">Register new account</a>
+            <a href="{{pathPrefix}}auth/registration">Register new account</a>
         </div>
     </div>
 </div>

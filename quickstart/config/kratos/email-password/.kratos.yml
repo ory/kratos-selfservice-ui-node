@@ -12,10 +12,10 @@ selfservice:
             hook: verify
 
   verify:
-    return_to: http://localhost:3000/
+    return_to: http://127.0.0.1:3000/
 
   logout:
-    redirect_to: http://localhost:3000/auth/login
+    redirect_to: http://127.0.0.1:3000/auth/login
 
   login:
     request_lifespan: 10m
@@ -38,21 +38,22 @@ secrets:
     - PLEASE-CHANGE-ME-I-AM-VERY-INSECURE
 
 urls:
-  login_ui: http://localhost:3000/auth/login
-  registration_ui: http://localhost:3000/auth/registration
-  error_ui: http://localhost:3000/error
-  settings_ui: http://localhost:3000/settings
-  verify_ui: http://localhost:3000/verify
+  login_ui: http://127.0.0.1:3000/auth/login
+  registration_ui: http://127.0.0.1:3000/auth/registration
+  error_ui: http://127.0.0.1:3000/error
+  settings_ui: http://127.0.0.1:3000/settings
+  verify_ui: http://127.0.0.1:3000/verify
 
   # These are undefined because not available in this demo
-  mfa_ui: http://localhost:3000/
+  mfa_ui: http://127.0.0.1:3000/
 
   self:
-    public: http://localhost:3000/.ory/kratos/public/
+    public: http://127.0.0.1:3000/.ory/kratos/public/
     admin: http://kratos:4434/
-  default_return_to: http://localhost:3000/
+  default_return_to: http://127.0.0.1:3000/
   whitelisted_return_to_urls:
-    - http://localhost:3000/
+    - http://127.0.0.1:3000/
+    - http://127.0.0.1:3000/auth/hydra/login
 
 hashers:
   argon2:

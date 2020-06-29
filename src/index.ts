@@ -3,6 +3,7 @@ import express, { Request, NextFunction, Response } from 'express'
 import handlebars from 'express-handlebars'
 import request from 'request'
 import { authHandler } from './routes/auth'
+import hydraauth from './routes/hydraauth'
 import { getConsent, postConsent } from './routes/consent'
 import errorHandler from './routes/error'
 import dashboard from './routes/dashboard'
@@ -123,6 +124,7 @@ if (process.env.NODE_ENV === 'stub') {
   app.get('/dashboard', protect, dashboard)
   app.get('/auth/registration', authHandler('registration'))
   app.get('/auth/login', authHandler('login'))
+  app.get('/auth/hydra/login', hydraauth)
   app.get('/consent', protect, getConsent, errorHandler)
   app.post('/consent', protect, bodyParser.urlencoded({ extended: true }), postConsent)
   app.get('/error', errorHandler)

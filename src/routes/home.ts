@@ -1,4 +1,4 @@
-import { Request, Response } from 'express'
+import { Request, Response, NextFunction } from 'express'
 import config from './../config'
 import hydra from './../services/hydra.js'
 import jd from 'jwt-decode'
@@ -6,7 +6,7 @@ import url from 'url';
 
 type UserRequest = Request & { user: any }
 
-const authInfo = (req: UserRequest) => {
+export const authInfo = (req: UserRequest) => {
   if (config.securityMode === 'JWT') {
     const bearer = req.header('authorization')
     if (bearer) {
@@ -40,38 +40,12 @@ const authInfo = (req: UserRequest) => {
   }
 }
 
-export default (req: Request, res: Response) => {
+export default (req: Request, res: Response, next: NextFunction) => {
   // The challenge is used to fetch information about the login request from ORY Hydra.
-  console.log("HOME PAGE")
+  console.log("    --> HOME PAGE (/)")
   const query = url.parse(req.url, true).query;
-  // TODO FIGURE OUT HOW TO DO LOGIN AND REGISTRATION PAGES WITHOUT COOKIE FOR KEEPING THE CHALLENGE
-  let challenge = query.login_challenge || req.cookies.login_challenge;
-  res.cookie("login_challenge", challenge);
-  console.log(challenge);
 
   const ai = authInfo(req as UserRequest)
 
-  hydra.acceptLoginRequest(challenge, {
-    // Subject is an alias for user ID. A subject can be a random string, a UUID, an email address, ....
-    subject: ai.claims.session.identity.traits.email,
-
-    // This tells hydra to remember the browser and automatically authenticate the user in future requests. This will
-    // set the "skip" parameter in the other route to true on subsequent requests!
-    remember: true,
-
-    // When the session expires, in seconds. Set this to 0 so it will never expire.
-    remember_for: 3600,
-
-    // Sets which "level" (e.g. 2-factor authentication) of authentication the user has. The value is really arbitrary
-    // and optional. In the context of OpenID Connect, a value of 0 indicates the lowest authorization level.
-    // acr: '0',
-  })
-  .then(function (response:any) {
-    // All we need to do now is to redirect the user back to hydra!
-    res.redirect(response.redirect_to);
-  })
-  // This will handle any error that happens when making HTTP calls to hydra
-  .catch(function (error:any) {
-    console.log(error);
-  });
+  res.redirect(`/dashboard`)
 }

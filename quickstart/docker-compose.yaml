@@ -40,11 +40,11 @@ services:
     restart: on-failure # TODO figure out why we need this (incorporate health check into hydra migrate command?)
     environment:
       - LOG_LEAK_SENSITIVE_VALUES=true
-      - URLS_SELF_ISSUER=http://localhost:4444
-      - URLS_SELF_PUBLIC=http://localhost:4444
-      - URLS_CONSENT=http://localhost:3000/consent
-      - URLS_LOGIN=http://localhost:3000/auth/login
-      - URLS_LOGOUT=http://localhost:3000/logout
+      - URLS_SELF_ISSUER=http://127.0.0.1:4444
+      - URLS_SELF_PUBLIC=http://127.0.0.1:4444
+      - URLS_CONSENT=http://127.0.0.1:3000/consent
+      - URLS_LOGIN=http://127.0.0.1:3000/auth/hydra/login
+      - URLS_LOGOUT=http://127.0.0.1:3000/logout
       - SECRETS_SYSTEM=youReallyNeedToChangeThis
       - OIDC_SUBJECT_IDENTIFIERS_SUPPORTED_TYPES=public,pairwise
       - OIDC_SUBJECT_IDENTIFIERS_PAIRWISE_SALT=youReallyNeedToChangeThis

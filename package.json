@@ -34,7 +34,7 @@
     "cookie-parser": "^1.4.5",
     "express": "^4.17.1",
     "express-handlebars": "^3.1.0",
-    "express-jwt": "^5.3.1",
+    "express-jwt": "^6.0.0",
     "handlebars-helpers": "^0.10.0",
     "jwks-rsa": "^1.6.2",
     "jwt-decode": "^2.2.0",

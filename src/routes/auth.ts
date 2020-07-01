@@ -25,7 +25,7 @@ export const authHandler = (type: 'login' | 'registration') => (
   // The request is used to identify the login and registration request and
   // return data like the csrf_token and so on.
   if (!request) {
-    console.log('    --> No request found in URL, initializing auth flow.')
+    console.log('No request found in URL, initializing auth flow.')
     res.redirect(`${config.kratos.browser}/self-service/browser/flows/${type}`)
     return
   }
@@ -73,7 +73,6 @@ export const authHandler = (type: 'login' | 'registration') => (
         }
       }
 
-      console.log(request);
       res.render(type, {
         ...request,
         oidc:methodConfig("oidc"),

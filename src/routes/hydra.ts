@@ -24,9 +24,9 @@ export default (
   res: Response,
   next: NextFunction
 ) => {
-  console.log("    --> hitting (auth/hydra/login ...")
+  console.log("hitting (auth/hydra/login ...")
   const ai = authInfo(req as UserRequest)
-  console.log("    --> authInfo "+JSON.stringify(ai))
+  console.log("authInfo "+JSON.stringify(ai))
   // The request is used to identify the login and registration request in ORY Kratos and return data like the csrf_token and so on.
   const request = req.query.request
   const currentLocation = `${req.protocol}://${req.headers.host}${req.url}`;
@@ -35,7 +35,7 @@ export default (
   // TODO FIGURE OUT HOW TO DO LOGIN AND REGISTRATION PAGES WITHOUT COOKIE FOR KEEPING THE CHALLENGE
   let challenge = query.login_challenge || req.cookies.login_challenge;
   if (challenge != null && challenge != "undefined") {
-    console.log("    --> Writing the login_challenge cookie from hydra: " + challenge);
+    console.log("Writing the login_challenge cookie from hydra: " + challenge);
     res.cookie("login_challenge", challenge);
   } else {
     console.log("challenge exists: "+challenge)
@@ -62,7 +62,7 @@ export default (
       // The challenge is used to fetch information about the login request from ORY Hydra.
       // Means we have just been redirected from Hydra, and are on the login page
       // We must check the hydra session to see if we can skip login
-      console.log("    --> Checking Hydra Sessions");
+      console.log("Checking Hydra Sessions");
       // 2. Call Hydra and check the session of this user
 
       return hydraAdminEndpoint.getLoginRequest(challenge)
@@ -118,7 +118,7 @@ export default (
           }
         })
         .catch((err:any) => {
-          console.log("    --> Something went wrong with validating hydra's challenge getting the LohginRequest:"+challenge)
+          console.log("Something went wrong with validating hydra's challenge getting the LohginRequest:"+challenge)
           console.log(err)
           res.status(500).send('Something went wrong with your challenge!');
           next()

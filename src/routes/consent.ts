@@ -68,9 +68,8 @@ export const postConsent = (
   ) => {
   // The challenge is now a hidden input field, so let's take it from the request body instead
   var challenge = req.body.challenge;
-
   // Let's see if the user decided to accept or reject the consent request..
-  if (req.body.submit === 'Deny access') {
+  if (req.body.submit != 'Allow access') {
     // Looks like the consent request was denied by the user
     return hydra.rejectConsentRequest(challenge, {
       error: 'access_denied',

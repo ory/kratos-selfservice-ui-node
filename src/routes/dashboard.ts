@@ -1,7 +1,6 @@
 import { Request, Response } from 'express'
 import config from '../config'
 import jd from 'jwt-decode'
-import url from 'url';
 
 type UserRequest = Request & { user: any }
 

@@ -43,7 +43,7 @@ export default (req: Request, res: Response, next: NextFunction) => {
 
       res.render('recovery', {
         ...request,
-        token: methodConfig('token')
+        token: methodConfig('recovery_token')
       })
     }
   ).catch((err: any) => next(err))

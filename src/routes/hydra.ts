@@ -12,7 +12,7 @@ import {AdminApi as HydraAdminApi, AcceptLoginRequest} from '@oryd/hydra-client'
 import {IncomingMessage} from 'http'
 import url from 'url';
 import jd from 'jwt-decode';
-import {authInfo} from './home'
+import {authInfo} from './dashboard'
 
 const hydraAdminEndpoint = new HydraAdminApi(process.env.HYDRA_ADMIN_URL)
 const kratosPublicEndpoint = new PublicApi(config.kratos.public)

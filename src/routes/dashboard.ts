@@ -5,7 +5,7 @@ import url from 'url';
 
 type UserRequest = Request & { user: any }
 
-const authInfo = (req: UserRequest) => {
+export const authInfo = (req: UserRequest) => {
   if (config.securityMode === 'JWT') {
     const bearer = req.header('authorization')
     if (bearer) {

@@ -7,7 +7,6 @@ import hydraauth from './routes/hydra'
 import { getConsent, postConsent } from './routes/consent'
 import errorHandler from './routes/error'
 import dashboard from './routes/dashboard'
-import home from './routes/home'
 import debug from './routes/debug'
 import config, { SECURITY_MODE_JWT, SECURITY_MODE_STANDALONE } from './config'
 import jwks from 'jwks-rsa'
@@ -120,8 +119,7 @@ if (process.env.NODE_ENV === 'stub') {
     });
   })
 } else {
-  app.get('/', protect, home)
-  app.get('/dashboard', protect, dashboard)
+  app.get('/', protect, dashboard)
   app.get('/auth/registration', authHandler('registration'))
   app.get('/auth/login', authHandler('login'))
   app.get('/auth/hydra/login', hydraauth)

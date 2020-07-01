@@ -1,5 +1,4 @@
 import {NextFunction, Request, Response} from 'express'
-import hydra from './../services/hydra.js';
 import config from '../config'
 import {sortFormFields} from '../translations'
 import {
@@ -9,16 +8,14 @@ import {
   LoginRequest,
   RegistrationRequest,
 } from '@oryd/kratos-client'
+import {AdminApi as HydraAdminApi, AcceptLoginRequest} from '@oryd/hydra-client'
 import {IncomingMessage} from 'http'
 import url from 'url';
 import jd from 'jwt-decode';
 import {authInfo} from './home'
-import {protect} from '../index'
 
-// A simple express handler that shows the login / registration screen.
-// Argument "type" can either be "login" or "registration" and will
-// fetch the form data from ORY Kratos's Public API.
-const adminEndpoint = new AdminApi(config.kratos.admin)
+const hydraAdminEndpoint = new HydraAdminApi(process.env.HYDRA_ADMIN_URL)
+const kratosPublicEndpoint = new PublicApi(config.kratos.public)
 
 type UserRequest = Request & { user: any }
 
@@ -58,10 +55,8 @@ export default (
     }
     if (!challenge) {
       console.log("No request but also no challenge, Invalid request!");
-      res.status(500).send('No request but also no challenge, Invalid request! This endpoint should get redirected from hydra. Don\'t use it directly!');
       next()
       return
-
     } else {
       // 1. Parse Hydra challenge from query params
       // The challenge is used to fetch information about the login request from ORY Hydra.
@@ -69,56 +64,57 @@ export default (
       // We must check the hydra session to see if we can skip login
       console.log("    --> Checking Hydra Sessions");
       // 2. Call Hydra and check the session of this user
-      return hydra.getLoginRequest(challenge)
-        .then((hydraResponse: any) => {
+
+      return hydraAdminEndpoint.getLoginRequest(challenge)
+        .then(({ response, body }) => {
           // If hydra was already able to authenticate the user, skip will be true and we do not need to re-authenticate
           // the user.
-          if (hydraResponse.skip) {
+          if (body.skip) {
             // You can apply logic here, for example update the number of times the user logged in...
             // Now it's time to grant the login request. You could also deny the request if something went terribly wrong
             // (e.g. your arch-enemy logging in...)
-            return hydra.acceptLoginRequest(challenge, {
+            let acceptLoginRequest = new AcceptLoginRequest()
+
+            acceptLoginRequest.subject = body.subject
+            console.log("    -> acceptLoginRequest: "+acceptLoginRequest)
+            return hydraAdminEndpoint.acceptLoginRequest(challenge, acceptLoginRequest
               // All we need to do is to confirm that we indeed want to log in the user.
-              subject: hydraResponse.subject
-            }).then((hydraResponse: any) => {
+              
+            ).then((hydraResponse: any) => {
               // All we need to do now is to redirect the user back to hydra!
               res.redirect(hydraResponse.redirect_to)
             });
           } else if (kratos_session){
             // Figuring out the user
-            const publicEndpoint = new PublicApi(config.kratos.public)
-            publicEndpoint
+            kratosPublicEndpoint
               // We need to know who the user is for hydra
               .whoami(req as { headers: { [name: string]: string } })
               .then( ({ body, response }) => {
-                console.log("We authenticated the user, Accept the LoginRequest and tell Hydra");
-                return hydra.acceptLoginRequest(challenge, {
+                // User is authenticated, accept the LoginRequest and tell Hydra
+                let acceptLoginRequest = new AcceptLoginRequest()
+                acceptLoginRequest.subject = body.identity.id
+                return hydraAdminEndpoint.acceptLoginRequest(challenge, {
                   // All we need to do is to confirm that we indeed want to log in the user.
                   subject: body.identity.id
                 }).then((hydraResponse: any) => {
                   // All we need to do now is to redirect the user back to hydra!
-                  res.redirect(hydraResponse.redirect_to)
+                  res.redirect(hydraResponse.body.redirectTo)
                 })                
                 .catch((err:any) => {
-                  console.log("    --> Something went wrong with validating the session:"+kratos_session)
+                  // Something went wrong with validating the whoami answer
                   console.log(err)
-                  res.status(500).send('Something went wrong with your session!');
-                  next()
-                  return
+                  next(err)
                 });
               })
               .catch((err:any) => {
-                console.log("    -->  Something went wrong with validating the session:"+kratos_session)
+                // Something went wrong with the whoami call
                 console.log(err)
-                res.status(500).send('Something went wrong with your session!');
-                next()
-                return
+                next(err)
               });
           } else {
-            console.log("    --> No request, challenge existing but also not authenticated. Unknown state!")
-            res.status(500).send('No request, challenge existing but also not authenticated. Unknown state!');
+            // No request, challenge existing but also not authenticated. Unknown state!
+            console.log("No request, challenge existing but also not authenticated. Unknown state!")
             next()
-            return
           }
         })
         .catch((err:any) => {
@@ -126,13 +122,7 @@ export default (
           console.log(err)
           res.status(500).send('Something went wrong with your challenge!');
           next()
-          return
         });
     }
   }
-
-  console.log("    -->  Something very weird happened")
-  res.status(500).send('Something went wrong!');
-  next()
-  return
 }

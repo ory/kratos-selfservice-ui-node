@@ -1,6 +1,5 @@
 import { Request, Response } from 'express'
 import config from '../config'
-import hydra from './../services/hydra.js';
 import jd from 'jwt-decode'
 import url from 'url';
 

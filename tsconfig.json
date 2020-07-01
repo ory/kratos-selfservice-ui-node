@@ -1,7 +1,5 @@
 {
   "compilerOptions": {
-    "allowJs": true,
-    "declaration": false,
     "resolveJsonModule": true,
     "target": "es5",
     "module": "commonjs",

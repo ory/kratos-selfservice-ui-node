@@ -1,18 +1,8 @@
 import {NextFunction, Request, Response} from 'express'
 import config from '../config'
-import {sortFormFields} from '../translations'
-import {
-  AdminApi,
-  PublicApi,
-  FormField,
-  LoginRequest,
-  RegistrationRequest,
-} from '@oryd/kratos-client'
+import {PublicApi} from '@oryd/kratos-client'
 import {AdminApi as HydraAdminApi, AcceptLoginRequest} from '@oryd/hydra-client'
-import {IncomingMessage} from 'http'
 import url from 'url';
-import jd from 'jwt-decode';
-import {authInfo} from './dashboard'
 
 const hydraAdminEndpoint = new HydraAdminApi(process.env.HYDRA_ADMIN_URL)
 const kratosPublicEndpoint = new PublicApi(config.kratos.public)
@@ -24,9 +14,6 @@ export default (
   res: Response,
   next: NextFunction
 ) => {
-  console.log("hitting (auth/hydra/login ...")
-  const ai = authInfo(req as UserRequest)
-  console.log("authInfo "+JSON.stringify(ai))
   // The request is used to identify the login and registration request in ORY Kratos and return data like the csrf_token and so on.
   const request = req.query.request
   const currentLocation = `${req.protocol}://${req.headers.host}${req.url}`;
@@ -76,7 +63,7 @@ export default (
             let acceptLoginRequest = new AcceptLoginRequest()
 
             acceptLoginRequest.subject = body.subject
-            console.log("    -> acceptLoginRequest: "+acceptLoginRequest)
+            console.log("acceptLoginRequest "+acceptLoginRequest)
             return hydraAdminEndpoint.acceptLoginRequest(challenge, acceptLoginRequest
               // All we need to do is to confirm that we indeed want to log in the user.
               
@@ -112,15 +99,14 @@ export default (
                 next(err)
               });
           } else {
-            // No request, challenge existing but also not authenticated. Unknown state!
-            console.log("No request, challenge existing but also not authenticated. Unknown state!")
+            console.log("Request and challenge are bot set but user is not authenticated. Unknown state!")
+            res.status(400).send('Request and challenge are bot set but user is not authenticated. Please try again!');
             next()
           }
         })
         .catch((err:any) => {
-          console.log("Something went wrong with validating hydra's challenge getting the LohginRequest:"+challenge)
+          // Something went wrong with validating hydra's challenge getting the LoginRequest
           console.log(err)
-          res.status(500).send('Something went wrong with your challenge!');
           next()
         });
     }

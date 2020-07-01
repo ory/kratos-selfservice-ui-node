@@ -1,6 +1,9 @@
 import { NextFunction, Request, Response } from 'express'
-import hydra from './../services/hydra.js';
+import {AdminApi as HydraAdminApi, AcceptConsentRequest, RejectRequest} from '@oryd/hydra-client'
 import url from 'url';
+import { rejectConsentRequest } from '../services/hydra';
+
+const hydraAdminEndpoint = new HydraAdminApi(process.env.HYDRA_ADMIN_URL)
 
 export const getConsent = (
     req: Request,
@@ -12,34 +15,32 @@ export const getConsent = (
   // The challenge is used to fetch information about the consent request from ORY Hydra.
   var challenge = query.consent_challenge;
 
-  hydra.getConsentRequest(challenge)
-  // This will be called if the HTTP request was successful
+  hydraAdminEndpoint.getConsentRequest(String(challenge))
+    // This will be called if the HTTP request was successful
     .then(function (response:any) {
       // If a user has granted this application the requested scope, hydra will tell us to not show the UI.
       if (response.skip) {
         // You can apply logic here, for example grant another scope, or do whatever...
 
         // Now it's time to grant the consent request. You could also deny the request if something went terribly wrong
-        return hydra.acceptConsentRequest(challenge, {
-          // We can grant all scopes that have been requested - hydra already checked for us that no additional scopes
+        const acceptConsentRequest = new AcceptConsentRequest()
+        // We can grant all scopes that have been requested - hydra already checked for us that no additional scopes
           // are requested accidentally.
-          grant_scope: response.requested_scope,
+        acceptConsentRequest.grantScope = response.requested_scope
+        // ORY Hydra checks if requested audiences are allowed by the client, so we can simply echo this.
+        acceptConsentRequest.grantAccessTokenAudience = response.requested_access_token_audience
+        // The session allows us to set session data for id and access tokens
+        // acceptConsentRequest.session = {
+          // This data will be available when introspectin+ the token. Try to avoid sensitive information here,
+          // unless you limit who can introspect tokens.
+          // access_token: { foo: 'bar' },
 
-          // ORY Hydra checks if requested audiences are allowed by the client, so we can simply echo this.
-          grant_access_token_audience: response.requested_access_token_audience,
-
-          // The session allows us to set session data for id and access tokens
-          session: {
-            // This data will be available when introspecting the token. Try to avoid sensitive information here,
-            // unless you limit who can introspect tokens.
-            // access_token: { foo: 'bar' },
-
-            // This data will be available in the ID token.
-            // id_token: { baz: 'bar' },
-          }
-        }).then(function (response:any) {
+          // This data will be available in the ID token.
+          // id_token: { baz: 'bar' },
+        //}
+        return hydraAdminEndpoint.acceptConsentRequest(String(challenge), acceptConsentRequest).then(function (response:any) {
           // All we need to do now is to redirect the user back to hydra!
-          res.redirect(response.redirect_to);
+          res.redirect(response.body.redirectTo);
         });
       }
 
@@ -71,13 +72,14 @@ export const postConsent = (
   // Let's see if the user decided to accept or reject the consent request..
   if (req.body.submit != 'Allow access') {
     // Looks like the consent request was denied by the user
-    return hydra.rejectConsentRequest(challenge, {
-      error: 'access_denied',
-      error_description: 'The resource owner denied the request'
-    })
+    const rejectConsentRequest = new RejectRequest()
+    rejectConsentRequest.error = 'access_denied'
+    rejectConsentRequest.errorDescription = 'The resource owner denied the request'
+    
+    return hydraAdminEndpoint.rejectConsentRequest( challenge, rejectConsentRequest)
       .then(function (response:any) {
         // All we need to do now is to redirect the browser back to hydra!
-        res.redirect(response.redirect_to);
+        res.redirect(response.body.redirectTo);
       })
       // This will handle any error that happens when making HTTP calls to hydra
       .catch(function (error:any) {
@@ -91,37 +93,34 @@ export const postConsent = (
   }
 
   // Seems like the user authenticated! Let's tell hydra...
-  hydra.getConsentRequest(challenge)
+  hydraAdminEndpoint.getConsentRequest(challenge)
   // This will be called if the HTTP request was successful
     .then(function (response:any) {
-      return hydra.acceptConsentRequest(challenge, {
-        // We can grant all scopes that have been requested - hydra already checked for us that no additional scopes
-        // are requested accidentally.
-        grant_scope: grant_scope,
+      const acceptConsentRequest = new AcceptConsentRequest()
+      // We can grant all scopes that have been requested - hydra already checked for us that no additional scopes
+      // are requested accidentally.
+      acceptConsentRequest.grantScope = grant_scope
+      // ORY Hydra checks if requested audiences are allowed by the client, so we can simply echo this.
+      acceptConsentRequest.grantAccessTokenAudience = response.requested_access_token_audience
+      // This tells hydra to remember this consent request and allow the same client to request the same
+      // scopes from the same user, without showing the UI, in the future.
+      acceptConsentRequest.remember = Boolean(req.body.remember),
+      // When this "remember" sesion expires, in seconds. Set this to 0 so it will never expire.
+      acceptConsentRequest.rememberFor = 3600
+      // The session allows us to set session data for id and access tokens
+      // acceptConsentRequest.session = {
+        // This data will be available when introspecting the token. Try to avoid sensitive information here,
+        // unless you limit who can introspect tokens.
+        // access_token: { foo: 'bar' },
 
-        // The session allows us to set session data for id and access tokens
-        session: {
-          // This data will be available when introspecting the token. Try to avoid sensitive information here,
-          // unless you limit who can introspect tokens.
-          // access_token: { foo: 'bar' },
+        // This data will be available in the ID token.
+        // id_token: { baz: 'bar' },
+      //}
 
-          // This data will be available in the ID token.
-          // id_token: { baz: 'bar' },
-        },
-
-        // ORY Hydra checks if requested audiences are allowed by the client, so we can simply echo this.
-        grant_access_token_audience: response.requested_access_token_audience,
-
-        // This tells hydra to remember this consent request and allow the same client to request the same
-        // scopes from the same user, without showing the UI, in the future.
-        remember: Boolean(req.body.remember),
-
-        // When this "remember" sesion expires, in seconds. Set this to 0 so it will never expire.
-        remember_for: 3600,
-      })
+      return hydraAdminEndpoint.acceptConsentRequest(challenge, acceptConsentRequest)
         .then(function (response:any) {
           // All we need to do now is to redirect the user back to hydra!
-          res.redirect(response.redirect_to);
+          res.redirect(response.body.redirectTo);
         })
     })
     // This will handle any error that happens when making HTTP calls to hydra

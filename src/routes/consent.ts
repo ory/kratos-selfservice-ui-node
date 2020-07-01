@@ -1,7 +1,6 @@
 import { NextFunction, Request, Response } from 'express'
 import {AdminApi as HydraAdminApi, AcceptConsentRequest, RejectRequest} from '@oryd/hydra-client'
 import url from 'url';
-import { rejectConsentRequest } from '../services/hydra';
 
 const hydraAdminEndpoint = new HydraAdminApi(process.env.HYDRA_ADMIN_URL)
 

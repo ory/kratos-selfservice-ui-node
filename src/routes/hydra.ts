@@ -62,7 +62,7 @@ export default (
             // (e.g. your arch-enemy logging in...)
             let acceptLoginRequest = new AcceptLoginRequest()
 
-            acceptLoginRequest.subject = body.subject
+            acceptLoginRequest.subject = String(body.subject)
             console.log("acceptLoginRequest "+acceptLoginRequest)
             return hydraAdminEndpoint.acceptLoginRequest(challenge, acceptLoginRequest
               // All we need to do is to confirm that we indeed want to log in the user.

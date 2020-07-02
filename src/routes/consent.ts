@@ -45,8 +45,7 @@ export const getConsent = (
 
       // If consent can't be skipped we MUST show the consent UI.
       res.render('consent', {
-        // csrfToken: req.csrfToken() ? req.csrfToken() : 'none',
-        // csrfToken: TODO CSRF? 'no CSRF!',
+        csrfToken: req.csrfToken(),
         challenge: challenge,
         // We have a bunch of data available from the response, check out the API docs to find what these values mean
         // and what additional data you have available.

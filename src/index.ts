@@ -23,6 +23,9 @@ import verifyHandler from './routes/verification'
 import recoveryHandler from './routes/recovery'
 import morgan from 'morgan'
 import bodyParser from 'body-parser'
+import csrf from 'csurf'
+
+const csrfProtection = csrf({cookie: true})
 
 const protectOathKeeper = jwt({
   // Dynamically provide a signing key based on the kid in the header and the signing keys provided by the JWKS endpoint.
@@ -123,8 +126,8 @@ if (process.env.NODE_ENV === 'stub') {
   app.get('/auth/registration', authHandler('registration'))
   app.get('/auth/login', authHandler('login'))
   app.get('/auth/hydra/login', hydraauth)
-  app.get('/consent', protect, getConsent, errorHandler)
-  app.post('/consent', protect, bodyParser.urlencoded({ extended: true }), postConsent)
+  app.get('/consent', protect, csrfProtection, getConsent, errorHandler)
+  app.post('/consent', protect, bodyParser.urlencoded({ extended: true }), csrfProtection, postConsent)
   app.get('/error', errorHandler)
   app.get('/settings', protect, settingsHandler)
   app.get('/verify', verifyHandler)

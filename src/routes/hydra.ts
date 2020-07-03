@@ -79,11 +79,10 @@ export default (
               .then( ({ body, response }) => {
                 // User is authenticated, accept the LoginRequest and tell Hydra
                 let acceptLoginRequest = new AcceptLoginRequest()
-                acceptLoginRequest.subject = body.identity.id
-                return hydraAdminEndpoint.acceptLoginRequest(challenge, {
-                  // All we need to do is to confirm that we indeed want to log in the user.
-                  subject: body.identity.id
-                }).then((hydraResponse: any) => {
+                //acceptLoginRequest.subject = body.identity.id
+                acceptLoginRequest.subject = body.identity.traits.email
+                return hydraAdminEndpoint.acceptLoginRequest(challenge, acceptLoginRequest
+                ).then((hydraResponse: any) => {
                   // All we need to do now is to redirect the user back to hydra!
                   res.redirect(hydraResponse.body.redirectTo)
                 })                

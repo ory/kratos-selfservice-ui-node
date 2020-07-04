@@ -6,7 +6,7 @@ const commonApi = new CommonApi(config.kratos.admin)
 
 const settingsHandler = (req: Request, res: Response, next: NextFunction) => {
   const request = req.query.request
-  // The request is used to identify the login and registraion request and
+  // The request is used to identify the account settings request and
   // return data like the csrf_token and so on.
   if (!request) {
     console.log('No request found in URL, initializing flow.')

@@ -8,7 +8,7 @@ const commonApi = new CommonApi(config.kratos.admin)
 export default (req: Request, res: Response, next: NextFunction) => {
   const request = req.query.request
 
-  // The request is used to identify the login and registration request and
+  // The request is used to identify the account recovery request and
   // return data like the csrf_token and so on.
   if (!request) {
     console.log('No request found in URL, initializing recovery flow.')

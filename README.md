@@ -2,7 +2,7 @@
 
 [![CircleCI](https://circleci.com/gh/ory/kratos-selfservice-ui-node.svg?style=badge)](https://circleci.com/gh/ory/kratos-selfservice-ui-node)
 
-This is an exemplary Self Service UI for ORY Kratos's Self Service features:
+This is an exemplary Self Service UI for [ORY Kratos](https://github.com/ory/kratos) Self Service features:
 
 - Registration
 - Login
@@ -41,10 +41,10 @@ This application works in two set ups:
 #### Standalone using cookies
 
 This mode adds a route to the app which proxies all traffic flowing to `/.ory/kratos/public/*`
-to ORY Krato's Public API. That way, this app an ORY Kratos share the same domain
+to ORY Kratos' Public API. That way, this app and ORY Kratos share the same domain
 and port which makes cookies work.
 
-To authenticate incoming requests, this app uses ORY Krato's `whoami` API to check
+To authenticate incoming requests, this app uses ORY Kratos' `whoami` API to check
 whether the session is valid or not.
 
 To enable this mode, set the environment variable `SECURITY_MODE=cookie`.
@@ -66,7 +66,7 @@ these two environment variables must be set:
 used to verify the JSON Web Tokens. When using ORY Oathkeeper, you should
 point this URL to ORY Oathkeeper's JWKS API (the API port, not the proxy port!),
 e.g. `https://my-oathkeeper-api/.well-known/jwks.json`.
-- `KRATOS_BROWSER_URL`: The URL where ORY Kratos's public API is located at,
+- `KRATOS_BROWSER_URL`: The URL where ORY Kratos's public API is located,
   when accessible from the public internet via ORY Oathkeeper. This could be for example
   `http://kratos.my-app.com/`.
 
@@ -91,7 +91,7 @@ export KRATOS_PUBLIC_URL=http://127.0.0.1:4433/
 export KRATOS_ADMIN_URL=http://127.0.0.1:4434/
 export PORT=4455
 
-# In ORY Kratos, run the quickstart:
+# In ORY Kratos run the quickstart:
 #
 #   make quickstart-dev
 # 

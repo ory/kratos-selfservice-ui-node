@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from 'express'
 import {AdminApi as HydraAdminApi, AcceptConsentRequest, RejectRequest} from '@oryd/hydra-client'
 import url from 'url';
+import {logger} from '../config'
 
 const hydraAdminEndpoint = new HydraAdminApi(process.env.HYDRA_ADMIN_URL)
 
@@ -37,6 +38,7 @@ export const getConsent = (
           // This data will be available in the ID token.
           // id_token: { baz: 'bar' },
         //}
+        logger.info('Accepting ConsentReuqest')
         return hydraAdminEndpoint.acceptConsentRequest(String(challenge), acceptConsentRequest).then(function (response:any) {
           // All we need to do now is to redirect the user back to hydra!
           res.redirect(response.body.redirectTo);
@@ -56,6 +58,7 @@ export const getConsent = (
     })
     // This will handle any error that happens when making HTTP calls to hydra
     .catch(function (error:any) {
+      logger.error(error)
       next(error);
     });
 };
@@ -81,6 +84,7 @@ export const postConsent = (
       })
       // This will handle any error that happens when making HTTP calls to hydra
       .catch(function (error:any) {
+        logger.error(error)
         next(error);
       });
   }
@@ -123,6 +127,7 @@ export const postConsent = (
     })
     // This will handle any error that happens when making HTTP calls to hydra
     .catch(function (error:any) {
+      logger.error(error)
       next(error);
     });
 };

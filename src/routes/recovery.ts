@@ -1,5 +1,5 @@
 import {NextFunction, Request, Response} from 'express'
-import config from '../config'
+import config, {logger} from '../config'
 import {CommonApi} from '@oryd/kratos-client'
 import {IncomingMessage} from 'http'
 
@@ -11,7 +11,7 @@ export default (req: Request, res: Response, next: NextFunction) => {
   // The request is used to identify the login and registration request and
   // return data like the csrf_token and so on.
   if (!request) {
-    console.log('No request found in URL, initializing recovery flow.')
+    logger.info('No request found in URL, initializing recovery flow.')
     res.redirect(`${config.kratos.browser}/self-service/browser/flows/recovery`)
     return
   }

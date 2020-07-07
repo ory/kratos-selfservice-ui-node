@@ -8,7 +8,7 @@ import { getConsent, postConsent } from './routes/consent'
 import errorHandler from './routes/error'
 import dashboard from './routes/dashboard'
 import debug from './routes/debug'
-import config, { SECURITY_MODE_JWT, SECURITY_MODE_STANDALONE } from './config'
+import config, { SECURITY_MODE_JWT, SECURITY_MODE_STANDALONE, logger } from './config'
 import jwks from 'jwks-rsa'
 import jwt from 'express-jwt'
 import {
@@ -24,6 +24,7 @@ import recoveryHandler from './routes/recovery'
 import morgan from 'morgan'
 import bodyParser from 'body-parser'
 import csrf from 'csurf'
+import winston from 'winston'
 
 const csrfProtection = csrf({cookie: true})
 
@@ -165,5 +166,7 @@ app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
 const port = Number(process.env.PORT) || 3000
 app.listen(port, () => {
   console.log(`Listening on http://0.0.0.0:${port}`)
+  logger.info(`Listening on http://0.0.0.0:${port}`)
   console.log(`Security mode: ${config.securityMode}`)
+  logger.info(`Security mode: ${config.securityMode}`)
 })

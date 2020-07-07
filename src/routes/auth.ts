@@ -1,5 +1,5 @@
 import {NextFunction, Request, Response} from 'express'
-import config from '../config'
+import config, {logger} from '../config'
 import {sortFormFields} from '../translations'
 import {
   AdminApi,
@@ -25,7 +25,7 @@ export const authHandler = (type: 'login' | 'registration') => (
   // The request is used to identify the login and registration request and
   // return data like the csrf_token and so on.
   if (!request) {
-    console.log('No request found in URL, initializing auth flow.')
+    logger.info('No request found in URL, initializing auth flow.')
     res.redirect(`${config.kratos.browser}/self-service/browser/flows/${type}`)
     return
   }
@@ -41,6 +41,7 @@ export const authHandler = (type: 'login' | 'registration') => (
   authRequest
     .then(({body, response}) => {
       if (response.statusCode == 404 || response.statusCode == 410 || response.statusCode == 403) {
+        logger.warn(`redirecting to /self-service/browser/flows/${type} due to statusCode ${response.statusCode}`)
         res.redirect(
           `${config.kratos.browser}/self-service/browser/flows/${type}`
         )

@@ -1,5 +1,5 @@
 import {NextFunction, Request, Response} from 'express'
-import config from '../config'
+import config, { logger } from '../config'
 import {CommonApi} from '@oryd/kratos-client'
 
 const commonApi = new CommonApi(config.kratos.admin)
@@ -9,7 +9,7 @@ const settingsHandler = (req: Request, res: Response, next: NextFunction) => {
   // The request is used to identify the login and registraion request and
   // return data like the csrf_token and so on.
   if (!request) {
-    console.log('No request found in URL, initializing flow.')
+    logger.info('No request found in URL, initializing settings flow.')
     res.redirect(`${config.kratos.browser}/self-service/browser/flows/settings`)
     return
   }

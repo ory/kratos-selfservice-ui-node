@@ -1,3 +1,17 @@
+import winston from `winston`
+
+// Replace this with how you think logging should look like
+export const logger = winston.createLogger({
+  format: winston.format.combine(
+    winston.format.colorize(),
+    winston.format.simple()
+  ),
+  transports: [
+    new winston.transports.Console(),
+    //new winston.transports.File({ filename: 'combined.log' })
+  ]
+});
+
 export const SECURITY_MODE_STANDALONE = 'cookie'
 export const SECURITY_MODE_JWT = 'jwt'
 

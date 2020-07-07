@@ -1,6 +1,6 @@
 import {NextFunction, Request, Response} from 'express'
-import config from '../config'
-import {PublicApi} from '@oryd/kratos-client'
+import config, {logger} from '../config'
+import {PublicApi, Session} from '@oryd/kratos-client'
 import {AdminApi as HydraAdminApi, AcceptLoginRequest} from '@oryd/hydra-client'
 import url from 'url';
 
@@ -19,13 +19,13 @@ export default (
   const currentLocation = `${req.protocol}://${req.headers.host}${req.url}`;
 
   const query = url.parse(req.url, true).query;
-  // TODO FIGURE OUT HOW TO DO LOGIN AND REGISTRATION PAGES WITHOUT COOKIE FOR KEEPING THE CHALLENGE
+  
   let challenge = query.login_challenge || req.cookies.login_challenge;
   if (challenge != null && challenge != "undefined") {
-    console.log("Writing the login_challenge cookie from hydra: " + challenge);
-    res.cookie("login_challenge", challenge);
+    logger.debug("Writing the login_challenge cookie from hydra: " + challenge);
+    logger.debug("login_challenge", challenge);
   } else {
-    console.log("challenge exists: "+challenge)
+    logger.debug("challenge exists: "+challenge)
   } 
   // ToDo Need to check more specific here!
   const kratos_session = req.cookies.ory_kratos_session
@@ -35,13 +35,13 @@ export default (
       // 3. Initiate login flow with Kratos
       // prompt=login forces a new login from kratos regardless of browser sessions - this is important because we are letting Hydra handle sessions
       // redirect_to ensures that when we redirect back to this url, we will have both the initial hydra challenge and the kratos request id in query params
-      console.log("    --> no request, not authenticated. Redirecting to kratos");
+      logger.info("no request, not authenticated. Redirecting to kratos");
       let return_to_address = encodeURI(currentLocation);
       res.redirect(`${config.kratos.browser}/self-service/browser/flows/login?prompt=login&return_to=${return_to_address}`);
       return
     }
     if (!challenge) {
-      console.log("No request but also no challenge, Invalid request!");
+      logger.error("No request, no challenge, Invalid request!");
       next()
       return
     } else {
@@ -49,7 +49,6 @@ export default (
       // The challenge is used to fetch information about the login request from ORY Hydra.
       // Means we have just been redirected from Hydra, and are on the login page
       // We must check the hydra session to see if we can skip login
-      console.log("Checking Hydra Sessions");
       // 2. Call Hydra and check the session of this user
 
       return hydraAdminEndpoint.getLoginRequest(challenge)
@@ -63,7 +62,7 @@ export default (
             let acceptLoginRequest = new AcceptLoginRequest()
 
             acceptLoginRequest.subject = String(body.subject)
-            console.log("acceptLoginRequest "+acceptLoginRequest)
+            logger.info("acceptLoginRequest "+acceptLoginRequest)
             return hydraAdminEndpoint.acceptLoginRequest(challenge, acceptLoginRequest
               // All we need to do is to confirm that we indeed want to log in the user.
               
@@ -76,36 +75,33 @@ export default (
             kratosPublicEndpoint
               // We need to know who the user is for hydra
               .whoami(req as { headers: { [name: string]: string } })
-              .then( ({ body, response }) => {
+              .then( ({body, response} ) => {
                 // User is authenticated, accept the LoginRequest and tell Hydra
-                let acceptLoginRequest = new AcceptLoginRequest()
+                let acceptLoginRequest : AcceptLoginRequest = new AcceptLoginRequest()
+                // We should probably use "id" here but the gitlab-scenario only works via "email"
                 //acceptLoginRequest.subject = body.identity.id
-                acceptLoginRequest.subject = body.identity.traits.email
+                acceptLoginRequest.subject = (body.identity.traits as { email: string }).email || "fallback@mail.com"
+                
                 return hydraAdminEndpoint.acceptLoginRequest(challenge, acceptLoginRequest
                 ).then((hydraResponse: any) => {
                   // All we need to do now is to redirect the user back to hydra!
                   res.redirect(hydraResponse.body.redirectTo)
-                })                
-                .catch((err:any) => {
-                  // Something went wrong with validating the whoami answer
-                  console.log(err)
-                  next(err)
-                });
+                })
               })
               .catch((err:any) => {
                 // Something went wrong with the whoami call
-                console.log(err)
+                logger.error(err)
                 next(err)
               });
           } else {
-            console.log("Request and challenge are bot set but user is not authenticated. Unknown state!")
+            logger.error("Request and challenge are both set but user is not authenticated. Unknown state!")
             res.status(400).send('Request and challenge are bot set but user is not authenticated. Please try again!');
             next()
           }
         })
         .catch((err:any) => {
           // Something went wrong with validating hydra's challenge getting the LoginRequest
-          console.log(err)
+          logger.error(err)
           next()
         });
     }

@@ -41,7 +41,7 @@ export const authHandler = (type: 'login' | 'registration') => (
   authRequest
     .then(({body, response}) => {
       if (response.statusCode == 404 || response.statusCode == 410 || response.statusCode == 403) {
-        logger.warn(`redirecting to /self-service/browser/flows/${type} due to statusCode ${response.statusCode}`)
+        logger.warn(`Redirecting to /self-service/browser/flows/${type} due to statusCode ${response.statusCode}`)
         res.redirect(
           `${config.kratos.browser}/self-service/browser/flows/${type}`
         )

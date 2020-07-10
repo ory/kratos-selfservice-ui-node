@@ -6,10 +6,8 @@ export const logger = winston.createLogger({
     winston.format.colorize(),
     winston.format.simple()
   ),
-  transports: [
-    new winston.transports.Console(),
-  ]
-});
+  transports: [new winston.transports.Console()],
+})
 
 export const SECURITY_MODE_STANDALONE = 'cookie'
 export const SECURITY_MODE_JWT = 'jwt'

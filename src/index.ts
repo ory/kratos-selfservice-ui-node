@@ -8,7 +8,11 @@ import { getConsent, postConsent } from './routes/consent'
 import errorHandler from './routes/error'
 import dashboard from './routes/dashboard'
 import debug from './routes/debug'
-import config, { SECURITY_MODE_JWT, SECURITY_MODE_STANDALONE, logger } from './config'
+import config, {
+  SECURITY_MODE_JWT,
+  SECURITY_MODE_STANDALONE,
+  logger,
+} from './config'
 import jwks from 'jwks-rsa'
 import jwt from 'express-jwt'
 import {
@@ -26,7 +30,7 @@ import bodyParser from 'body-parser'
 import csrf from 'csurf'
 import winston from 'winston'
 
-const csrfProtection = csrf({cookie: true})
+const csrfProtection = csrf({ cookie: true })
 
 const protectOathKeeper = jwt({
   // Dynamically provide a signing key based on the kid in the header and the signing keys provided by the JWKS endpoint.
@@ -115,11 +119,11 @@ if (process.env.NODE_ENV === 'stub') {
   app.get('/consent', (_: Request, res: Response) => {
     res.render('consent', {
       csrfToken: 'no CSRF!',
-      challenge: "challenge",
-      requested_scope: ["scope1", "scope2"],
-      user: "response.subject",
-      client: "response.client",
-    });
+      challenge: 'challenge',
+      requested_scope: ['scope1', 'scope2'],
+      user: 'response.subject',
+      client: 'response.client',
+    })
   })
 } else {
   app.get('/', protect, dashboard)
@@ -127,7 +131,13 @@ if (process.env.NODE_ENV === 'stub') {
   app.get('/auth/login', authHandler('login'))
   app.get('/auth/hydra/login', hydraHandler)
   app.get('/consent', protect, csrfProtection, getConsent, errorHandler)
-  app.post('/consent', protect, bodyParser.urlencoded({ extended: true }), csrfProtection, postConsent)
+  app.post(
+    '/consent',
+    protect,
+    bodyParser.urlencoded({ extended: true }),
+    csrfProtection,
+    postConsent
+  )
   app.get('/error', errorHandler)
   app.get('/settings', protect, settingsHandler)
   app.get('/verify', verifyHandler)

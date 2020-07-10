@@ -126,7 +126,7 @@ if (process.env.NODE_ENV === 'stub') {
   app.get('/', protect, dashboard)
   app.get('/auth/registration', authHandler('registration'))
   app.get('/auth/login', authHandler('login'))
-  app.get('/auth/hydra/login', hydraauth)
+  app.get('/auth/hydra/login', hydraHandler)
   app.get('/consent', protect, csrfProtection, getConsent, errorHandler)
   app.post('/consent', protect, bodyParser.urlencoded({ extended: true }), csrfProtection, postConsent)
   app.get('/error', errorHandler)

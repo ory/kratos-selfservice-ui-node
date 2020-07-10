@@ -1,11 +1,12 @@
 import {NextFunction, Request, Response} from 'express'
 import config, {logger} from '../config'
-import {PublicApi, Session} from '@oryd/kratos-client'
+import {PublicApi, AdminApi as KratosAdminApi, Session} from '@oryd/kratos-client'
 import {AdminApi as HydraAdminApi, AcceptLoginRequest} from '@oryd/hydra-client'
 import url from 'url';
 
 const hydraAdminEndpoint = new HydraAdminApi(process.env.HYDRA_ADMIN_URL)
 const kratosPublicEndpoint = new PublicApi(config.kratos.public)
+const kratosAdminEndpoint = new KratosAdminApi(config.kratos.admin)
 
 type UserRequest = Request & { user: any }
 
@@ -76,17 +77,28 @@ export default (
               // We need to know who the user is for hydra
               .whoami(req as { headers: { [name: string]: string } })
               .then( ({body, response} ) => {
-                // User is authenticated, accept the LoginRequest and tell Hydra
-                let acceptLoginRequest : AcceptLoginRequest = new AcceptLoginRequest()
-                // We should probably use "id" here but the gitlab-scenario only works via "email"
-                //acceptLoginRequest.subject = body.identity.id
-                acceptLoginRequest.subject = (body.identity.traits as { email: string }).email || "fallback@mail.com"
-                
-                return hydraAdminEndpoint.acceptLoginRequest(challenge, acceptLoginRequest
-                ).then((hydraResponse: any) => {
-                  // All we need to do now is to redirect the user back to hydra!
-                  res.redirect(hydraResponse.body.redirectTo)
-                })
+                // We need to get the email of the user. We don't want to do that via traits as
+                // they are dynamic. They would be part of the PublicAPI. That's not true
+                // for identity.addresses So let's get it via the AdmninAPI
+                const subject = body.identity.id
+                const blub = kratosAdminEndpoint
+                  .getIdentity(body.identity.id) 
+                  .then( ({response}) => {
+                    // User is authenticated, accept the LoginRequest and tell Hydra
+                    let acceptLoginRequest : AcceptLoginRequest = new AcceptLoginRequest()
+                    // We should probably use "id" here but the gitlab-scenario only works via "email"
+                    acceptLoginRequest.subject = subject
+                    acceptLoginRequest.context = (response as any).body
+   
+                    //acceptLoginRequest.subject = (body.identity.traits as { email: string }).email || "fallback@mail.com"
+                    
+                    return hydraAdminEndpoint.acceptLoginRequest(challenge, acceptLoginRequest
+                    ).then((hydraResponse: any) => {
+                      // All we need to do now is to redirect the user back to hydra!
+                      res.redirect(hydraResponse.body.redirectTo)
+                    })
+                  })
+
               })
               .catch((err:any) => {
                 // Something went wrong with the whoami call

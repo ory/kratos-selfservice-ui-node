@@ -113,7 +113,6 @@ if (process.env.NODE_ENV === 'stub') {
   })
   app.get('/error', (_: Request, res: Response) => res.render('error'))
   app.get('/consent', (_: Request, res: Response) => {
-    const config = stubs.registration.methods.password.config
     res.render('consent', {
       csrfToken: 'no CSRF!',
       challenge: "challenge",

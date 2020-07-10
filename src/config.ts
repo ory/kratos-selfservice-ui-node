@@ -43,4 +43,6 @@ export default {
   projectName: process.env.PROJECT_NAME || 'SecureApp',
 
   securityMode,
+  SECURITY_MODE_JWT,
+  SECURITY_MODE_STANDALONE,
 }

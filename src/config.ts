@@ -1,4 +1,4 @@
-import winston from `winston`
+import winston from 'winston'
 
 // Replace this with how you think logging should look like
 export const logger = winston.createLogger({

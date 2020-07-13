@@ -28,7 +28,6 @@ import recoveryHandler from './routes/recovery'
 import morgan from 'morgan'
 import bodyParser from 'body-parser'
 import csrf from 'csurf'
-import winston from 'winston'
 
 const csrfProtection = csrf({ cookie: true })
 

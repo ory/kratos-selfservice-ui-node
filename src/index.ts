@@ -3,8 +3,7 @@ import express, { Request, NextFunction, Response } from 'express'
 import handlebars from 'express-handlebars'
 import request from 'request'
 import { authHandler } from './routes/auth'
-import hydraHandler from './routes/hydra'
-import { getConsent, postConsent } from './routes/consent'
+import hydraHandler, { getConsent, postConsent } from './routes/hydra'
 import errorHandler from './routes/error'
 import dashboard from './routes/dashboard'
 import debug from './routes/debug'
@@ -15,13 +14,9 @@ import config, {
 } from './config'
 import jwks from 'jwks-rsa'
 import jwt from 'express-jwt'
-import {
-  getTitle,
-  sortFormFields,
-  toFormInputPartialName,
-} from './translations'
+import { getTitle, toFormInputPartialName } from './translations'
 import * as stubs from './stub/payloads'
-import { FormField, PublicApi } from '@oryd/kratos-client'
+import { PublicApi } from '@oryd/kratos-client'
 import settingsHandler from './routes/settings'
 import verifyHandler from './routes/verification'
 import recoveryHandler from './routes/recovery'

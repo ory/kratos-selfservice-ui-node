@@ -8,7 +8,6 @@
                 <div style="margin-bottom: 8px">Hydra Challenge</div>
                 <label id="login-challenge">
                     <input name="challenge" value={{challenge}}></input>
-                    {{!-- {{> form submitLabel="challenge" form=challenge}} --}}
                 </label>
             {{/if}}
 
@@ -16,7 +15,6 @@
                 <div style="margin-bottom: 8px">CSRF Token</div>
                 <label id="login-csrfToken">
                     <input name="_csrf" value={{csrfToken}}></input>
-                    {{!-- {{> form form=_csrfToken}} --}}
                 </label>
             {{/if}}
 
@@ -30,12 +28,12 @@
             <ul>
                 {{#if client.policy_url}}
                     <li id="login-csrfToken">
-                        <a href={{client.policy_url}}>Policy</a>
+                        <a href={{client.policy_url}}>Read the Privacy Policy</a>
                     </li>
                 {{/if}}
                 {{#if client.tos_uri}}
                     <li id="login-csrfToken">
-                        <a href={{client.tos_uri}}>Teams of Service</a>
+                        <a href={{client.tos_uri}}>Terms of Service</a>
                     </li>
                 {{/if}} 
             </ul>

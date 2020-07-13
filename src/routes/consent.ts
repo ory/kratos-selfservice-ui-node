@@ -82,15 +82,16 @@ export const postConsent = (
     rejectConsentRequest.errorDescription = 'The resource owner denied the request'
     
     return hydraAdminEndpoint.rejectConsentRequest( challenge, rejectConsentRequest)
-      .then(function (response:any) {
+      .then(function (body:any) {
         // All we need to do now is to redirect the browser back to hydra!
-        res.redirect(response.body.redirectTo);
+        res.redirect(body.redirectTo);
       })
       // This will handle any error that happens when making HTTP calls to hydra
       .catch(function (error:any) {
         logger.error(error)
         next(error);
-      });
+      }
+    );
   }
 
   var grant_scope = req.body.grant_scope
@@ -135,8 +136,8 @@ export const postConsent = (
         })
     })
     // This will handle any error that happens when making HTTP calls to hydra
-    .catch(function (error:any) {
-      logger.error(error)
-      next(error);
+    .catch((err) => {
+      logger.error(err)
+      next(err);
     });
 };

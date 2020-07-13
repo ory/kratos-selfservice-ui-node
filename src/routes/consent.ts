@@ -11,7 +11,7 @@ export const getConsent = (
     next: NextFunction
   ) => {
   // Parses the URL query
-  var query = url.parse(req.url, true).query;
+  const query = url.parse(req.url, true).query;
   // The challenge is used to fetch information about the consent request from ORY Hydra.
   var challenge = query.consent_challenge;
 

@@ -13,7 +13,7 @@ export const getConsent = (
   // Parses the URL query
   const query = url.parse(req.url, true).query;
   // The challenge is used to fetch information about the consent request from ORY Hydra.
-  var challenge = query.consent_challenge;
+  const challenge = query.consent_challenge;
 
   hydraAdminEndpoint.getConsentRequest(String(challenge))
     // This will be called if the HTTP request was successful

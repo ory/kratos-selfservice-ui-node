@@ -35,6 +35,9 @@ export default {
     admin: (process.env.KRATOS_ADMIN_URL || '').replace(/\/+$/, ''),
     public: publicUrl.replace(/\/+$/, ''),
   },
+  hydra: {
+    admin: (process.env.HYDRA_ADMIN_URL || '').replace(/\/+$/, ''),
+  },
   baseUrl,
   jwksUrl: process.env.JWKS_URL || '/',
   projectName: process.env.PROJECT_NAME || 'SecureApp',

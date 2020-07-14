@@ -3,8 +3,6 @@ import { authInfo } from '../auth'
 
 type UserRequest = Request & { user: any }
 
-
-
 export default (req: Request, res: Response) => {
   const interestingHeaders = req.rawHeaders.reduce(
     (p: string[], v: string, i) =>
@@ -25,6 +23,6 @@ ${interestingHeaders
     )
   )
   .join('\n')}
-...`
+...`,
   })
 }

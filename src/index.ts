@@ -36,6 +36,7 @@ const protectProxy = (req: Request, res: Response, next: NextFunction) => {
   // When using ORY Oathkeeper, the redirection is done by ORY Oathkeeper.
   // Since we're checking for the session ourselves here, we redirect here
   // if the session is invalid.
+  req.headers['host'] = config.kratos.public.split('/')[2]
   publicEndpoint
     .whoami(req as { headers: { [name: string]: string } })
     .then(({ body, response }) => {

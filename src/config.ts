@@ -38,7 +38,7 @@ export default {
 
   https: {
     enabled: httpsEnabled,
-    certificatePath: httpsCertPath,
-    keyPath: httpsKeyPath
+    certificatePath: httpsCertPath || '',
+    keyPath: httpsKeyPath || '',
   },
 }

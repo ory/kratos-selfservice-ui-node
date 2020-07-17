@@ -110,7 +110,7 @@ if (process.env.NODE_ENV === 'stub') {
     res.render('settings', stubs.settings)
   })
   app.get('/error', (_: Request, res: Response) => res.render('error'))
-  app.get('/consent', (_: Request, res: Response) => {
+  app.get('/auth/hydra/consent', (_: Request, res: Response) => {
     res.render('consent', {
       csrfToken: 'no CSRF!',
       challenge: 'challenge',
@@ -130,14 +130,13 @@ if (process.env.NODE_ENV === 'stub') {
 
   if (Boolean(config.hydra.admin)) {
     app.get('/auth/hydra/login', hydraLogin)
-    // FIXME - why is this not also prefix /auth/hydra/?
-    app.get('/consent', protect, csrfProtection, hydraGetConsent, errorHandler)
-    app.post(
-      '/consent',
-      protect,
-      bodyParser.urlencoded({extended: true}),
-      csrfProtection,
-      hydraPostConsent
+    app.get('/auth/hydra/consent', 
+      protect, csrfProtection, 
+      hydraGetConsent, errorHandler
+    )
+    app.post('/auth/hydra/consent',
+      protect, bodyParser.urlencoded({extended: true}),
+      csrfProtection, hydraPostConsent
     )
   }
 }

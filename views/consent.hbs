@@ -2,7 +2,7 @@
     <div class="container">
         {{> icon_logo}}
         <h5 class="subheading">Welcome to the example consent page!</h5>
-        <form action="/consent" method="POST">
+        <form action="/auth/hydra/consent" method="POST">
             <p style="margin-bottom: 15px">Hi {{user}}, application <strong>{{client.client_name}}</strong> wants access resources on your behalf and to:</p>
             {{#if challenge}}
                 <div style="margin-bottom: 8px">Hydra Challenge</div>

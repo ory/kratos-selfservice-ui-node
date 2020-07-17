@@ -19,16 +19,7 @@ export const hydraLogin = (req: Request, res: Response, next: NextFunction) => {
   // The kratosRequest is used to identify the login and registration kratosRequest in ORY Kratos and return data like the csrf_token and so on.
   const kratosRequest = req.query.request
 
-  const hydraChallenge =
-    req.query.login_challenge || req.cookies.login_challenge
-  if (!hydraChallenge) {
-    logger.debug(
-      'Writing the login_challenge cookie from hydra: ',
-      hydraChallenge
-    )
-  } else {
-    logger.debug('hydraChallenge exists: ' + hydraChallenge)
-  }
+  const hydraChallenge = req.query.login_challenge
 
   if (config.securityMode !== SECURITY_MODE_STANDALONE) {
     next(
@@ -41,8 +32,7 @@ export const hydraLogin = (req: Request, res: Response, next: NextFunction) => {
   const kratosSessionCookie = req.cookies.ory_kratos_session
 
   if (kratosRequest) {
-    // FIXME @k9ert this state is undefined.
-    next(new Error('what should be done here?'))
+    next(new Error('This endpoint is not supposed to be called with an ORY kratos request!'))
     return
   }
 
@@ -54,9 +44,10 @@ export const hydraLogin = (req: Request, res: Response, next: NextFunction) => {
       'Initiating ORY Kratos Login flow because neither a ORY Kratos Login Request nor a valid ORY Kratos Session was found.'
     )
 
-    // FIXME @k9ert this will not work behind a proxy
     const returnTo = encodeURI(
-      `${req.protocol}://${req.headers.host}${req.url}`
+      config.baseUrl == ''  ? 
+        `${req.protocol}://${req.headers.host}${req.url}` :
+        `${config.baseUrl}${req.url}` // works behind a proxy
     )
 
     res.redirect(

@@ -1,6 +1,6 @@
-import {NextFunction, Request, Response} from 'express'
+import { NextFunction, Request, Response } from 'express'
 import config, { logger } from '../config'
-import {CommonApi} from '@oryd/kratos-client'
+import { CommonApi } from '@oryd/kratos-client'
 
 const commonApi = new CommonApi(config.kratos.admin)
 
@@ -16,8 +16,12 @@ const settingsHandler = (req: Request, res: Response, next: NextFunction) => {
 
   commonApi
     .getSelfServiceBrowserSettingsRequest(request)
-    .then(({body, response}) => {
-      if (response.statusCode == 404 || response.statusCode == 410 || response.statusCode == 403) {
+    .then(({ body, response }) => {
+      if (
+        response.statusCode == 404 ||
+        response.statusCode == 410 ||
+        response.statusCode == 403
+      ) {
         res.redirect(
           `${config.kratos.browser}/self-service/browser/flows/settings`
         )
@@ -34,9 +38,9 @@ const settingsHandler = (req: Request, res: Response, next: NextFunction) => {
       if (request) {
         res.render('settings', {
           ...request,
-          password: methodConfig("password"),
-          profile: methodConfig("profile"),
-          oidc: methodConfig("oidc"),
+          password: methodConfig('password'),
+          profile: methodConfig('profile'),
+          oidc: methodConfig('oidc'),
         })
         return
       }
@@ -45,10 +49,7 @@ const settingsHandler = (req: Request, res: Response, next: NextFunction) => {
         'Expected self service settings request to be defined.'
       )
     })
-    .catch(err => {
-      console.error(err)
-      next(err)
-    })
+    .catch(next)
 }
 
 export default settingsHandler

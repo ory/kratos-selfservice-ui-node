@@ -1,162 +1,214 @@
-import {NextFunction, Request, Response} from 'express'
-import config, {logger} from '../config'
-import {PublicApi, AdminApi as KratosAdminApi, Session } from '@oryd/kratos-client'
-import {AdminApi as HydraAdminApi, AcceptConsentRequest, AcceptLoginRequest, RejectRequest} from '@oryd/hydra-client'
-import url from 'url';
+import { NextFunction, Request, Response } from 'express'
+import config, { logger, SECURITY_MODE_STANDALONE } from '../config'
+import { PublicApi, Session } from '@oryd/kratos-client'
+import {
+  AdminApi as HydraAdminApi,
+  AcceptConsentRequest,
+  AcceptLoginRequest,
+  RejectRequest,
+} from '@oryd/hydra-client'
+
+// This type is used for asserting the "ORY Hydra Consent Context" type.
+// It's simply the ORY Kratos session.
+interface LoginContext extends Session {}
 
 const hydraAdminEndpoint = new HydraAdminApi(process.env.HYDRA_ADMIN_URL)
 const kratosPublicEndpoint = new PublicApi(config.kratos.public)
-const kratosAdminEndpoint = new KratosAdminApi(config.kratos.admin)
 
-type UserRequest = Request & { user: any }
+export const hydraLogin = (req: Request, res: Response, next: NextFunction) => {
+  // The kratosRequest is used to identify the login and registration kratosRequest in ORY Kratos and return data like the csrf_token and so on.
+  const kratosRequest = req.query.request
 
-export default (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  // The request is used to identify the login and registration request in ORY Kratos and return data like the csrf_token and so on.
-  const request = req.query.request
-  const currentLocation = `${req.protocol}://${req.headers.host}${req.url}`;
-
-  const query = url.parse(req.url, true).query;
-  
-  let challenge = query.login_challenge || req.cookies.login_challenge;
-  if (challenge != null && challenge != "undefined") {
-    logger.debug("Writing the login_challenge cookie from hydra: ", challenge);
+  const hydraChallenge =
+    req.query.login_challenge || req.cookies.login_challenge
+  if (!hydraChallenge) {
+    logger.debug(
+      'Writing the login_challenge cookie from hydra: ',
+      hydraChallenge
+    )
   } else {
-    logger.debug("challenge exists: "+challenge)
-  } 
-  const kratos_session = req.cookies.ory_kratos_session
+    logger.debug('hydraChallenge exists: ' + hydraChallenge)
+  }
 
-  if (!request) {
-    if (!kratos_session) {
-      // 3. Initiate login flow with Kratos
-      // prompt=login forces a new login from kratos regardless of browser sessions - this is important because we are letting Hydra handle sessions
-      // redirect_to ensures that when we redirect back to this url, we will have both the initial hydra challenge and the kratos request id in query params
-      logger.info("Initiating ORY Kratos Login flow because neither a ORY Kratos Login Request nor a valid ORY Kratos Session was found.");
-      let return_to_address = encodeURI(currentLocation);
-      res.redirect(`${config.kratos.browser}/self-service/browser/flows/login?prompt=login&return_to=${return_to_address}`);
-      return
-    }
-    if (!challenge) {
-      logger.error("ORY Hydra Login flow could not be completed because no ORY Kratos Login Request and no ORY Hydra Login Challenge were found in the request.");
-      next(new Error("No ORY Kratos Login Request and no ORY Hydra Login Challenge were found in the request."))
-      return
-    } else {
-      // 1. Parse Hydra challenge from query params
-      // The challenge is used to fetch information about the login request from ORY Hydra.
-      // Means we have just been redirected from Hydra, and are on the login page
-      // We must check the hydra session to see if we can skip login
-      // 2. Call Hydra and check the session of this user
+  if (config.securityMode !== SECURITY_MODE_STANDALONE) {
+    next(
+      new Error(
+        'Interaction with ORY Hydra only works in security standalone mode right now.'
+      )
+    )
+    return
+  }
+  const kratosSessionCookie = req.cookies.ory_kratos_session
 
-      return hydraAdminEndpoint.getLoginRequest(challenge)
-        .then(({ response, body }) => {
-          // If hydra was already able to authenticate the user, skip will be true and we do not need to re-authenticate
-          // the user.
-          if (body.skip) {
-            // You can apply logic here, for example update the number of times the user logged in...
-            // Now it's time to grant the login request. You could also deny the request if something went terribly wrong
-            // (e.g. your arch-enemy logging in...)
-            let acceptLoginRequest = new AcceptLoginRequest()
+  if (kratosRequest) {
+    // FIXME @k9ert this state is undefined.
+    next(new Error('what should be done here?'))
+    return
+  }
 
-            acceptLoginRequest.subject = String(body.subject)
-            logger.info("Accepting ORY Hydra Login Request because skip is true: ", acceptLoginRequest)
-            return hydraAdminEndpoint.acceptLoginRequest(challenge, acceptLoginRequest)
-              .then((hydraResponse: any) => {
-              // All we need to do is to confirm that we indeed want to log in the user.
-              
-              // All we need to do now is to redirect the user back to hydra!
-              res.redirect(hydraResponse.redirect_to)
-            });
-          } else if (kratos_session){
-            // Figuring out the user
-            return kratosPublicEndpoint
-              // We need to know who the user is for hydra
-              .whoami(req as { headers: { [name: string]: string } })
-              .then( ({body, response} ) => {
-                // We need to get the email of the user. We don't want to do that via traits as
-                // they are dynamic. They would be part of the PublicAPI. That's not true
-                // for identity.addresses So let's get it via the AdmninAPI
-                const subject = body.identity.id
-                kratosAdminEndpoint
-                  .getIdentity(body.identity.id) 
-                  .then( ({response}) => {
-                    // User is authenticated, accept the LoginRequest and tell Hydra
-                    let acceptLoginRequest : AcceptLoginRequest = new AcceptLoginRequest()
-                    // We should probably use "id" here but the gitlab-scenario only works via "email"
-                    acceptLoginRequest.subject = subject
-                    acceptLoginRequest.context = (response as any).body
-   
-                    //acceptLoginRequest.subject = (body.identity.traits as { email: string }).email || "fallback@mail.com"
-                    
-                    return hydraAdminEndpoint.acceptLoginRequest(challenge, acceptLoginRequest)
-                      .then((hydraResponse: any) => {
-                        // All we need to do now is to redirect the user back to hydra!
-                        res.redirect(hydraResponse.body.redirectTo)
-                    })
-                  })
+  if (!kratosSessionCookie) {
+    // 3. Initiate login flow with Kratos
+    // prompt=login forces a new login from kratos regardless of browser sessions - this is important because we are letting Hydra handle sessions
+    // redirect_to ensures that when we redirect back to this url, we will have both the initial hydra hydraChallenge and the kratos kratosRequest id in query params
+    logger.info(
+      'Initiating ORY Kratos Login flow because neither a ORY Kratos Login Request nor a valid ORY Kratos Session was found.'
+    )
 
-              })
-          } else {
-            logger.error("Request and challenge are both set but user is not authenticated. Unknown state!")
-            res.status(400).send('Request and challenge are bot set but user is not authenticated. Please try again!');
-            next()
-          }
-        })
-        .catch((err) => {
-          // Something went wrong with validating hydra's challenge getting the LoginRequest
-          logger.error(err)
-          next()
-        });
-    }
+    // FIXME @k9ert this will not work behind a proxy
+    const returnTo = encodeURI(
+      `${req.protocol}://${req.headers.host}${req.url}`
+    )
+
+    res.redirect(
+      `${config.kratos.browser}/self-service/browser/flows/login?prompt=login&return_to=${returnTo}`
+    )
+    return
+  }
+
+  if (!hydraChallenge) {
+    logger.error(
+      'ORY Hydra Login flow could not be completed because no ORY Kratos Login Request and no ORY Hydra Login Challenge were found in the kratosRequest.'
+    )
+    next(
+      new Error(
+        'No ORY Kratos Login Request and no ORY Hydra Login Challenge were found in the kratosRequest.'
+      )
+    )
+    return
+  }
+
+  // 1. Parse Hydra hydraChallenge from query params
+  // The hydraChallenge is used to fetch information about the login kratosRequest from ORY Hydra.
+  // Means we have just been redirected from Hydra, and are on the login page
+  // We must check the hydra session to see if we can skip login
+
+  // 2. Call Hydra and check the session of this user
+  return hydraAdminEndpoint
+    .getLoginRequest(hydraChallenge)
+    .then(({ body }) => {
+      // If hydra was already able to authenticate the user, skip will be true and we do not need to re-authenticate
+      // the user.
+      if (body.skip) {
+        // You can apply logic here, for example update the number of times the user logged in...
+        // Now it's time to grant the login kratosRequest. You could also deny the kratosRequest if something went terribly wrong
+        // (e.g. your arch-enemy logging in...)
+        const acceptLoginRequest = new AcceptLoginRequest()
+        acceptLoginRequest.subject = String(body.subject)
+
+        logger.debug(
+          'Accepting ORY Hydra Login Request because skip is true: ',
+          acceptLoginRequest
+        )
+        return hydraAdminEndpoint
+          .acceptLoginRequest(hydraChallenge, acceptLoginRequest)
+          .then(({ body }) => {
+            // All we need to do now is to redirect the user back to hydra!
+            res.redirect(String(body.redirectTo))
+          })
+      } else if (kratosSessionCookie) {
+        // Figuring out the user
+        return (
+          kratosPublicEndpoint
+            // We need to know who the user is for hydra
+            .whoami(req as { headers: { [name: string]: string } })
+            .then(({ body }) => {
+              // We need to get the email of the user. We don't want to do that via traits as
+              // they are dynamic. They would be part of the PublicAPI. That's not true
+              // for identity.addresses So let's get it via the AdmninAPI
+              const subject = body.identity.id
+
+              // User is authenticated, accept the LoginRequest and tell Hydra
+              let acceptLoginRequest: AcceptLoginRequest = new AcceptLoginRequest()
+              acceptLoginRequest.subject = subject
+              acceptLoginRequest.context = body
+
+              return hydraAdminEndpoint
+                .acceptLoginRequest(hydraChallenge, acceptLoginRequest)
+                .then(({ body }) => {
+                  // All we need to do now is to redirect the user back to hydra!
+                  res.redirect(String(body.redirectTo))
+                })
+            })
+        )
+      }
+
+      logger.error(
+        'Request and hydraChallenge are both set but user is not authenticated. Unknown state!'
+      )
+      return Promise.reject(
+        new Error(
+          "'Request and hydraChallenge are bot set but user is not authenticated. Please try again!'"
+        )
+      )
+    })
+    .catch(next)
+}
+
+const createHydraSession = (
+  requestedScope: string[] = [],
+  context: LoginContext
+) => {
+  const verifiableAddresses = context.identity.verifiableAddresses || []
+  if (
+    requestedScope.indexOf('email') === -1 ||
+    verifiableAddresses.length === 0
+  ) {
+    return {}
+  }
+
+  return {
+    // This data will be available when introspecting the token. Try to avoid sensitive information here,
+    // unless you limit who can introspect tokens. (Therefore the scope-check above)
+    // access_token: { foo: 'bar' },
+
+    // This data will be available in the ID token.
+    // Most services need email-addresses, so let's include that.
+    idToken: {
+      email: verifiableAddresses[0].value as Object, // FIXME Small typescript workaround caused by a bug in Go-swagger
+    },
   }
 }
 
-
-
-export const getConsent = (
+export const hydraGetConsent = (
   req: Request,
   res: Response,
   next: NextFunction
 ) => {
   // Parses the URL query
-  const query = url.parse(req.url, true).query;
   // The challenge is used to fetch information about the consent request from ORY Hydra.
-  const challenge = query.consent_challenge;
+  const challenge = req.query.consent_challenge
 
-  hydraAdminEndpoint.getConsentRequest(challenge)
+  hydraAdminEndpoint
+    .getConsentRequest(challenge)
     // This will be called if the HTTP request was successful
-    .then(function ({body}) {
+    .then(({ body }) => {
       // If a user has granted this application the requested scope, hydra will tell us to not show the UI.
       if (body.skip) {
         // You can apply logic here, for example grant another scope, or do whatever...
 
         // Now it's time to grant the consent request. You could also deny the request if something went terribly wrong
         const acceptConsentRequest = new AcceptConsentRequest()
+
         // We can grant all scopes that have been requested - hydra already checked for us that no additional scopes
         // are requested accidentally.
         acceptConsentRequest.grantScope = body.requestedScope
-        // ORY Hydra checks if requested audiences are allowed by the client, so we can simply echo this.
-        acceptConsentRequest.grantAccessTokenAudience = body.requestedAccessTokenAudience
-        // The session allows us to set session data for id and access tokens
-        if ((body.requestedScope as any).indexOf('email') > -1) {
-          acceptConsentRequest.session = {
-            // This data will be available when introspecting the token. Try to avoid sensitive information here,
-            // unless you limit who can introspect tokens. (Therefore the scope-check above)
-            // access_token: { foo: 'bar' },
 
-            // This data will be available in the ID token.
-            // Most services need email-addresses, so let's include that.
-            idToken: { 
-              email: (body.context as any).addresses[0].value
-            },
-          }
-        }
-        return hydraAdminEndpoint.acceptConsentRequest(String(challenge), acceptConsentRequest).then(function (response:any) {
-          // All we need to do now is to redirect the user back to hydra!
-          res.redirect(response.body.redirectTo);
-        });
+        // ORY Hydra checks if requested audiences are allowed by the client, so we can simply echo this.
+        acceptConsentRequest.grantAccessTokenAudience =
+          body.requestedAccessTokenAudience
+
+        // The session allows us to set session data for id and access tokens. Let's add the email if it is included.
+        acceptConsentRequest.session = createHydraSession(
+          body.requestedScope,
+          body.context as LoginContext
+        )
+
+        return hydraAdminEndpoint
+          .acceptConsentRequest(String(challenge), acceptConsentRequest)
+          .then(({ body }) => {
+            // All we need to do now is to redirect the user back to hydra!
+            res.redirect(String(body.redirectTo))
+          })
       }
 
       // If consent can't be skipped we MUST show the consent UI.
@@ -168,86 +220,82 @@ export const getConsent = (
         requested_scope: body.requestedScope,
         user: body.subject,
         client: body.client,
-      });
+      })
     })
     // This will handle any error that happens when making HTTP calls to hydra
-    .catch((err) => {
-      logger.error(err)
-      next(err);
-    });
-  };
+    .catch(next)
+}
 
-  export const postConsent = (
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) => {
+export const hydraPostConsent = (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   // The challenge is now a hidden input field, so let's take it from the request body instead
-  const challenge = req.body.challenge;
+  const challenge = req.body.challenge
+
   // Let's see if the user decided to accept or reject the consent request..
   if (req.body.submit !== 'Allow access') {
     // Looks like the consent request was denied by the user
     const rejectConsentRequest = new RejectRequest()
+
     rejectConsentRequest.error = 'access_denied'
-    rejectConsentRequest.errorDescription = 'The resource owner denied the request'
-    
-    return hydraAdminEndpoint.rejectConsentRequest( challenge, rejectConsentRequest)
-      .then(function (body:any) {
-        // All we need to do now is to redirect the browser back to hydra!
-        res.redirect(body.redirectTo);
-      })
-      // This will handle any error that happens when making HTTP calls to hydra
-      .catch((err) => {
-        logger.error(err)
-        next(err);
-      }
-    );
+    rejectConsentRequest.errorDescription =
+      'The resource owner denied the request'
+
+    return (
+      hydraAdminEndpoint
+        .rejectConsentRequest(challenge, rejectConsentRequest)
+        .then(({ body }) => {
+          // All we need to do now is to redirect the browser back to hydra!
+          res.redirect(String(body.redirectTo))
+        })
+        // This will handle any error that happens when making HTTP calls to hydra
+        .catch(next)
+    )
   }
 
-  var grant_scope = req.body.grant_scope
-  if (!Array.isArray(grant_scope)) {
-    grant_scope = [grant_scope]
+  let grantScope = req.body.grant_scope
+  if (!Array.isArray(grantScope)) {
+    grantScope = [grantScope]
   }
 
   // Seems like the user authenticated! Let's tell hydra...
-  hydraAdminEndpoint.getConsentRequest(challenge)
-  // This will be called if the HTTP request was successful
-    .then(({body}) => {
+  hydraAdminEndpoint
+    .getConsentRequest(challenge)
+    // This will be called if the HTTP request was successful
+    .then(({ body }) => {
       const acceptConsentRequest = new AcceptConsentRequest()
       // We can grant all scopes that have been requested - hydra already checked for us that no additional scopes
       // are requested accidentally.
-      acceptConsentRequest.grantScope = grant_scope
+      acceptConsentRequest.grantScope = grantScope
+
       // ORY Hydra checks if requested audiences are allowed by the client, so we can simply echo this.
-      acceptConsentRequest.grantAccessTokenAudience = body.requestedAccessTokenAudience
+      acceptConsentRequest.grantAccessTokenAudience =
+        body.requestedAccessTokenAudience
+
       // This tells hydra to remember this consent request and allow the same client to request the same
       // scopes from the same user, without showing the UI, in the future.
-      acceptConsentRequest.remember = Boolean(req.body.remember),
+      acceptConsentRequest.remember = Boolean(req.body.remember)
+
       // When this "remember" sesion expires, in seconds. Set this to 0 so it will never expire.
       acceptConsentRequest.rememberFor = 3600
-      if (grant_scope.indexOf('email') > -1) {
-        // The session allows us to set session data for id and access tokens
-        acceptConsentRequest.session = {
-          // This data will be available when introspecting the token. Try to avoid sensitive information here,
-          // unless you limit who can introspect tokens.
-          // access_token: { foo: 'bar' },
 
-          // This data will be available in the ID token.
-          idToken: { 
-            email: (body.context as any).addresses[0].value
-          },
-        }
-      }
+      // The session allows us to set session data for id and access tokens. Let's add the email if it is included.
+      acceptConsentRequest.session = createHydraSession(
+        body.requestedScope,
+        body.context as LoginContext
+      )
 
-
-      return hydraAdminEndpoint.acceptConsentRequest(challenge, acceptConsentRequest)
-        .then(function (response:any) {
-          // All we need to do now is to redirect the user back to hydra!
-          res.redirect(response.body.redirectTo);
-        })
+      return hydraAdminEndpoint.acceptConsentRequest(
+        challenge,
+        acceptConsentRequest
+      )
+    })
+    .then(({ body }) => {
+      // All we need to do now is to redirect the user back to hydra!
+      res.redirect(String(body.redirectTo))
     })
     // This will handle any error that happens when making HTTP calls to hydra
-    .catch((err) => {
-      logger.error(err)
-      next(err);
-    });
-};
+    .catch(next)
+}

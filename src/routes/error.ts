@@ -47,5 +47,5 @@ export default (req: Request, res: Response, next: NextFunction) => {
         )}`
       )
     })
-    .catch(err => next(err))
+    .catch(next)
 }

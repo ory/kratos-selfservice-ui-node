@@ -1,6 +1,8 @@
 # ORY Kratos as Login Provider for ORY Hydra
 
-To run this example execute:
+**Warning: ** this is a preliminary example and will properly be implemented in ORY Kratos directly.
+
+For now, to run this example execute:
 
 ```shell script
 $ docker-compose up --build

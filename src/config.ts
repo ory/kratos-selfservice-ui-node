@@ -1,4 +1,5 @@
 import winston from 'winston'
+import crypto from 'crypto'
 
 // Replace this with how you think logging should look like
 export const logger = winston.createLogger({
@@ -29,6 +30,8 @@ switch ((process.env.SECURITY_MODE || '').toLowerCase()) {
     securityMode = SECURITY_MODE_JWT
 }
 
+const cookieSecret = crypto.randomBytes(48).toString('hex')
+
 export default {
   kratos: {
     browser: browserUrl.replace(/\/+$/, ''),
@@ -45,6 +48,8 @@ export default {
   securityMode,
   SECURITY_MODE_JWT,
   SECURITY_MODE_STANDALONE,
+
+  cookieSecret: process.env.COOKIE_SECRET || cookieSecret,
 
   https: {
     enabled:

@@ -30,6 +30,8 @@ This application can be configured using two environment variables:
 - `BASE_URL` (optional): The base url of this app. If served e.g. behind a proxy or via
   GitHub pages this would be the path, e.g. `https://mywebsite.com/kratos-selfservice-ui-node/`.
   **Must be absolute!**
+- `COOKIE_SECRET` (optional): This secret is used to encrypt cookies which are used as part of the ORY Hydra
+   integration.
 - `TLS_CERT_PATH` (optional): Path to certificate file. Should be set up together with `TLS_KEY_PATH` to enable HTTPS.
 - `TLS_KEY_PATH` (optional): Path to key file Should be set up together with `TLS_CERT_PATH` to enable HTTPS.
 

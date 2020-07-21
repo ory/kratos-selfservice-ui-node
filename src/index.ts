@@ -25,6 +25,7 @@ import * as https from 'https'
 import * as fs from 'fs'
 import bodyParser from 'body-parser'
 import csrf from 'csurf'
+import session from 'express-session'
 
 const csrfProtection = csrf({cookie: true})
 
@@ -69,6 +70,12 @@ app.use((req: Request, res: Response, next: NextFunction) => {
   res.locals.pathPrefix = config.baseUrl ? '' : '/'
   next()
 })
+app.use(session({
+  secret: config.cookieSecret,
+  resave: false,
+  saveUninitialized: true,
+  cookie: { secure: config.https.enabled}
+}))
 app.use(express.static('public'))
 app.use(express.static('node_modules/normalize.css'))
 

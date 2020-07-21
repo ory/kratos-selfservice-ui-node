@@ -32,7 +32,11 @@ export const hydraLogin = (req: Request, res: Response, next: NextFunction) => {
   const kratosSessionCookie = req.cookies.ory_kratos_session
 
   if (kratosRequest) {
-    next(new Error('This endpoint is not supposed to be called with an ORY kratos request!'))
+    next(
+      new Error(
+        'This endpoint is not supposed to be called with an ORY kratos request!'
+      )
+    )
     return
   }
 
@@ -45,9 +49,9 @@ export const hydraLogin = (req: Request, res: Response, next: NextFunction) => {
     )
 
     const returnTo = encodeURI(
-      config.baseUrl == ''  ? 
-        `${req.protocol}://${req.headers.host}${req.url}` :
-        `${config.baseUrl}${req.url}` // works behind a proxy
+      config.baseUrl == ''
+        ? `${req.protocol}://${req.headers.host}${req.url}`
+        : `${config.baseUrl}${req.url}` // works behind a proxy
     )
 
     res.redirect(

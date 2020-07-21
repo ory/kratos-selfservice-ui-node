@@ -8,6 +8,7 @@ import {
   RegistrationRequest,
 } from '@oryd/kratos-client'
 import {IncomingMessage} from 'http'
+import {isString} from "../helpers";
 
 const kratos = new AdminApi(config.kratos.admin)
 
@@ -19,11 +20,11 @@ export const authHandler = (type: 'login' | 'registration') => (
   res: Response,
   next: NextFunction
 ) => {
-  const request = String(req.query.request)
+  const request = req.query.request
 
   // The request is used to identify the login and registration request and
   // return data like the csrf_token and so on.
-  if (!request) {
+  if (!request || !isString(request)) {
     console.log('No request found in URL, initializing auth flow.')
     res.redirect(`${config.kratos.browser}/self-service/browser/flows/${type}`)
     return
@@ -78,8 +79,5 @@ export const authHandler = (type: 'login' | 'registration') => (
         password: methodConfig("password"),
       })
     })
-    .catch(err => {
-      console.error(err)
-      next(err)
-    })
+    .catch(next)
 }

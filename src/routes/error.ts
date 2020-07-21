@@ -1,12 +1,12 @@
-import { NextFunction, Request, Response } from 'express'
+import {NextFunction, Request, Response} from 'express'
 import config from '../config'
-import { CommonApi, ErrorContainer } from '@oryd/kratos-client'
-import { IncomingMessage } from 'http'
+import {CommonApi, ErrorContainer} from '@oryd/kratos-client'
+import {IncomingMessage} from 'http'
 
-const commonApi = new CommonApi(config.kratos.admin)
+const kratos = new CommonApi(config.kratos.admin)
 
 export default (req: Request, res: Response, next: NextFunction) => {
-  const error = req.query.error
+  const error = String(req.query.error)
 
   if (!error) {
     // No error was send, redirecting back to home.
@@ -14,13 +14,13 @@ export default (req: Request, res: Response, next: NextFunction) => {
     return
   }
 
-  commonApi
+  kratos
     .getSelfServiceError(error)
     .then(
       ({
-        body,
-        response,
-      }: {
+         body,
+         response,
+       }: {
         body: ErrorContainer
         response: IncomingMessage
       }) => {

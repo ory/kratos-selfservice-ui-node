@@ -2,10 +2,10 @@ import { NextFunction, Request, Response } from 'express'
 import config, { logger } from '../config'
 import { CommonApi } from '@oryd/kratos-client'
 
-const commonApi = new CommonApi(config.kratos.admin)
+const kratos = new CommonApi(config.kratos.admin)
 
 const settingsHandler = (req: Request, res: Response, next: NextFunction) => {
-  const request = req.query.request
+  const request = String(req.query.request)
   // The request is used to identify the account settings request and
   // return data like the csrf_token and so on.
   if (!request) {
@@ -14,7 +14,7 @@ const settingsHandler = (req: Request, res: Response, next: NextFunction) => {
     return
   }
 
-  commonApi
+  kratos
     .getSelfServiceBrowserSettingsRequest(request)
     .then(({ body, response }) => {
       if (

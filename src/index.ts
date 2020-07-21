@@ -21,6 +21,8 @@ import settingsHandler from './routes/settings'
 import verifyHandler from './routes/verification'
 import recoveryHandler from './routes/recovery'
 import morgan from 'morgan'
+import * as https from 'https'
+import * as fs from 'fs'
 import bodyParser from 'body-parser'
 import csrf from 'csurf'
 
@@ -41,6 +43,7 @@ const protectProxy = (req: Request, res: Response, next: NextFunction) => {
   // When using ORY Oathkeeper, the redirection is done by ORY Oathkeeper.
   // Since we're checking for the session ourselves here, we redirect here
   // if the session is invalid.
+  req.headers['host'] = config.kratos.public.split('/')[2]
   publicEndpoint
     .whoami(req as { headers: { [name: string]: string } })
     .then(({body, response}) => {
@@ -130,8 +133,8 @@ if (process.env.NODE_ENV === 'stub') {
 
   if (Boolean(config.hydra.admin)) {
     app.get('/auth/hydra/login', hydraLogin)
-    app.get('/auth/hydra/consent', 
-      protect, csrfProtection, 
+    app.get('/auth/hydra/consent',
+      protect, csrfProtection,
       hydraGetConsent, errorHandler
     )
     app.post('/auth/hydra/consent',
@@ -170,7 +173,20 @@ app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
 })
 
 const port = Number(process.env.PORT) || 3000
-app.listen(port, () => {
-  logger.info(`Listening on http://0.0.0.0:${port}`)
+
+let listener = () => {
+  let proto = config.https.enabled ? 'https' : 'http'
+  logger.info(`Listening on ${proto}://0.0.0.0:${port}`)
   logger.info(`Security mode: ${config.securityMode}`)
-})
+}
+
+if (config.https.enabled) {
+  const options = {
+    cert: fs.readFileSync(config.https.certificatePath),
+    key: fs.readFileSync(config.https.keyPath),
+  }
+
+  https.createServer(options, app).listen(port, listener)
+} else {
+  app.listen(port, listener)
+}

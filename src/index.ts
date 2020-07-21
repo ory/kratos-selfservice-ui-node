@@ -20,8 +20,8 @@ import settingsHandler from './routes/settings'
 import verifyHandler from './routes/verification'
 import recoveryHandler from './routes/recovery'
 import morgan from 'morgan'
-import * as https from 'https';
-import * as fs from 'fs';
+import * as https from 'https'
+import * as fs from 'fs'
 
 const protectOathKeeper = jwt({
   // Dynamically provide a signing key based on the kid in the header and the signing keys provided by the JWKS endpoint.
@@ -150,9 +150,9 @@ app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
 const port = Number(process.env.PORT) || 3000
 
 let listener = () => {
-    let proto = config.https.enabled ? 'https' : 'http'
-    console.log(`Listening on ${proto}://0.0.0.0:${port}`)
-    console.log(`Security mode: ${config.securityMode}`)
+  let proto = config.https.enabled ? 'https' : 'http'
+  console.log(`Listening on ${proto}://0.0.0.0:${port}`)
+  console.log(`Security mode: ${config.securityMode}`)
 }
 
 if (config.https.enabled) {
@@ -163,5 +163,5 @@ if (config.https.enabled) {
 
   https.createServer(options, app).listen(port, listener)
 } else {
-    app.listen(port, listener)
+  app.listen(port, listener)
 }

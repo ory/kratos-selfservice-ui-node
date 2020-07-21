@@ -33,7 +33,9 @@ export default {
   SECURITY_MODE_STANDALONE,
 
   https: {
-    enabled: process.env.hasOwnProperty('TLS_KEY_PATH') && process.env.hasOwnProperty('TLS_CERT_PATH'),
+    enabled:
+      process.env.hasOwnProperty('TLS_KEY_PATH') &&
+      process.env.hasOwnProperty('TLS_CERT_PATH'),
     certificatePath: process.env.TLS_CERT_PATH || '',
     keyPath: process.env.TLS_KEY_PATH || '',
   },

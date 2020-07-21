@@ -19,9 +19,11 @@ selfservice:
       ui_url: http://127.0.0.1:3000/settings
 
     verification:
+      ui_url: http://127.0.0.1:3000/verification
       enabled: false
 
     recovery:
+      ui_url: http://127.0.0.1:3000/recovery
       enabled: false
 
     logout:

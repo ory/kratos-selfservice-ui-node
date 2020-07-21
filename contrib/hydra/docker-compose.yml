@@ -54,7 +54,6 @@ services:
     networks:
       - intranet
 
-
   kratos-selfservice-ui-node:
     build:
       context: ../..
@@ -64,7 +63,6 @@ services:
       - KRATOS_PUBLIC_URL=http://kratos:4433/
       - KRATOS_ADMIN_URL=http://kratos:4434/
       - SECURITY_MODE=standalone
-      - PORT=3000
     ports:
       - "3000:3000"
     networks:
@@ -115,13 +113,15 @@ services:
     networks:
       - intranet
 
-  mailslurper:
-    image: oryd/mailslurper:latest-smtps
-    ports:
-      - "4436:4436"
-      - "4437:4437"
-    networks:
-      - intranet
+# Sending emails is not part of this demo, so this is commented out:
+#
+#  mailslurper:
+#    image: oryd/mailslurper:latest-smtps
+#    ports:
+#      - "4436:4436"
+#      - "4437:4437"
+#    networks:
+#      - intranet
 
 networks:
   intranet:

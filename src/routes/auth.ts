@@ -7,7 +7,7 @@ import {
   RegistrationRequest,
 } from '@oryd/kratos-client'
 import { IncomingMessage } from 'http'
-import {isString} from "../helpers";
+import { isString } from '../helpers'
 
 const kratos = new AdminApi(config.kratos.admin)
 

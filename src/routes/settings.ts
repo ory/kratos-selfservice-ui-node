@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from 'express'
 import config, { logger } from '../config'
 import { CommonApi } from '@oryd/kratos-client'
-import {isString} from "../helpers";
+import { isString } from '../helpers'
 
 const kratos = new CommonApi(config.kratos.admin)
 

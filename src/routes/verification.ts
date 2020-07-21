@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from 'express'
 import config, { logger } from '../config'
 import { CommonApi } from '@oryd/kratos-client'
 import { IncomingMessage } from 'http'
-import {isString} from "../helpers";
+import { isString } from '../helpers'
 
 const kratos = new CommonApi(config.kratos.admin)
 
@@ -31,8 +31,7 @@ export default (req: Request, res: Response, next: NextFunction) => {
         return Promise.reject(body)
       }
 
-        res.render('verification', body)
-      }
-    )
+      res.render('verification', body)
+    })
     .catch(next)
 }

@@ -1,12 +1,14 @@
-import {NextFunction, Request, Response} from 'express'
-import config, {logger, SECURITY_MODE_STANDALONE} from '../config'
-import {PublicApi, Session} from '@oryd/kratos-client'
+import { NextFunction, Request, Response } from 'express'
+import config, { logger, SECURITY_MODE_STANDALONE } from '../config'
+import { PublicApi, Session } from '@oryd/kratos-client'
 import {
   AdminApi as HydraAdminApi,
   AcceptConsentRequest,
   AcceptLoginRequest,
   RejectRequest,
 } from '@oryd/hydra-client'
+import { isString } from '../helpers'
+import crypto from 'crypto'
 
 // Client for interacting with Hydra's Admin API
 const hydraClient = new HydraAdminApi(process.env.HYDRA_ADMIN_URL)
@@ -14,11 +16,55 @@ const hydraClient = new HydraAdminApi(process.env.HYDRA_ADMIN_URL)
 // Client for interacting with Kratos' Public and Admin API
 const kratosClient = new PublicApi(config.kratos.public)
 
-export const hydraLogin = (req: Request, res: Response, next: NextFunction) => {
-  // The kratosRequest is used to identify the login and registration kratosRequest
-  // in ORY Kratos and return data like the csrf_token and so on.
-  const kratosRequest = req.query.request
+const redirectToLogin = (req: Request, res: Response, next: NextFunction) => {
+  if (!req.session) {
+    next(Error('Unable to used express-session'))
+    return
+  }
 
+  // 3. Initiate login flow with ORY Kratos:
+  //
+  //   - `prompt=login` forces a new login from kratos regardless of browser sessions.
+  //      This is important because we are letting Hydra handle sessions
+  //   - `redirect_to` ensures that when we redirect back to this url,
+  //      we will have both the initial ORY Hydra Login Challenge and the ORY Kratos Login Request ID in
+  //      the URL query parameters.
+  logger.info(
+    'Initiating ORY Kratos Login flow because neither a ORY Kratos Login Request nor a valid ORY Kratos Session was found.'
+  )
+
+  const state = crypto.randomBytes(48).toString('hex')
+  req.session.hydraLoginState = state
+  req.session.save(error => {
+    if (error) {
+      next(error)
+      return
+    }
+
+    logger.debug('Return to: ', {
+      url: req.url,
+      base: config.baseUrl,
+      prot: `${req.protocol}://${req.headers.host}`,
+    })
+    const baseUrl = config.baseUrl || `${req.protocol}://${req.headers.host}`
+    const returnTo = new URL(req.url, baseUrl)
+    returnTo.searchParams.set('hydra_login_state', state)
+    logger.debug(`returnTo: "${returnTo.toString()}"`, returnTo)
+
+    const redirectTo = new URL(
+      config.kratos.browser + '/self-service/browser/flows/login',
+      baseUrl
+    )
+    redirectTo.searchParams.set('refresh', 'true')
+    redirectTo.searchParams.set('return_to', returnTo.toString())
+
+    logger.debug(`redirectTo: "${redirectTo.toString()}"`, redirectTo)
+
+    res.redirect(redirectTo.toString())
+  })
+}
+
+export const hydraLogin = (req: Request, res: Response, next: NextFunction) => {
   // The hydraChallenge represents the Hydra login_challenge query parameter.
   const hydraChallenge = req.query.login_challenge
 
@@ -30,50 +76,12 @@ export const hydraLogin = (req: Request, res: Response, next: NextFunction) => {
     )
     return
   }
-  const kratosSessionCookie = req.cookies.ory_kratos_session
 
-  if (kratosRequest) {
-    next(
-      new Error(
-        `This endpoint is not supposed to be called with an ORY Kratos request but got: "${kratosRequest}"`
-      )
+  if (!hydraChallenge || !isString(hydraChallenge)) {
+    const error = new Error(
+      'ORY Hydra Login flow could not be completed because no ORY Hydra Login Challenge was found in the HTTP request.'
     )
-    return
-  }
-
-  if (!kratosSessionCookie || !(typeof hydraChallenge === "string")) {
-    // 3. Initiate login flow with ORY Kratos:
-    //
-    //   - `prompt=login` forces a new login from kratos regardless of browser sessions.
-    //      This is important because we are letting Hydra handle sessions
-    //   - `redirect_to` ensures that when we redirect back to this url,
-    //      we will have both the initial ORY Hydra Login Challenge and the ORY Kratos Login Request ID in
-    //      the URL query parameters.
-    logger.info(
-      'Initiating ORY Kratos Login flow because neither a ORY Kratos Login Request nor a valid ORY Kratos Session was found.'
-    )
-
-    const returnTo = encodeURI(
-      config.baseUrl == ''
-        ? `${req.protocol}://${req.headers.host}${req.url}`
-        : `${config.baseUrl}${req.url}` // works behind a proxy
-    )
-
-    res.redirect(
-      `${config.kratos.browser}/self-service/browser/flows/login?prompt=login&return_to=${returnTo}?loginState=....`
-    )
-    return
-  }
-
-  if (!hydraChallenge || !(typeof hydraChallenge === "string")) {
-    logger.error(
-      'ORY Hydra Login flow could not be completed because no ORY Kratos Login Request and no ORY Hydra Login Challenge were found in the kratosRequest.'
-    )
-    next(
-      new Error(
-        'No ORY Kratos Login Request and no ORY Hydra Login Challenge were found in the kratosRequest.'
-      )
-    )
+    next(error)
     return
   }
 
@@ -85,7 +93,7 @@ export const hydraLogin = (req: Request, res: Response, next: NextFunction) => {
   // 2. Call Hydra and check the session of this user
   return hydraClient
     .getLoginRequest(hydraChallenge)
-    .then(({body}) => {
+    .then(({ body }) => {
       // If hydra was already able to authenticate the user, skip will be true and we do not need to re-authenticate
       // the user.
       if (body.skip) {
@@ -99,66 +107,66 @@ export const hydraLogin = (req: Request, res: Response, next: NextFunction) => {
           'Accepting ORY Hydra Login Request because skip is true',
           acceptLoginRequest
         )
+
         return hydraClient
           .acceptLoginRequest(hydraChallenge, acceptLoginRequest)
-          .then(({body}) => {
+          .then(({ body }) => {
             // All we need to do now is to redirect the user back to hydra!
             res.redirect(String(body.redirectTo))
           })
       }
 
-      if (
-        kratosSessionCookie &&
-        req.cookies.loginState === req.query.loginState
-      ) {
-        // accept
-      } else {
-        const returnTo = encodeURI(
-          config.baseUrl == ''
-            ? `${req.protocol}://${req.headers.host}${req.url}`
-            : `${config.baseUrl}${req.url}` // works behind a proxy
+      const hydraLoginState = req.query.hydra_login_state
+      if (!hydraLoginState || !isString(hydraLoginState)) {
+        logger.debug(
+          'Redirecting to login page because hydra_login_state was not found in the HTTP URL query parameters.'
         )
-
-        res.redirect(
-          `${config.kratos.browser}/self-service/browser/flows/login?prompt=login&return_to=${returnTo}?loginState=....`
-        )
+        redirectToLogin(req, res, next)
         return
       }
 
-      if (kratosSessionCookie) {
-        // Figuring out the user
-        return (
-          kratosClient
-            // We need to know who the user is for hydra
-            .whoami(req as { headers: { [name: string]: string } })
-            .then(({body}) => {
-              // We need to get the email of the user. We don't want to do that via traits as
-              // they are dynamic. They would be part of the PublicAPI. That's not true
-              // for identity.addresses So let's get it via the AdmninAPI
-              const subject = body.identity.id
-
-              // User is authenticated, accept the LoginRequest and tell Hydra
-              let acceptLoginRequest: AcceptLoginRequest = new AcceptLoginRequest()
-              acceptLoginRequest.subject = subject
-              acceptLoginRequest.context = body
-
-              return hydraClient
-                .acceptLoginRequest(hydraChallenge, acceptLoginRequest)
-                .then(({body}) => {
-                  // All we need to do now is to redirect the user back to hydra!
-                  res.redirect(String(body.redirectTo))
-                })
-            })
+      const kratosSessionCookie = req.cookies.ory_kratos_session
+      if (!kratosSessionCookie) {
+        // The state was set but we did not receive a session. Let's retry.
+        logger.debug(
+          'Redirecting to login page because no ORY Kratos session cookie was set.'
         )
+        redirectToLogin(req, res, next)
+        return
       }
 
-      logger.error(
-        'Request and hydraChallenge are both set but user is not authenticated. Unknown state!'
-      )
-      return Promise.reject(
-        new Error(
-          "'Request and hydraChallenge are bot set but user is not authenticated. Please try again!'"
+      if (hydraLoginState !== req.session?.hydraLoginState) {
+        // States mismatch, retry.
+        logger.debug(
+          'Redirecting to login page because login states do not match.'
         )
+        redirectToLogin(req, res, next)
+        return
+      }
+
+      // Figuring out the user
+      return (
+        kratosClient
+          // We need to know who the user is for hydra
+          .whoami(req as { headers: { [name: string]: string } })
+          .then(({ body }) => {
+            // We need to get the email of the user. We don't want to do that via traits as
+            // they are dynamic. They would be part of the PublicAPI. That's not true
+            // for identity.addresses So let's get it via the AdmninAPI
+            const subject = body.identity.id
+
+            // User is authenticated, accept the LoginRequest and tell Hydra
+            let acceptLoginRequest: AcceptLoginRequest = new AcceptLoginRequest()
+            acceptLoginRequest.subject = subject
+            acceptLoginRequest.context = body
+
+            return hydraClient
+              .acceptLoginRequest(hydraChallenge, acceptLoginRequest)
+              .then(({ body }) => {
+                // All we need to do now is to redirect the user back to hydra!
+                res.redirect(String(body.redirectTo))
+              })
+          })
       )
     })
     .catch(next)
@@ -198,7 +206,7 @@ export const hydraGetConsent = (
   // The challenge is used to fetch information about the consent request from ORY Hydra.
   const challenge = req.query.consent_challenge
 
-  if (!challenge || (typeof challenge !== "string")) {
+  if (!challenge || !isString(challenge)) {
     next(new Error('Expected consent_challenge to be set.'))
     return
   }
@@ -206,7 +214,7 @@ export const hydraGetConsent = (
   hydraClient
     .getConsentRequest(challenge)
     // This will be called if the HTTP request was successful
-    .then(({body}) => {
+    .then(({ body }) => {
       // If a user has granted this application the requested scope, hydra will tell us to not show the UI.
       if (body.skip) {
         // You can apply logic here, for example grant another scope, or do whatever...
@@ -230,7 +238,7 @@ export const hydraGetConsent = (
 
         return hydraClient
           .acceptConsentRequest(challenge, acceptConsentRequest)
-          .then(({body}) => {
+          .then(({ body }) => {
             // All we need to do now is to redirect the user back to hydra!
             res.redirect(String(body.redirectTo))
           })
@@ -271,7 +279,7 @@ export const hydraPostConsent = (
     return (
       hydraClient
         .rejectConsentRequest(challenge, rejectConsentRequest)
-        .then(({body}) => {
+        .then(({ body }) => {
           // All we need to do now is to redirect the browser back to hydra!
           res.redirect(String(body.redirectTo))
         })
@@ -289,7 +297,7 @@ export const hydraPostConsent = (
   hydraClient
     .getConsentRequest(challenge)
     // This will be called if the HTTP request was successful
-    .then(({body}) => {
+    .then(({ body }) => {
       const acceptConsentRequest = new AcceptConsentRequest()
       // We can grant all scopes that have been requested - hydra already checked for us that no additional scopes
       // are requested accidentally.
@@ -314,7 +322,7 @@ export const hydraPostConsent = (
 
       return hydraClient.acceptConsentRequest(challenge, acceptConsentRequest)
     })
-    .then(({body}) => {
+    .then(({ body }) => {
       // All we need to do now is to redirect the user back to hydra!
       res.redirect(String(body.redirectTo))
     })

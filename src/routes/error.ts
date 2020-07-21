@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from 'express'
 import config from '../config'
 import { CommonApi, ErrorContainer } from '@oryd/kratos-client'
 import { IncomingMessage } from 'http'
-import {isString} from "../helpers";
+import { isString } from '../helpers'
 
 const kratos = new CommonApi(config.kratos.admin)
 

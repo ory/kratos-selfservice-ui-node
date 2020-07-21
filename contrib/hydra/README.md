@@ -9,7 +9,7 @@ $ docker-compose up --build
 Next, create an OAuth2 Client
 
 ```shell script
-$ docker-compose -f quickstart.yml exec hydra \
+$ docker-compose exec hydra \
     hydra clients create \
     --endpoint http://127.0.0.1:4445 \
     --id auth-code-client \

@@ -2,15 +2,16 @@ import { NextFunction, Request, Response } from 'express'
 import config, { logger } from '../config'
 import { CommonApi } from '@oryd/kratos-client'
 import { IncomingMessage } from 'http'
+import {isString} from "../helpers";
 
 const kratos = new CommonApi(config.kratos.admin)
 
 export default (req: Request, res: Response, next: NextFunction) => {
-  const request = String(req.query.request)
+  const request = req.query.request
 
   // The request is used to identify the login and registration request and
   // return data like the csrf_token and so on.
-  if (!request) {
+  if (!request || !isString(request)) {
     logger.info('No request found in URL, initializing verify flow.')
     res.redirect(
       `${config.kratos.browser}/self-service/browser/flows/verification/email`
@@ -30,12 +31,8 @@ export default (req: Request, res: Response, next: NextFunction) => {
         return Promise.reject(body)
       }
 
-      return body
-    })
-    .then((request: any) => {
-      res.render('verification', {
-        ...request,
-      })
-    })
+        res.render('verification', body)
+      }
+    )
     .catch(next)
 }

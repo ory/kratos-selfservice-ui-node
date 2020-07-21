@@ -9,17 +9,17 @@ import {
 } from '@oryd/kratos-client'
 import {IncomingMessage} from 'http'
 
+const kratos = new AdminApi(config.kratos.admin)
+
 // A simple express handler that shows the login / registration screen.
 // Argument "type" can either be "login" or "registration" and will
 // fetch the form data from ORY Kratos's Public API.
-const adminEndpoint = new AdminApi(config.kratos.admin)
-
 export const authHandler = (type: 'login' | 'registration') => (
   req: Request,
   res: Response,
   next: NextFunction
 ) => {
-  const request = req.query.request
+  const request = String(req.query.request)
 
   // The request is used to identify the login and registration request and
   // return data like the csrf_token and so on.
@@ -34,8 +34,8 @@ export const authHandler = (type: 'login' | 'registration') => (
     body?: LoginRequest | RegistrationRequest
   }> =
     type === 'login'
-      ? adminEndpoint.getSelfServiceBrowserLoginRequest(request)
-      : adminEndpoint.getSelfServiceBrowserRegistrationRequest(request)
+      ? kratos.getSelfServiceBrowserLoginRequest(request)
+      : kratos.getSelfServiceBrowserRegistrationRequest(request)
 
   authRequest
     .then(({body, response}) => {
@@ -74,8 +74,8 @@ export const authHandler = (type: 'login' | 'registration') => (
 
       res.render(type, {
         ...request,
-        oidc:methodConfig("oidc"),
-        password:methodConfig("password"),
+        oidc: methodConfig("oidc"),
+        password: methodConfig("password"),
       })
     })
     .catch(err => {

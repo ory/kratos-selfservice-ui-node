@@ -3,10 +3,10 @@ import config from '../config'
 import {CommonApi} from '@oryd/kratos-client'
 import {IncomingMessage} from 'http'
 
-const commonApi = new CommonApi(config.kratos.admin)
+const kratos = new CommonApi(config.kratos.admin)
 
 export default (req: Request, res: Response, next: NextFunction) => {
-  const request = req.query.request
+  const request = String(req.query.request)
 
   // The request is used to identify the account recovery request and
   // return data like the csrf_token and so on.
@@ -16,7 +16,7 @@ export default (req: Request, res: Response, next: NextFunction) => {
     return
   }
 
-  commonApi
+  kratos
     .getSelfServiceBrowserRecoveryRequest(request)
     .then(({body, response}: { response: IncomingMessage, body?: any }) => {
         if (response.statusCode == 404) {

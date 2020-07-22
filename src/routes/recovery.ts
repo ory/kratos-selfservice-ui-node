@@ -1,8 +1,8 @@
-import {NextFunction, Request, Response} from 'express'
-import config from '../config'
-import {CommonApi} from '@oryd/kratos-client'
-import {IncomingMessage} from 'http'
-import {isString} from "../helpers";
+import { NextFunction, Request, Response } from 'express'
+import config, { logger } from '../config'
+import { CommonApi } from '@oryd/kratos-client'
+import { IncomingMessage } from 'http'
+import { isString } from '../helpers'
 
 const kratos = new CommonApi(config.kratos.admin)
 
@@ -12,14 +12,14 @@ export default (req: Request, res: Response, next: NextFunction) => {
   // The request is used to identify the account recovery request and
   // return data like the csrf_token and so on.
   if (!request || !isString(request)) {
-    console.log('No request found in URL, initializing recovery flow.')
+    logger.info('No request found in URL, initializing recovery flow.')
     res.redirect(`${config.kratos.browser}/self-service/browser/flows/recovery`)
     return
   }
 
   kratos
     .getSelfServiceBrowserRecoveryRequest(request)
-    .then(({body, response}: { response: IncomingMessage, body?: any }) => {
+    .then(({ body, response }: { response: IncomingMessage; body?: any }) => {
       if (response.statusCode == 404) {
         res.redirect(
           `${config.kratos.browser}/self-service/browser/flows/recovery`
@@ -41,7 +41,7 @@ export default (req: Request, res: Response, next: NextFunction) => {
 
       res.render('recovery', {
         ...body,
-        token: methodConfig('link')
+        token: methodConfig('link'),
       })
     })
     .catch(next)

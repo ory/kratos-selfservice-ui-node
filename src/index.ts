@@ -1,27 +1,33 @@
 import cookieParser from 'cookie-parser'
-import express, { Request, NextFunction, Response } from 'express'
+import express, {Request, NextFunction, Response} from 'express'
 import handlebars from 'express-handlebars'
 import request from 'request'
-import { authHandler } from './routes/auth'
+import {authHandler} from './routes/auth'
+import {hydraLogin, hydraGetConsent, hydraPostConsent} from './routes/hydra'
 import errorHandler from './routes/error'
 import dashboard from './routes/dashboard'
 import debug from './routes/debug'
-import config, { SECURITY_MODE_JWT, SECURITY_MODE_STANDALONE } from './config'
+import config, {
+  SECURITY_MODE_JWT,
+  SECURITY_MODE_STANDALONE,
+  logger,
+} from './config'
 import jwks from 'jwks-rsa'
 import jwt from 'express-jwt'
-import {
-  getTitle,
-  sortFormFields,
-  toFormInputPartialName,
-} from './translations'
+import {getTitle, toFormInputPartialName} from './translations'
 import * as stubs from './stub/payloads'
-import { FormField, PublicApi } from '@oryd/kratos-client'
+import {PublicApi} from '@oryd/kratos-client'
 import settingsHandler from './routes/settings'
 import verifyHandler from './routes/verification'
 import recoveryHandler from './routes/recovery'
 import morgan from 'morgan'
 import * as https from 'https'
 import * as fs from 'fs'
+import bodyParser from 'body-parser'
+import csrf from 'csurf'
+import session from 'express-session'
+
+const csrfProtection = csrf({cookie: true})
 
 const protectOathKeeper = jwt({
   // Dynamically provide a signing key based on the kid in the header and the signing keys provided by the JWKS endpoint.
@@ -41,8 +47,8 @@ const protectProxy = (req: Request, res: Response, next: NextFunction) => {
   req.headers['host'] = config.kratos.public.split('/')[2]
   publicEndpoint
     .whoami(req as { headers: { [name: string]: string } })
-    .then(({ body, response }) => {
-      ;(req as Request & { user: any }).user = { session: body }
+    .then(({body, response}) => {
+      ;(req as Request & { user: any }).user = {session: body}
       next()
     })
     .catch(() => {
@@ -64,6 +70,12 @@ app.use((req: Request, res: Response, next: NextFunction) => {
   res.locals.pathPrefix = config.baseUrl ? '' : '/'
   next()
 })
+app.use(session({
+  secret: config.cookieSecret,
+  resave: false,
+  saveUninitialized: true,
+  cookie: { secure: config.https.enabled}
+}))
 app.use(express.static('public'))
 app.use(express.static('node_modules/normalize.css'))
 
@@ -108,15 +120,35 @@ if (process.env.NODE_ENV === 'stub') {
     res.render('settings', stubs.settings)
   })
   app.get('/error', (_: Request, res: Response) => res.render('error'))
+  app.get('/auth/hydra/consent', (_: Request, res: Response) => {
+    res.render('consent', {
+      csrfToken: 'no CSRF!',
+      challenge: 'challenge',
+      requested_scope: ['scope1', 'scope2'],
+      user: 'response.subject',
+      client: 'response.client',
+    })
+  })
 } else {
   app.get('/', protect, dashboard)
-  app.get('/dashboard', protect, dashboard)
   app.get('/auth/registration', authHandler('registration'))
   app.get('/auth/login', authHandler('login'))
   app.get('/error', errorHandler)
   app.get('/settings', protect, settingsHandler)
   app.get('/verify', verifyHandler)
   app.get('/recovery', recoveryHandler)
+
+  if (Boolean(config.hydra.admin)) {
+    app.get('/auth/hydra/login', hydraLogin)
+    app.get('/auth/hydra/consent',
+      protect, csrfProtection,
+      hydraGetConsent, errorHandler
+    )
+    app.post('/auth/hydra/consent',
+      protect, bodyParser.urlencoded({extended: true}),
+      csrfProtection, hydraPostConsent
+    )
+  }
 }
 
 app.get('/health', (_: Request, res: Response) => res.send('ok'))
@@ -130,7 +162,7 @@ if (config.securityMode === SECURITY_MODE_STANDALONE) {
       const url =
         config.kratos.public + req.url.replace('/.ory/kratos/public', '')
       req
-        .pipe(request(url, { followRedirect: false }).on('error', next))
+        .pipe(request(url, {followRedirect: false}).on('error', next))
         .pipe(res)
     }
   )
@@ -141,7 +173,7 @@ app.get('*', (_: Request, res: Response) => {
 })
 
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
-  console.error(err.stack)
+  logger.error(err.message, err.stack)
   res.status(500).render('error', {
     message: JSON.stringify(err, null, 2),
   })
@@ -151,8 +183,8 @@ const port = Number(process.env.PORT) || 3000
 
 let listener = () => {
   let proto = config.https.enabled ? 'https' : 'http'
-  console.log(`Listening on ${proto}://0.0.0.0:${port}`)
-  console.log(`Security mode: ${config.securityMode}`)
+  logger.info(`Listening on ${proto}://0.0.0.0:${port}`)
+  logger.info(`Security mode: ${config.securityMode}`)
 }
 
 if (config.https.enabled) {

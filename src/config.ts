@@ -1,3 +1,16 @@
+import winston from 'winston'
+import crypto from 'crypto'
+
+// Replace this with how you think logging should look like
+export const logger = winston.createLogger({
+  format: winston.format.combine(
+    winston.format.colorize(),
+    winston.format.simple()
+  ),
+  level: process.env.NODE_ENV === 'production' ? 'info' : 'debug',
+  transports: [new winston.transports.Console()],
+})
+
 export const SECURITY_MODE_STANDALONE = 'cookie'
 export const SECURITY_MODE_JWT = 'jwt'
 
@@ -18,11 +31,16 @@ switch ((process.env.SECURITY_MODE || '').toLowerCase()) {
     securityMode = SECURITY_MODE_JWT
 }
 
+const cookieSecret = crypto.randomBytes(48).toString('hex')
+
 export default {
   kratos: {
     browser: browserUrl.replace(/\/+$/, ''),
     admin: (process.env.KRATOS_ADMIN_URL || '').replace(/\/+$/, ''),
     public: publicUrl.replace(/\/+$/, ''),
+  },
+  hydra: {
+    admin: (process.env.HYDRA_ADMIN_URL || '').replace(/\/+$/, ''),
   },
   baseUrl,
   jwksUrl: process.env.JWKS_URL || '/',
@@ -31,6 +49,8 @@ export default {
   securityMode,
   SECURITY_MODE_JWT,
   SECURITY_MODE_STANDALONE,
+
+  cookieSecret: process.env.COOKIE_SECRET || cookieSecret,
 
   https: {
     enabled:

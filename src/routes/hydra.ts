@@ -145,6 +145,7 @@ export const hydraLogin = (req: Request, res: Response, next: NextFunction) => {
       }
 
       // Figuring out the user
+      req.headers['host'] = config.kratos.public.split('/')[2]
       return (
         kratosClient
           // We need to know who the user is for hydra

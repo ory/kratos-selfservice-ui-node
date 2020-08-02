@@ -11,7 +11,7 @@ import { isString } from '../helpers'
 import crypto from 'crypto'
 
 // Client for interacting with Hydra's Admin API
-const hydraClient = new HydraAdminApi(process.env.HYDRA_ADMIN_URL)
+const hydraClient = new HydraAdminApi(config.hydra.admin)
 
 // Client for interacting with Kratos' Public and Admin API
 const kratosClient = new PublicApi(config.kratos.public)

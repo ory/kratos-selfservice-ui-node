@@ -1,9 +1,9 @@
 import cookieParser from 'cookie-parser'
-import express, {Request, NextFunction, Response} from 'express'
+import express, { Request, NextFunction, Response } from 'express'
 import handlebars from 'express-handlebars'
 import request from 'request'
-import {authHandler} from './routes/auth'
-import {hydraLogin, hydraGetConsent, hydraPostConsent} from './routes/hydra'
+import { authHandler } from './routes/auth'
+import { hydraLogin, hydraGetConsent, hydraPostConsent } from './routes/hydra'
 import errorHandler from './routes/error'
 import dashboard from './routes/dashboard'
 import debug from './routes/debug'
@@ -14,9 +14,9 @@ import config, {
 } from './config'
 import jwks from 'jwks-rsa'
 import jwt from 'express-jwt'
-import {getTitle, toFormInputPartialName} from './translations'
+import { getTitle, toFormInputPartialName } from './translations'
 import * as stubs from './stub/payloads'
-import {PublicApi} from '@oryd/kratos-client'
+import { PublicApi } from '@oryd/kratos-client'
 import settingsHandler from './routes/settings'
 import verifyHandler from './routes/verification'
 import recoveryHandler from './routes/recovery'
@@ -27,7 +27,7 @@ import bodyParser from 'body-parser'
 import csrf from 'csurf'
 import session from 'express-session'
 
-const csrfProtection = csrf({cookie: true})
+const csrfProtection = csrf({ cookie: true })
 
 const protectOathKeeper = jwt({
   // Dynamically provide a signing key based on the kid in the header and the signing keys provided by the JWKS endpoint.
@@ -47,8 +47,8 @@ const protectProxy = (req: Request, res: Response, next: NextFunction) => {
   req.headers['host'] = config.kratos.public.split('/')[2]
   publicEndpoint
     .whoami(req as { headers: { [name: string]: string } })
-    .then(({body, response}) => {
-      ;(req as Request & { user: any }).user = {session: body}
+    .then(({ body, response }) => {
+      ;(req as Request & { user: any }).user = { session: body }
       next()
     })
     .catch(() => {
@@ -70,12 +70,14 @@ app.use((req: Request, res: Response, next: NextFunction) => {
   res.locals.pathPrefix = config.baseUrl ? '' : '/'
   next()
 })
-app.use(session({
-  secret: config.cookieSecret,
-  resave: false,
-  saveUninitialized: true,
-  cookie: { secure: config.https.enabled}
-}))
+app.use(
+  session({
+    secret: config.cookieSecret,
+    resave: false,
+    saveUninitialized: true,
+    cookie: { secure: config.https.enabled },
+  })
+)
 app.use(express.static('public'))
 app.use(express.static('node_modules/normalize.css'))
 
@@ -140,13 +142,19 @@ if (process.env.NODE_ENV === 'stub') {
 
   if (Boolean(config.hydra.admin)) {
     app.get('/auth/hydra/login', hydraLogin)
-    app.get('/auth/hydra/consent',
-      protect, csrfProtection,
-      hydraGetConsent, errorHandler
+    app.get(
+      '/auth/hydra/consent',
+      protect,
+      csrfProtection,
+      hydraGetConsent,
+      errorHandler
     )
-    app.post('/auth/hydra/consent',
-      protect, bodyParser.urlencoded({extended: true}),
-      csrfProtection, hydraPostConsent
+    app.post(
+      '/auth/hydra/consent',
+      protect,
+      bodyParser.urlencoded({ extended: true }),
+      csrfProtection,
+      hydraPostConsent
     )
   }
 }
@@ -162,7 +170,7 @@ if (config.securityMode === SECURITY_MODE_STANDALONE) {
       const url =
         config.kratos.public + req.url.replace('/.ory/kratos/public', '')
       req
-        .pipe(request(url, {followRedirect: false}).on('error', next))
+        .pipe(request(url, { followRedirect: false }).on('error', next))
         .pipe(res)
     }
   )

@@ -8,14 +8,13 @@ jobs:
       - checkout
       - restore_cache:
           keys:
-            - v1-dependencies-{{ checksum "package-lock.json" }}
-            - v1-dependencies-
+            - kratos-selfservice-ui-node-{{ checksum "package-lock.json" }}
       - run: npm ci
       - run: npm run check-format
       - save_cache:
           paths:
             - node_modules
-          key: v1-dependencies-{{ checksum "package-lock.json" }}
+          key: kratos-selfservice-ui-node-{{ checksum "package-lock.json" }}
       - run: npm test
 
   build:
@@ -26,13 +25,12 @@ jobs:
       - checkout
       - restore_cache:
           keys:
-            - v1-dependencies-{{ checksum "package-lock.json" }}
-            - v1-dependencies-
+            - kratos-selfservice-ui-node-{{ checksum "package-lock.json" }}
       - run: npm ci
       - save_cache:
           paths:
             - node_modules
-          key: v1-dependencies-{{ checksum "package-lock.json" }}
+          key: kratos-selfservice-ui-node-{{ checksum "package-lock.json" }}
       - run: npm build
 
   release:

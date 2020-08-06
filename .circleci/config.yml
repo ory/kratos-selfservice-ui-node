@@ -2,7 +2,7 @@ version: 2.1
 jobs:
   test:
     docker:
-      - image: circleci/node:13.6
+      - image: circleci/node:14.7
     working_directory: ~/app
     steps:
       - checkout
@@ -19,7 +19,7 @@ jobs:
 
   build:
     docker:
-      - image: circleci/node:13.6
+      - image: circleci/node:14.7
     working_directory: ~/app
     steps:
       - checkout
@@ -35,7 +35,7 @@ jobs:
 
   release:
     docker:
-      - image: circleci/node:13.6
+      - image: circleci/node:14.7
     working_directory: ~/app
     steps:
       - checkout

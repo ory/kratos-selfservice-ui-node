@@ -22,7 +22,7 @@
   },
   "homepage": "https://github.com/ory/kratos-selfservice-ui-node#readme",
   "dependencies": {
-    "@oryd/kratos-client": "0.0.0-next.a3fbd19e6f44",
+    "@oryd/kratos-client": "0.0.0-next.a9be195f356a",
     "@types/cookie-parser": "^1.4.2",
     "@types/express": "^4.17.7",
     "@types/express-handlebars": "0.0.33",

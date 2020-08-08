@@ -1,4 +1,4 @@
-import url from 'url'
+import urljoin from 'url-join'
 
 export const SECURITY_MODE_STANDALONE = 'cookie'
 export const SECURITY_MODE_JWT = 'jwt'
@@ -12,7 +12,7 @@ switch ((process.env.SECURITY_MODE || '').toLowerCase()) {
   case 'cookie':
   case 'standalone':
     securityMode = SECURITY_MODE_STANDALONE
-    browserUrl = url.resolve(baseUrl, '/.ory/kratos/public/')
+    browserUrl = urljoin(baseUrl, '/.ory/kratos/public/')
     break
   case 'jwt':
   case 'oathkeeper':

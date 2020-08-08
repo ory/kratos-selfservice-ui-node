@@ -20,7 +20,7 @@ import settingsHandler from './routes/settings'
 import verifyHandler from './routes/verification'
 import recoveryHandler from './routes/recovery'
 import morgan from 'morgan'
-import url from 'url'
+import urljoin from 'url-join'
 import * as https from 'https'
 import * as fs from 'fs'
 
@@ -47,7 +47,7 @@ const protectProxy = (req: Request, res: Response, next: NextFunction) => {
       next()
     })
     .catch(() => {
-      res.redirect(url.resolve(config.baseUrl, '/auth/login'))
+      res.redirect(urljoin(config.baseUrl, '/auth/login'))
     })
 }
 
@@ -61,7 +61,7 @@ app.set('view engine', 'hbs')
 
 app.use((req: Request, res: Response, next: NextFunction) => {
   res.locals.projectName = config.projectName
-  res.locals.baseUrl = url.resolve(config.baseUrl, '/')
+  res.locals.baseUrl = urljoin(config.baseUrl, '/')
   res.locals.pathPrefix = config.baseUrl ? '' : '/'
   next()
 })

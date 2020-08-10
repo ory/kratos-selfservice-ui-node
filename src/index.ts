@@ -61,7 +61,7 @@ app.set('view engine', 'hbs')
 
 app.use((req: Request, res: Response, next: NextFunction) => {
   res.locals.projectName = config.projectName
-  res.locals.baseUrl = urljoin(config.baseUrl, '/')
+  res.locals.baseUrl = config.baseUrl
   res.locals.pathPrefix = config.baseUrl ? '' : '/'
   next()
 })
@@ -128,8 +128,10 @@ if (config.securityMode === SECURITY_MODE_STANDALONE) {
   app.use(
     '/.ory/kratos/public/',
     (req: Request, res: Response, next: NextFunction) => {
-      const url =
-        config.kratos.public + req.url.replace('/.ory/kratos/public', '')
+      const url = urljoin(
+        config.kratos.public,
+        req.url.replace('/.ory/kratos/public', '')
+      )
       req
         .pipe(request(url, { followRedirect: false }).on('error', next))
         .pipe(res)

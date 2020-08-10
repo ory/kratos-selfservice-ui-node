@@ -128,8 +128,10 @@ if (config.securityMode === SECURITY_MODE_STANDALONE) {
   app.use(
     '/.ory/kratos/public/',
     (req: Request, res: Response, next: NextFunction) => {
-      const url =
-        urljoin(config.kratos.public, req.url.replace('/.ory/kratos/public', ''))
+      const url = urljoin(
+        config.kratos.public,
+        req.url.replace('/.ory/kratos/public', '')
+      )
       req
         .pipe(request(url, { followRedirect: false }).on('error', next))
         .pipe(res)

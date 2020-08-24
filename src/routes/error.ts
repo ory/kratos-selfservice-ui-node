@@ -31,22 +31,19 @@ export default (req: Request, res: Response, next: NextFunction) => {
           return
         }
 
-        return body
+        if ('errors' in body) {
+          res.status(500).render('error', {
+            message: JSON.stringify(body.errors, null, 2),
+          })
+          return Promise.resolve()
+        }
+
+        return Promise.reject(
+          `expected errorContainer to contain "errors" but got ${JSON.stringify(
+            body
+          )}`
+        )
       }
     )
-    .then((errorContainer = {}) => {
-      if ('errors' in errorContainer) {
-        res.status(500).render('error', {
-          message: JSON.stringify(errorContainer.errors, null, 2),
-        })
-        return Promise.resolve()
-      }
-
-      return Promise.reject(
-        `expected errorContainer to contain "errors" but got ${JSON.stringify(
-          errorContainer
-        )}`
-      )
-    })
     .catch(next)
 }

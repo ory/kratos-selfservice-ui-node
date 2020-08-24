@@ -4,8 +4,8 @@ import {sortFormFields} from '../translations'
 import {
   AdminApi,
   FormField,
-  LoginRequest,
-  RegistrationRequest,
+  LoginFlow,
+  RegistrationFlow,
 } from '@oryd/kratos-client'
 import {IncomingMessage} from 'http'
 import {isString} from "../helpers";
@@ -20,29 +20,31 @@ export const authHandler = (type: 'login' | 'registration') => (
   res: Response,
   next: NextFunction
 ) => {
-  const request = req.query.request
+  const flow = req.query.flow
 
-  // The request is used to identify the login and registration request and
+  // The flow is used to identify the login and registration flow and
   // return data like the csrf_token and so on.
-  if (!request || !isString(request)) {
-    console.log('No request found in URL, initializing auth flow.')
-    res.redirect(`${config.kratos.browser}/self-service/browser/flows/${type}`)
+  if (!flow || !isString(flow)) {
+    console.log('No flow ID found in URL, initializing auth flow.')
+    res.redirect(
+      `${config.kratos.browser}/self-service/${type}/browser`
+    )
     return
   }
 
   const authRequest: Promise<{
     response: IncomingMessage
-    body?: LoginRequest | RegistrationRequest
+    body?: LoginFlow | RegistrationFlow
   }> =
     type === 'login'
-      ? kratos.getSelfServiceBrowserLoginRequest(request)
-      : kratos.getSelfServiceBrowserRegistrationRequest(request)
+      ? kratos.getSelfServiceLoginFlow(flow)
+      : kratos.getSelfServiceRegistrationFlow(flow)
 
   authRequest
     .then(({body, response}) => {
       if (response.statusCode == 404 || response.statusCode == 410 || response.statusCode == 403) {
         res.redirect(
-          `${config.kratos.browser}/self-service/browser/flows/${type}`
+          `${config.kratos.browser}/self-service/${type}/browser`
         )
         return
       } else if (response.statusCode != 200) {
@@ -51,9 +53,11 @@ export const authHandler = (type: 'login' | 'registration') => (
 
       return body
     })
-    .then((request?: LoginRequest | RegistrationRequest) => {
+    .then((request?: LoginFlow | RegistrationFlow) => {
       if (!request) {
-        res.redirect(`${config.kratos.browser}/self-service/browser/flows/${type}`)
+        res.redirect(
+          `${config.kratos.browser}/self-service/${type}/browser`
+        )
         return
       }
 
@@ -63,8 +67,8 @@ export const authHandler = (type: 'login' | 'registration') => (
         request.methods.password.config.fields = request.methods.password.config.fields.sort(sortFormFields)
       }
 
-      // This helper returns a request method config (e.g. for the password flow).
-      // If active is set and not the given request method key, it wil be omitted.
+      // This helper returns a flow method config (e.g. for the password flow).
+      // If active is set and not the given flow method key, it wil be omitted.
       // This prevents the user from e.g. signing up with email but still seeing
       // other sign up form elements when an input is incorrect.
       const methodConfig = (key: string) => {

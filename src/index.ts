@@ -6,16 +6,15 @@ import { authHandler } from './routes/auth'
 import errorHandler from './routes/error'
 import dashboard from './routes/dashboard'
 import debug from './routes/debug'
-import config, { SECURITY_MODE_JWT, SECURITY_MODE_STANDALONE } from './config'
+import config, { SECURITY_MODE_JWT } from './config'
 import jwks from 'jwks-rsa'
 import jwt from 'express-jwt'
 import {
   getTitle,
-  sortFormFields,
   toFormInputPartialName,
 } from './translations'
 import * as stubs from './stub/payloads'
-import { FormField, PublicApi } from '@oryd/kratos-client'
+import { PublicApi } from '@oryd/kratos-client'
 import settingsHandler from './routes/settings'
 import verifyHandler from './routes/verification'
 import recoveryHandler from './routes/recovery'
@@ -50,7 +49,6 @@ const protectProxy = (req: Request, res: Response, next: NextFunction) => {
       res.redirect(urljoin(config.baseUrl, '/auth/login'))
     })
 }
-
 const protect =
   config.securityMode === SECURITY_MODE_JWT ? protectOathKeeper : protectProxy
 
@@ -122,22 +120,6 @@ if (process.env.NODE_ENV === 'stub') {
 
 app.get('/health', (_: Request, res: Response) => res.send('ok'))
 app.get('/debug', debug)
-
-if (config.securityMode === SECURITY_MODE_STANDALONE) {
-  // If this security mode is enabled, we redirect all requests matching `/self-service` to ORY Kratos
-  app.use(
-    '/.ory/kratos/public/',
-    (req: Request, res: Response, next: NextFunction) => {
-      const url = urljoin(
-        config.kratos.public,
-        req.url.replace('/.ory/kratos/public', '')
-      )
-      req
-        .pipe(request(url, { followRedirect: false }).on('error', next))
-        .pipe(res)
-    }
-  )
-}
 
 app.get('*', (_: Request, res: Response) => {
   res.redirect(config.baseUrl)

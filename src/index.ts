@@ -9,10 +9,7 @@ import debug from './routes/debug'
 import config, { SECURITY_MODE_JWT } from './config'
 import jwks from 'jwks-rsa'
 import jwt from 'express-jwt'
-import {
-  getTitle,
-  toFormInputPartialName,
-} from './translations'
+import { getTitle, toFormInputPartialName } from './translations'
 import * as stubs from './stub/payloads'
 import { PublicApi } from '@oryd/kratos-client'
 import settingsHandler from './routes/settings'

@@ -1,15 +1,26 @@
 import {NextFunction, Request, Response} from 'express'
+import {AdminApi, LoginFlow, RegistrationFlow} from '@oryd/kratos-client'
+import {IncomingMessage} from 'http'
+
 import config from '../config'
 import {sortFormFields} from '../translations'
-import {
-  AdminApi,
-  FormField,
-  LoginFlow,
-  RegistrationFlow,
-} from '@oryd/kratos-client'
-import {IncomingMessage} from 'http'
 import {isString} from "../helpers";
 
+// Variable config has keys:
+// kratos: {
+//
+//   // The browser config key is used to redirect the user. It reflects where ORY Kratos' Public API
+//   // is accessible from. Here, we're assuming traffic going to `http://example.org/.ory/kratos/public/`
+//   // will be forwarded to ORY Kratos' Public API.
+//   browser: 'https://kratos.example.org',
+//
+//   // The locatoin of the ORY Kratos Admin API
+//   admin: 'https://ory-kratos-admin.example-org.vpc',
+// },
+
+// Uses the ORY Kratos NodeJS SDK - for more SDKs check:
+//
+//  https://www.ory.sh/kratos/docs/sdk/index
 const kratos = new AdminApi(config.kratos.admin)
 
 // A simple express handler that shows the login / registration screen.
@@ -41,30 +52,20 @@ export const authHandler = (type: 'login' | 'registration') => (
       : kratos.getSelfServiceRegistrationFlow(flow)
 
   authRequest
-    .then(({body, response}) => {
-      if (response.statusCode == 404 || response.statusCode == 410 || response.statusCode == 403) {
+    .then(({body: flow, response}) => {
+      if (response.statusCode == 404 || response.statusCode == 410 || response.statusCode == 403 || !flow) {
         res.redirect(
           `${config.kratos.browser}/self-service/${type}/browser`
         )
         return
       } else if (response.statusCode != 200) {
-        return Promise.reject(body)
+        return Promise.reject(flow)
       }
 
-      return body
-    })
-    .then((request?: LoginFlow | RegistrationFlow) => {
-      if (!request) {
-        res.redirect(
-          `${config.kratos.browser}/self-service/${type}/browser`
-        )
-        return
-      }
-
-      if (request.methods.password.config?.fields) {
+      if (flow.methods.password.config?.fields) {
         // We want the form fields to be sorted so that the email address is first, the
         // password second, and so on.
-        request.methods.password.config.fields = request.methods.password.config.fields.sort(sortFormFields)
+        flow.methods.password.config.fields = flow.methods.password.config.fields.sort(sortFormFields)
       }
 
       // This helper returns a flow method config (e.g. for the password flow).
@@ -72,16 +73,18 @@ export const authHandler = (type: 'login' | 'registration') => (
       // This prevents the user from e.g. signing up with email but still seeing
       // other sign up form elements when an input is incorrect.
       const methodConfig = (key: string) => {
-        if (request?.active === key || !request?.active) {
-          return request?.methods[key]?.config
+        if (flow?.active === key || !flow?.active) {
+          return flow?.methods[key]?.config
         }
       }
 
+      // Render the data using a view (e.g. Jade Template):
       res.render(type, {
-        ...request,
+        ...flow,
         oidc: methodConfig("oidc"),
         password: methodConfig("password"),
       })
     })
+    // Handle errors using ExpressJS' next functionality:
     .catch(next)
 }

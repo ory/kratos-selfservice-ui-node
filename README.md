@@ -37,25 +37,28 @@ This application can be configured using two environment variables:
 
 This application works in two set ups:
 
-- Standalone with ORY Kratos
+- Standalone
 - With the ORY Oathkeeper Reverse Proxy
 
-#### Standalone using cookies
+#### Standalone
 
-This mode adds a route to the app which proxies all traffic flowing to `/.ory/kratos/public/*`
-to ORY Kratos' Public API. That way, this app and ORY Kratos share the same domain
-and port which makes cookies work.
+This is the easiest mode as it requires no additional set up. This app runs on port `:4455`
+and ORY Kratos on the specified `KRATOS_ADMIN_URL`, `KRATOS_PUBLIC_URL` URLs.
+
+This mode relies on the browser's ability to send cookies regardless of the port. Cookies set for
+`127.0.0.1:4433` will thus also be sent when requesting `127.0.0.1:4455`. For environments
+where applications run on separate subdomains, check out [Multi-Domain Cookies](https://www.ory.sh/kratos/docs/guides/multi-domain-cookies)
 
 To authenticate incoming requests, this app uses ORY Kratos' `whoami` API to check
 whether the session is valid or not.
 
-To enable this mode, set the environment variable `SECURITY_MODE=cookie`.
+To enable this mode, set the environment variable `SECURITY_MODE=cookie` or leave it empty.
 
 ### With Oathkeeper using JSON Web Tokens (JWT)
 
 This mode requires ORY Oathkeeper to route all incoming traffic to either ORY Kratos
 or this app. It is expected that no browser traffic can reach this app or ORY Kratos
-directly.
+directly. To check out the full guide, head over to [Zero Trust with IAP Proxy](https://www.ory.sh/kratos/docs/guides/zero-trust-iap-proxy-identity-access-proxy).
 
 This app then expects ORY Oathkeeper to use the `id_token` mutator which is a
 JSON Web Token this app validates in order to figure out if a request is authorized (logged in)

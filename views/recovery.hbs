@@ -5,9 +5,9 @@
 
         {{> messages messages=messages className="global"}}
 
-        {{#if token}}
+        {{#if link}}
             <div id="recovery-token">
-                {{> form form=token submitLabel="Send recovery link"}}
+                {{> form form=link submitLabel="Send recovery link"}}
             </div>
         {{/if}}
     </div>

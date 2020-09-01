@@ -1,26 +1,26 @@
 import {NextFunction, Request, Response} from 'express'
 import config from '../config'
-import {CommonApi} from '@oryd/kratos-client'
+import {CommonApi, PublicApi} from '@oryd/kratos-client'
 import {isString} from "../helpers";
 
 const kratos = new CommonApi(config.kratos.admin)
 
 const settingsHandler = (req: Request, res: Response, next: NextFunction) => {
-  const request = req.query.request
-  // The request is used to identify the account settings request and
+  const flow = req.query.flow
+  // The flow ID is used to identify the account settings flow and
   // return data like the csrf_token and so on.
-  if (!request || !isString(request)) {
-    console.log('No request found in URL, initializing flow.')
-    res.redirect(`${config.kratos.browser}/self-service/browser/flows/settings`)
+  if (!flow || !isString(flow)) {
+    console.log('No flow found in URL, initializing flow.')
+    res.redirect(`${config.kratos.browser}/self-service/settings/browser`)
     return
   }
 
   kratos
-    .getSelfServiceBrowserSettingsRequest(request)
+    .getSelfServiceSettingsFlow(flow)
     .then(({body, response}) => {
       if (response.statusCode == 404 || response.statusCode == 410 || response.statusCode == 403) {
         res.redirect(
-          `${config.kratos.browser}/self-service/browser/flows/settings`
+          `${config.kratos.browser}/self-service/settings/browser`
         )
         return
       } else if (response.statusCode != 200) {

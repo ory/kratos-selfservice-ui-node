@@ -7,29 +7,29 @@ import {isString} from "../helpers";
 const kratos = new CommonApi(config.kratos.admin)
 
 export default (req: Request, res: Response, next: NextFunction) => {
-  const request = req.query.request
+  const flow = req.query.flow
 
-  // The request is used to identify the account recovery request and
+  // The flow is used to identify the account recovery flow and
   // return data like the csrf_token and so on.
-  if (!request || !isString(request)) {
+  if (!flow || !isString(flow)) {
     console.log('No request found in URL, initializing recovery flow.')
-    res.redirect(`${config.kratos.browser}/self-service/browser/flows/recovery`)
+    res.redirect(`${config.kratos.browser}/self-service/recovery/browser`)
     return
   }
 
   kratos
-    .getSelfServiceBrowserRecoveryRequest(request)
+    .getSelfServiceRecoveryFlow(flow)
     .then(({body, response}: { response: IncomingMessage, body?: any }) => {
       if (response.statusCode == 404) {
         res.redirect(
-          `${config.kratos.browser}/self-service/browser/flows/recovery`
+          `${config.kratos.browser}/self-service/recovery/browser`
         )
         return
       } else if (response.statusCode != 200) {
         return Promise.reject(body)
       }
 
-      // This helper returns a request method config (e.g. for the password flow).
+      // This helper returns a request method config (e.g. for the email flow).
       // If active is set and not the given request method key, it wil be omitted.
       // This prevents the user from e.g. signing up with email but still seeing
       // other sign up form elements when an input is incorrect.
@@ -41,7 +41,7 @@ export default (req: Request, res: Response, next: NextFunction) => {
 
       res.render('recovery', {
         ...body,
-        token: methodConfig('link')
+        link: methodConfig('link')
       })
     })
     .catch(next)

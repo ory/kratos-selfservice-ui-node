@@ -40,7 +40,7 @@
     "jwks-rsa": "^1.8.1",
     "jwt-decode": "^2.2.0",
     "morgan": "^1.10.0",
-    "node-fetch": "^2.6.0",
+    "node-fetch": "^2.6.1",
     "request": "^2.88.2",
     "typescript": "^3.9.7",
     "url-join": "^4.0.1"

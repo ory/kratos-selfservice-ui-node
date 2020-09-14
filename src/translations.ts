@@ -9,6 +9,18 @@ const translations = {
     title: 'E-Mail',
     position: 1,
   },
+  'traits.name.first': {
+    title: 'First Name',
+    position: 2,
+  },
+  'traits.name.last': {
+    title: 'Last Name',
+    position: 3,
+  },
+  'traits.website': {
+    title: 'Website',
+    position: 4,
+  },
   identifier: {
     title: 'E-Mail',
     position: 0,

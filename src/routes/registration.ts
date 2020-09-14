@@ -26,7 +26,7 @@ const kratos = new AdminApi(config.kratos.admin)
 // A simple express handler that shows the login / registration screen.
 // Argument "type" can either be "login" or "registration" and will
 // fetch the form data from ORY Kratos's Public API.
-export const authHandler = (type: 'login' | 'registration') => (
+export default (
   req: Request,
   res: Response,
   next: NextFunction
@@ -36,27 +36,17 @@ export const authHandler = (type: 'login' | 'registration') => (
   // The flow is used to identify the login and registration flow and
   // return data like the csrf_token and so on.
   if (!flow || !isString(flow)) {
-    console.log('No flow ID found in URL, initializing auth flow.')
+    console.log('No flow ID found in URL, initializing registration flow.')
     res.redirect(
-      `${config.kratos.browser}/self-service/${type}/browser`
+      `${config.kratos.browser}/self-service/registration/browser`
     )
     return
   }
 
-  const authRequest: Promise<{
-    response: IncomingMessage
-    body?: LoginFlow | RegistrationFlow
-  }> =
-    type === 'login'
-      ? kratos.getSelfServiceLoginFlow(flow)
-      : kratos.getSelfServiceRegistrationFlow(flow)
-
-  authRequest
+  kratos.getSelfServiceRegistrationFlow(flow)
     .then(({body: flow, response}) => {
       if (response.statusCode == 404 || response.statusCode == 410 || response.statusCode == 403 || !flow) {
-        res.redirect(
-          `${config.kratos.browser}/self-service/${type}/browser`
-        )
+        res.redirect(`${config.kratos.browser}/self-service/registration/browser`)
         return
       } else if (response.statusCode != 200) {
         return Promise.reject(flow)
@@ -79,7 +69,7 @@ export const authHandler = (type: 'login' | 'registration') => (
       }
 
       // Render the data using a view (e.g. Jade Template):
-      res.render(type, {
+      res.render('registration', {
         ...flow,
         oidc: methodConfig("oidc"),
         password: methodConfig("password"),

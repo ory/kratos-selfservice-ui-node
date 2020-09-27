@@ -1,6 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
 import { Configuration, PublicApi } from '@oryd/kratos-client';
-import { AxiosError } from 'axios';
 
 import config from '../config';
 import { sortFormFields } from '../translations';

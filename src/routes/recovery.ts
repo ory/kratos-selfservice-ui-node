@@ -1,7 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 import config from '../config';
 import { Configuration, PublicApi } from '@oryd/kratos-client';
-import { IncomingMessage } from 'http';
 import { isString, redirectOnSoftError } from '../helpers';
 
 const kratos = new PublicApi(new Configuration({ basePath: config.kratos.public }));

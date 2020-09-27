@@ -12,7 +12,9 @@ RUN npm ci
 
 COPY . /usr/src/app
 
-RUN if [ "$LINK" == "true" ] ; then cp -r ./contrib/sdk/generated/* node_modules/@oryd/kratos-client/; (cd node_modules/@oryd/kratos-client; rm -rf node_modules; npm run build) ; fi
+RUN if [ "$LINK" == "true" ]; then (cd ./contrib/sdk/generated; rm -rf node_modules; npm ci; npm run build); \
+    cp -r ./contrib/sdk/generated/* node_modules/@oryd/kratos-client/; \
+    fi
 
 RUN npm run build
 

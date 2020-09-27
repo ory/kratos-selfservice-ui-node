@@ -7,29 +7,21 @@
 //
 //   app.get("/dashboard", protect, (req, res) => { /* ... */ })
 
-import {PublicApi} from "@oryd/kratos-client";
+import {Configuration, PublicApi} from "@oryd/kratos-client";
 import config from "../config";
 import {NextFunction, Request, Response} from "express";
 import urljoin from "url-join";
 
-const sdk = new PublicApi(
-  config.kratos.public // In the quickstart: `http://127.0.0.1:4433/`
-)
+const kratos = new PublicApi(new Configuration({basePath: config.kratos.public}))
 
 export default (req: Request, res: Response, next: NextFunction) => {
-  // When using ORY Oathkeeper, the redirection is done by ORY Oathkeeper.
-  // Since we're checking for the session ourselves here, we redirect here
-  // if the session is invalid.
-  req.headers['host'] = config.kratos.public.split('/')[2]
-
-  // We override the TypeScript type because:
-  // - `whoami` does expect a simple string map, not IncomingHttpHeaders.
-  // - `express-session` does not properly type `req`.
-  const r = req as Request & { user: any } & { headers: { [name: string]: string } }
-
-  sdk.whoami(r).then(({body}) => {
-    // `whoami` returns the session or an error
-    r.user = {session: body}
+  kratos.whoami(
+    req.header("Cookie"),
+    req.header("Authorization"),
+  ).then(({data: session}) => {
+    // `whoami` returns the session or an error. We're changing the type here
+    // because express-session is not detected by TypeScript automatically.
+    (req as Request & { user: any }).user = {session}
     next()
   }).catch(() => {
     // If no session is found, redirect to login.

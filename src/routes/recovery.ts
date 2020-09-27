@@ -1,32 +1,27 @@
-import {NextFunction, Request, Response} from 'express'
-import config from '../config'
-import {CommonApi} from '@oryd/kratos-client'
-import {IncomingMessage} from 'http'
-import {isString} from "../helpers";
+import { NextFunction, Request, Response } from 'express';
+import config from '../config';
+import { Configuration, PublicApi } from '@oryd/kratos-client';
+import { IncomingMessage } from 'http';
+import { isString, redirectOnSoftError } from '../helpers';
 
-const kratos = new CommonApi(config.kratos.admin)
+const kratos = new PublicApi(new Configuration({ basePath: config.kratos.public }));
 
 export default (req: Request, res: Response, next: NextFunction) => {
-  const flow = req.query.flow
+  const flow = req.query.flow;
 
   // The flow is used to identify the account recovery flow and
   // return data like the csrf_token and so on.
   if (!flow || !isString(flow)) {
-    console.log('No request found in URL, initializing recovery flow.')
-    res.redirect(`${config.kratos.browser}/self-service/recovery/browser`)
-    return
+    console.log('No request found in URL, initializing recovery flow.');
+    res.redirect(`${config.kratos.browser}/self-service/recovery/browser`);
+    return;
   }
 
   kratos
     .getSelfServiceRecoveryFlow(flow)
-    .then(({body, response}: { response: IncomingMessage, body?: any }) => {
-      if (response.statusCode == 404) {
-        res.redirect(
-          `${config.kratos.browser}/self-service/recovery/browser`
-        )
-        return
-      } else if (response.statusCode != 200) {
-        return Promise.reject(body)
+    .then(({ status, data: body }) => {
+      if (status != 200) {
+        return Promise.reject(body);
       }
 
       // This helper returns a request method config (e.g. for the email flow).
@@ -35,14 +30,14 @@ export default (req: Request, res: Response, next: NextFunction) => {
       // other sign up form elements when an input is incorrect.
       const methodConfig = (key: string) => {
         if (body?.active === key || !body?.active) {
-          return body?.methods[key]?.config
+          return body?.methods[key]?.config;
         }
-      }
+      };
 
       res.render('recovery', {
         ...body,
-        link: methodConfig('link')
-      })
+        link: methodConfig('link'),
+      });
     })
-    .catch(next)
+    .catch(redirectOnSoftError(res, next, '/self-service/recovery/browser'));
 }

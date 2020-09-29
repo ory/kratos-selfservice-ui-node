@@ -66,7 +66,7 @@ export const methodConfig = (
 
   // We want the form fields to be sorted so that the email address is first, the
   // password second, and so on.
-  config.fields.sort(
+  config?.fields.sort(
     (first: FormField, second: FormField) =>
       getPosition(first) - getPosition(second)
   )

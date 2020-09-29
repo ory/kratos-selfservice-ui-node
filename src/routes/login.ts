@@ -2,8 +2,7 @@ import { NextFunction, Request, Response } from 'express';
 import { Configuration, PublicApi } from '@oryd/kratos-client';
 
 import config from '../config';
-import { sortFormFields } from '../translations';
-import { isString, redirectOnSoftError } from '../helpers';
+import { isString, methodConfig, redirectOnSoftError } from '../helpers';
 
 // Variable config has keys:
 // kratos: {
@@ -13,8 +12,11 @@ import { isString, redirectOnSoftError } from '../helpers';
 //   // will be forwarded to ORY Kratos' Public API.
 //   browser: 'https://kratos.example.org',
 //
-//   // The locatoin of the ORY Kratos Admin API
+//   // The location of the ORY Kratos Admin API
 //   admin: 'https://ory-kratos-admin.example-org.vpc',
+//
+//   // The location of the ORY Kratos Public API within the cluster
+//   public: 'https://ory-kratos-public.example-org.vpc',
 // },
 
 // Uses the ORY Kratos NodeJS SDK - for more SDKs check:
@@ -46,27 +48,11 @@ export default (
         return Promise.reject(flow);
       }
 
-      if (flow.methods.password.config?.fields) {
-        // We want the form fields to be sorted so that the email address is first, the
-        // password second, and so on.
-        flow.methods.password.config.fields = flow.methods.password.config.fields.sort(sortFormFields);
-      }
-
-      // This helper returns a flow method config (e.g. for the password flow).
-      // If active is set and not the given flow method key, it wil be omitted.
-      // This prevents the user from e.g. signing up with email but still seeing
-      // other sign up form elements when an input is incorrect.
-      const methodConfig = (key: string) => {
-        if (flow?.active === key || !flow?.active) {
-          return flow?.methods[key]?.config;
-        }
-      };
-
       // Render the data using a view (e.g. Jade Template):
       res.render('login', {
         ...flow,
-        oidc: methodConfig('oidc'),
-        password: methodConfig('password'),
+        oidc: methodConfig(flow, 'oidc'),
+        password: methodConfig(flow, 'password')
       });
     })
     // Handle errors using ExpressJS' next functionality:

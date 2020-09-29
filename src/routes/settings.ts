@@ -40,9 +40,9 @@ const settingsHandler = (req: Request, res: Response, next: NextFunction) => {
       // Render the data using a view (e.g. Jade Template):
       res.render('settings', {
         ...flow,
-        password: methodConfig(flow, 'oidc'),
-        profile: methodConfig(flow, 'password'),
-        oidc: methodConfig(flow, 'profile'),
+        password: methodConfig(flow, 'password'),
+        profile: methodConfig(flow, 'profile'),
+        oidc: methodConfig(flow, 'oidc'),
       });
     })
     .catch(redirectOnSoftError(res, next, '/self-service/settings/browser'));

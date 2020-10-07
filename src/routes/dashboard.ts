@@ -53,7 +53,7 @@ export default (req: Request, res: Response) => {
 
 ${interestingHeaders
   .filter((header: string) =>
-    /User-Agent|Authorization|Content-Type|Host|Accept-Encoding|Accept-Language|Connection|X-Forwarded-For/.test(
+    /User-Agent|Authorization|Content-Type|Host|Accept-Encoding|Accept-Language|Cookie|Connection|X-Forwarded-For/.test(
       header
     )
   )

@@ -1,4 +1,4 @@
-# kratos-selfservice-ui-node
+# ORY Kratos ExpressJS Self-Service UI Reference
 
 [![CircleCI](https://circleci.com/gh/ory/kratos-selfservice-ui-node.svg?style=badge)](https://circleci.com/gh/ory/kratos-selfservice-ui-node)
 

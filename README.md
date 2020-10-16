@@ -92,6 +92,7 @@ running. This is what that would look like:
 ```shell script
 # start the quickstart using docker compose as explained in the tutorial: https://www.ory.sh/kratos/docs/quickstart/
 export SECURITY_MODE=cookie
+export KRATOS_BROWSER_URL=http://127.0.0.1:4433/
 export KRATOS_PUBLIC_URL=http://127.0.0.1:4433/
 export KRATOS_ADMIN_URL=http://127.0.0.1:4434/
 export PORT=4455
@@ -102,7 +103,7 @@ export PORT=4455
 # 
 # Next you need to kill the docker container that runs this app in order to free the ports:
 #
-#   docker kill kratos_oathkeeper_1
+#   docker kill kratos_kratos-selfservice-ui-node_1
 
 npm start
 ```

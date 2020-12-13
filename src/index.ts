@@ -1,13 +1,11 @@
 import cookieParser from 'cookie-parser'
 import express, { Request, NextFunction, Response } from 'express'
-import handlebars from 'express-handlebars'
 import loginHandler from './routes/login'
 import registrationHandler from './routes/registration'
 import errorHandler from './routes/error'
 import dashboard from './routes/dashboard'
 import debug from './routes/debug'
 import config, { SECURITY_MODE_JWT } from './config'
-import { getTitle, toFormInputPartialName } from './translations'
 import * as stubs from './stub/payloads'
 import settingsHandler from './routes/settings'
 import verifyHandler from './routes/verification'
@@ -24,12 +22,16 @@ export const protect =
 const app = express()
 app.use(morgan('tiny'))
 app.use(cookieParser())
-app.set('view engine', 'hbs')
+
+const viewExtension = process.env.NODE_ENV === 'production' ? 'js' : 'tsx'
+
+app.set('view engine', viewExtension)
 
 app.use((req: Request, res: Response, next: NextFunction) => {
   res.locals.projectName = config.projectName
   res.locals.baseUrl = config.baseUrl
   res.locals.pathPrefix = config.baseUrl ? '' : '/'
+  res.locals.logoutUrl = `${config.kratos.browser}/self-service/browser/flows/logout`
   next()
 })
 
@@ -37,23 +39,10 @@ app.use(express.static('public'))
 app.use(express.static('node_modules/normalize.css'))
 
 app.engine(
-  'hbs',
-  handlebars({
-    extname: 'hbs',
-    layoutsDir: `${__dirname}/../views/layouts/`,
-    partialsDir: `${__dirname}/../views/partials/`,
-    defaultLayout: 'main',
-    helpers: {
-      ...require('handlebars-helpers')(),
-      json: (context: any) => JSON.stringify(context),
-      jsonPretty: (context: any) => JSON.stringify(context, null, 2),
-      getTitle,
-      toFormInputPartialName,
-      logoutUrl: () =>
-        `${config.kratos.browser}/self-service/browser/flows/logout`,
-    },
-  })
+  viewExtension,
+  require('express-react-views').createEngine({ beautify: true })
 )
+app.set('views', __dirname + '/views')
 
 if (process.env.NODE_ENV === 'stub') {
   // Setting NODE_ENV to "only-ui" disables all integration and only shows the UI. Useful

@@ -73,3 +73,5 @@ export const methodConfig = (
 
   return config
 }
+
+export const jsonPretty = (context: any) => JSON.stringify(context, null, 2)

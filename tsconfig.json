@@ -10,9 +10,11 @@
     "outDir": "./lib",
     "rootDir": "./src",
     "strict": true,
+    "noImplicitAny": false,
     "typeRoots": [
       "./typings"
     ],
+    "jsx": "react-jsx",
     "esModuleInterop": true
   },
   "exclude": ["contrib"]

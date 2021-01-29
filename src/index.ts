@@ -6,9 +6,14 @@ import registrationHandler from './routes/registration'
 import errorHandler from './routes/error'
 import dashboard from './routes/dashboard'
 import debug from './routes/debug'
-import config, { SECURITY_MODE_JWT } from './config'
+import config, { SECURITY_MODE_JWT, SECURITY_MODE_STANDALONE } from './config'
 import { getTitle, toFormInputPartialName } from './translations'
 import * as stubs from './stub/payloads'
+
+import request from 'request'
+import { hydraLogin, hydraGetConsent, hydraPostConsent } from './routes/hydra'
+import { Configuration, PublicApi } from '@oryd/kratos-client'
+
 import settingsHandler from './routes/settings'
 import verifyHandler from './routes/verification'
 import recoveryHandler from './routes/recovery'
@@ -17,6 +22,11 @@ import * as https from 'https'
 import * as fs from 'fs'
 import protectOathkeeper from './middleware/oathkeeper'
 import protectSimple from './middleware/simple'
+import bodyParser from 'body-parser'
+import csrf from 'csurf'
+import session from 'express-session'
+
+const csrfProtection = csrf({ cookie: true })
 
 export const protect =
   config.securityMode === SECURITY_MODE_JWT ? protectOathkeeper : protectSimple
@@ -33,6 +43,14 @@ app.use((req: Request, res: Response, next: NextFunction) => {
   next()
 })
 
+app.use(
+  session({
+    secret: config.cookieSecret,
+    resave: false,
+    saveUninitialized: true,
+    cookie: { secure: config.https.enabled },
+  })
+)
 app.use(express.static('public'))
 app.use(express.static('node_modules/normalize.css'))
 
@@ -75,6 +93,15 @@ if (process.env.NODE_ENV === 'stub') {
     res.render('settings', stubs.settings)
   })
   app.get('/error', (_: Request, res: Response) => res.render('error'))
+  app.get('/auth/hydra/consent', (_: Request, res: Response) => {
+    res.render('consent', {
+      csrfToken: 'no CSRF!',
+      challenge: 'challenge',
+      requested_scope: ['scope1', 'scope2'],
+      user: 'response.subject',
+      client: 'response.client',
+    })
+  })
 } else {
   app.get('/', protect, dashboard)
   app.get('/dashboard', protect, dashboard)
@@ -84,10 +111,42 @@ if (process.env.NODE_ENV === 'stub') {
   app.get('/settings', protect, settingsHandler)
   app.get('/verify', verifyHandler)
   app.get('/recovery', recoveryHandler)
+
+  if (Boolean(config.hydra.admin)) {
+    app.get('/auth/hydra/login', hydraLogin)
+    app.get(
+      '/auth/hydra/consent',
+      protect,
+      csrfProtection,
+      hydraGetConsent,
+      errorHandler
+    )
+    app.post(
+      '/auth/hydra/consent',
+      protect,
+      bodyParser.urlencoded({ extended: true }),
+      csrfProtection,
+      hydraPostConsent
+    )
+  }
 }
 
 app.get('/health', (_: Request, res: Response) => res.send('ok'))
 app.get('/debug', debug)
+
+if (config.securityMode === SECURITY_MODE_STANDALONE) {
+  // If this security mode is enabled, we redirect all requests matching `/self-service` to ORY Kratos
+  app.use(
+    '/.ory/kratos/public/',
+    (req: Request, res: Response, next: NextFunction) => {
+      const url =
+        config.kratos.public + req.url.replace('/.ory/kratos/public', '')
+      req
+        .pipe(request(url, { followRedirect: false }).on('error', next))
+        .pipe(res)
+    }
+  )
+}
 
 app.get('*', (_: Request, res: Response) => {
   res.redirect(config.baseUrl)

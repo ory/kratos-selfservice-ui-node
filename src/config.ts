@@ -1,3 +1,5 @@
+import crypto from 'crypto'
+
 export const SECURITY_MODE_STANDALONE = 'cookie'
 export const SECURITY_MODE_JWT = 'jwt'
 
@@ -17,11 +19,16 @@ switch ((process.env.SECURITY_MODE || '').toLowerCase()) {
     securityMode = SECURITY_MODE_STANDALONE
 }
 
+const cookieSecret = crypto.randomBytes(48).toString('hex')
+
 export default {
   kratos: {
     browser: browserUrl.replace(/\/+$/, ''),
     admin: (process.env.KRATOS_ADMIN_URL || '').replace(/\/+$/, ''),
     public: publicUrl.replace(/\/+$/, ''),
+  },
+  hydra: {
+    admin: (process.env.HYDRA_ADMIN_URL || '').replace(/\/+$/, ''),
   },
   baseUrl,
   jwksUrl: process.env.JWKS_URL || '/',
@@ -30,6 +37,8 @@ export default {
   securityMode,
   SECURITY_MODE_JWT,
   SECURITY_MODE_STANDALONE,
+
+  cookieSecret: process.env.HYDRA_COOKIE_SECRET || cookieSecret,
 
   https: {
     enabled:

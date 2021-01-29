@@ -1,0 +1,39 @@
+<div class="auth">
+    <div class="container">
+        {{> icon_logo}}
+        <h5 class="subheading">Welcome to the example consent page!</h5>
+        <form action="/auth/hydra/consent" method="POST">
+            <p style="margin-bottom: 15px">Hi {{user}}, application <strong>{{client.client_name}}</strong> wants access resources on your behalf and to:</p>
+
+            <input name="challenge" type="hidden" value={{challenge}} />
+            <input name="_csrf" type="hidden" value={{csrfToken}} />
+
+            <div style="margin-bottom: 15px; margin-top: 8px" >Scopes</div>
+            {{#each requested_scope as |scope|}}
+                <div style="margin-bottom: 5px">
+                    <input style="display: inline-block; margin-right: 3px" type="checkbox" id={{scope}} value={{scope}} name="grant_scope" />
+                    <div style="display: inline-block">{{scope}}</div>
+                </div>
+            {{/each}}
+            <ul>
+                {{#if client.policy_url}}
+                    <li id="login-csrfToken">
+                        <a href={{client.policy_url}}>Read the Privacy Policy</a>
+                    </li>
+                {{/if}}
+                {{#if client.tos_uri}}
+                    <li id="login-csrfToken">
+                        <a href={{client.tos_uri}}>Terms of Service</a>
+                    </li>
+                {{/if}}
+            </ul>
+            <div>
+                <input type="checkbox" id="remember" value="1" name="remember" />
+                <div style="display: inline-block; margin-right: 3px">Do not ask me again</div>
+            </div>
+
+            <Button type="submit" id="accept" name="submit" value="Allow access">Allow access</Button>
+            <Button style="margin-top: 15px" type="submit" id="accept" name="submit" value="Deny access">Deny access</Button>
+        </form>
+    </div>
+</div>

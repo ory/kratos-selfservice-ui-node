@@ -3,10 +3,11 @@ import express, { Request, NextFunction, Response } from 'express'
 import handlebars from 'express-handlebars'
 import loginHandler from './routes/login'
 import registrationHandler from './routes/registration'
+import { hydraLogin, hydraGetConsent, hydraPostConsent } from './routes/hydra'
 import errorHandler from './routes/error'
 import dashboard from './routes/dashboard'
 import debug from './routes/debug'
-import config, { SECURITY_MODE_JWT } from './config'
+import config, { logger, SECURITY_MODE_JWT } from './config'
 import { getTitle, toFormInputPartialName } from './translations'
 import * as stubs from './stub/payloads'
 import settingsHandler from './routes/settings'
@@ -17,6 +18,11 @@ import * as https from 'https'
 import * as fs from 'fs'
 import protectOathkeeper from './middleware/oathkeeper'
 import protectSimple from './middleware/simple'
+import bodyParser from 'body-parser'
+import csrf from 'csurf'
+import session from 'express-session'
+
+const csrfProtection = csrf({ cookie: true })
 
 export const protect =
   config.securityMode === SECURITY_MODE_JWT ? protectOathkeeper : protectSimple
@@ -32,6 +38,15 @@ app.use((req: Request, res: Response, next: NextFunction) => {
   res.locals.pathPrefix = config.baseUrl ? '' : '/'
   next()
 })
+
+app.use(
+  session({
+    secret: config.cookieSecret,
+    resave: false,
+    saveUninitialized: true,
+    cookie: { secure: config.https.enabled },
+  })
+)
 
 app.use(express.static('public'))
 app.use(express.static('node_modules/normalize.css'))
@@ -75,15 +90,41 @@ if (process.env.NODE_ENV === 'stub') {
     res.render('settings', stubs.settings)
   })
   app.get('/error', (_: Request, res: Response) => res.render('error'))
+  app.get('/auth/hydra/consent', (_: Request, res: Response) => {
+    res.render('consent', {
+      csrfToken: 'no CSRF!',
+      challenge: 'challenge',
+      requested_scope: ['scope1', 'scope2'],
+      user: 'response.subject',
+      client: 'response.client',
+    })
+  })
 } else {
   app.get('/', protect, dashboard)
-  app.get('/dashboard', protect, dashboard)
   app.get('/auth/registration', registrationHandler)
   app.get('/auth/login', loginHandler)
   app.get('/error', errorHandler)
   app.get('/settings', protect, settingsHandler)
   app.get('/verify', verifyHandler)
   app.get('/recovery', recoveryHandler)
+
+  if (Boolean(config.hydra.admin)) {
+    app.get('/auth/hydra/login', hydraLogin)
+    app.get(
+      '/auth/hydra/consent',
+      protect,
+      csrfProtection,
+      hydraGetConsent,
+      errorHandler
+    )
+    app.post(
+      '/auth/hydra/consent',
+      protect,
+      bodyParser.urlencoded({ extended: true }),
+      csrfProtection,
+      hydraPostConsent
+    )
+  }
 }
 
 app.get('/health', (_: Request, res: Response) => res.send('ok'))
@@ -94,7 +135,7 @@ app.get('*', (_: Request, res: Response) => {
 })
 
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
-  console.error(err.stack)
+  logger.error(err.message, err.stack)
   res.status(500).render('error', {
     message: JSON.stringify(err, null, 2),
   })
@@ -104,8 +145,8 @@ const port = Number(process.env.PORT) || 3000
 
 let listener = () => {
   let proto = config.https.enabled ? 'https' : 'http'
-  console.log(`Listening on ${proto}://0.0.0.0:${port}`)
-  console.log(`Security mode: ${config.securityMode}`)
+  logger.info(`Listening on ${proto}://0.0.0.0:${port}`)
+  logger.info(`Security mode: ${config.securityMode}`)
 }
 
 if (config.https.enabled) {

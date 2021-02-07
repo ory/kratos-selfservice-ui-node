@@ -1,6 +1,6 @@
-import jwt from "express-jwt";
-import jwks from "jwks-rsa";
-import config from "../config";
+import jwt from 'express-jwt'
+import jwks from 'jwks-rsa'
+import config from '../config'
 
 // This middleware assumes that the app is secured using ORY Oathkeeper, in which case we
 // verify the JSON Web Token issued by ORY Oathkeeper using the jwt-express middleware.

@@ -1,7 +1,7 @@
-import { NextFunction, Request, Response } from 'express';
-import config from '../config';
-import { AdminApi, Configuration } from '@oryd/kratos-client';
-import { isString, methodConfig, redirectOnSoftError } from '../helpers';
+import { NextFunction, Request, Response } from 'express'
+import config, { logger } from '../config'
+import { AdminApi, Configuration } from '@oryd/kratos-client'
+import { isString, methodConfig, redirectOnSoftError } from '../helpers'
 
 // Variable config has keys:
 // kratos: {
@@ -18,23 +18,25 @@ import { isString, methodConfig, redirectOnSoftError } from '../helpers';
 //   public: 'https://ory-kratos-public.example-org.vpc',
 // },
 
-const kratos = new AdminApi(new Configuration({ basePath: config.kratos.admin }));
+const kratos = new AdminApi(
+  new Configuration({ basePath: config.kratos.admin })
+)
 
 const settingsHandler = (req: Request, res: Response, next: NextFunction) => {
-  const flow = req.query.flow;
+  const flow = req.query.flow
   // The flow ID is used to identify the account settings flow and
   // return data like the csrf_token and so on.
   if (!flow || !isString(flow)) {
-    console.log('No flow found in URL, initializing flow.');
-    res.redirect(`${config.kratos.browser}/self-service/settings/browser`);
-    return;
+    logger.info('No flow found in URL, initializing flow.')
+    res.redirect(`${config.kratos.browser}/self-service/settings/browser`)
+    return
   }
 
   kratos
     .getSelfServiceSettingsFlow(flow)
     .then(({ status, data: flow }) => {
       if (status !== 200) {
-        return Promise.reject(flow);
+        return Promise.reject(flow)
       }
 
       // Render the data using a view (e.g. Jade Template):
@@ -43,9 +45,9 @@ const settingsHandler = (req: Request, res: Response, next: NextFunction) => {
         password: methodConfig(flow, 'password'),
         profile: methodConfig(flow, 'profile'),
         oidc: methodConfig(flow, 'oidc'),
-      });
+      })
     })
-    .catch(redirectOnSoftError(res, next, '/self-service/settings/browser'));
-};
+    .catch(redirectOnSoftError(res, next, '/self-service/settings/browser'))
+}
 
-export default settingsHandler;
+export default settingsHandler

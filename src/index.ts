@@ -1,6 +1,8 @@
 import { filterNodesByGroups, getNodeLabel } from '@ory/integrations/ui'
+import cookieParser from 'cookie-parser'
 import express, { Request, Response } from 'express'
 import handlebars from 'express-handlebars'
+import session from 'express-session'
 import * as fs from 'fs'
 import * as https from 'https'
 
@@ -17,13 +19,23 @@ import {
   registerSettingsRoute,
   registerStaticRoutes,
   registerVerificationRoute,
-  registerWelcomeRoute
+  registerWelcomeRoute,
+  registerHydraRoute
 } from './routes'
 
 const app = express()
 
 app.use(middlewareLogger)
 app.set('view engine', 'hbs')
+app.use(cookieParser())
+app.use(
+  session({
+    secret: process.env.HYDRA_COOKIE_SECRET || 'CHANGETHISSECRET',
+    resave: false,
+    saveUninitialized: true,
+    cookie: { secure: 'auto' }
+  })
+)
 
 app.engine(
   'hbs',
@@ -52,6 +64,7 @@ registerVerificationRoute(app)
 registerWelcomeRoute(app)
 registerErrorRoute(app)
 registerWelcomeRoute(app)
+registerHydraRoute(app)
 
 app.get('/', (req: Request, res: Response) => {
   res.redirect('welcome', 303)

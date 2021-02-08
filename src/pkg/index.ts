@@ -1,6 +1,7 @@
 import { AxiosError } from 'axios'
 import { NextFunction, Response } from 'express'
 
+import { hydraAdmin } from './hydraSdk'
 import { RouteOptionsCreator } from './route'
 import sdk, { apiBaseUrl } from './sdk'
 
@@ -23,6 +24,7 @@ export const defaultConfig: RouteOptionsCreator = () => {
     apiBaseUrl: apiBaseUrl,
     kratosBrowserUrl: apiBaseUrl,
     sdk,
+    hydraAdmin,
     baseUrlWithoutTrailingSlash: process.env.BASE_URL || undefined
   }
 }

@@ -12,7 +12,7 @@ export const createWelcomeRoute: RouteCreator =
     res.locals.projectName = 'Welcome to Ory'
 
     const { sdk } = createHelpers(req)
-    const session = req.session
+    const session = req.user
 
     // Create a logout URL
     const logoutUrl =

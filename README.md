@@ -30,14 +30,21 @@ This application can be configured using two environment variables:
 - `BASE_URL` (optional): The base url of this app. If served e.g. behind a proxy or via
   GitHub pages this would be the path, e.g. `https://mywebsite.com/kratos-selfservice-ui-node/`.
   **Must be absolute!**
+- `HYDRA_COOKIE_SECRET` (optional): This secret is used to encrypt cookies which are used as part of the ORY Hydra
+   integration.
 - `TLS_CERT_PATH` (optional): Path to certificate file. Should be set up together with `TLS_KEY_PATH` to enable HTTPS.
 - `TLS_KEY_PATH` (optional): Path to key file Should be set up together with `TLS_CERT_PATH` to enable HTTPS.
+
+  If you want to also use hydra and connect an app via OAuth2, set these env-variables:
+  - `HYDRA_ADMIN_URL` should point to hydra's admin port including scheme (e.g. https://hydra.example.com:445)
+
+  If you want to test hydra without the use of kratos for user-management, rather have a look at the [hydra-login-consent-node][https://github.com/ory/hydra-login-consent-node].
 
 ### Network Setup
 
 This application works in two set ups:
 
-- Standalone
+- Standalone with ORY Kratos (plus optionally ORY Hydra)
 - With the ORY Oathkeeper Reverse Proxy
 
 #### Standalone

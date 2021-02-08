@@ -1,1 +1,3 @@
 node_modules/
+lib
+contrib/hydra/kratos/docker-compose.yml

@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 import config from '../config';
 import { Configuration, PublicApi } from '@oryd/kratos-client';
-import { isString, methodConfig, redirectOnSoftError } from '../helpers';
+import { isString, redirectOnSoftError } from '../helpers/sdk';
 
 const kratos = new PublicApi(new Configuration({ basePath: config.kratos.public }));
 
@@ -24,10 +24,7 @@ export default (req: Request, res: Response, next: NextFunction) => {
       }
 
       // Render the data using a view (e.g. Jade Template):
-      res.render('recovery', {
-        ...flow,
-        link: methodConfig(flow, 'link')
-      });
+      res.render('recovery', flow);
     })
     .catch(redirectOnSoftError(res, next, '/self-service/recovery/browser'));
 }

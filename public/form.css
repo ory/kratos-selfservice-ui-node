@@ -42,8 +42,12 @@ form button {
     border-width: 0;
     padding: 0.875em 0.5em;
     transition: background-color 0.1s ease-in-out, color 0.1s ease-in-out;
-    margin-top: 3rem;
+    margin: .5rem 0 2rem;
     cursor: pointer;
+}
+
+form button + button {
+    margin-bottom: .5rem;
 }
 
 form button:hover {
@@ -61,7 +65,7 @@ form label input {
     line-height: 168%;
     width: 100%;
     box-sizing: border-box;
-    margin-bottom: 8px;
+    margin: .5rem 0 .5rem;
     box-shadow: 0 0 8px rgba(255, 255, 255, 0.1);
 }
 

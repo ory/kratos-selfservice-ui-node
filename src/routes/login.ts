@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from 'express';
 import { Configuration, PublicApi } from '@oryd/kratos-client';
 
 import config from '../config';
-import { isString, methodConfig, redirectOnSoftError } from '../helpers';
+import { isString, redirectOnSoftError } from '../helpers/sdk';
 
 // Variable config has keys:
 // kratos: {
@@ -49,11 +49,7 @@ export default (
       }
 
       // Render the data using a view (e.g. Jade Template):
-      res.render('login', {
-        ...flow,
-        oidc: methodConfig(flow, 'oidc'),
-        password: methodConfig(flow, 'password')
-      });
+      res.render('login', flow);
     })
     // Handle errors using ExpressJS' next functionality:
     .catch(redirectOnSoftError(res, next, '/self-service/login/browser'));

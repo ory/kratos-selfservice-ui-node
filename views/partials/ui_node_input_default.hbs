@@ -1,0 +1,7 @@
+<fieldset>
+    <label>
+        <input name="{{attributes.name}}" type="{{attributes.type}}" value="{{attributes.value}}" placeholder="{{getTitle .}}" {{#if attributes.disabled}}disabled{{/if}}>
+        <span>{{getTitle .}}</span>
+    </label>
+    {{> messages }}
+</fieldset>

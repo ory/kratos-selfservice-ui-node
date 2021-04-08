@@ -1,35 +1,29 @@
 <div class="content">
-    {{> header}}
-    <div class="container">
-        <h2>Settings</h2>
+  {{> header}}
+  <div class="container" id="settings">
+    <h2>Settings</h2>
 
-        {{> messages messages=messages className="global"}}
+    {{> messages messages=messages className="global" }}
 
-        {{#if (eq state "success")}}
-            <p>Your changes have been saved!</p>
-        {{/if}}
+    <form action="{{ui.action}}" method="{{ui.method}}">
+      {{> messages messages=ui.messages }}
 
-        {{#if profile}}
-            <div id="user-profile">
-                <h3>Profile</h3>
-                {{> form submitLabel="Save" form=profile}}
-            </div>
-        {{/if}}
+      {{> ui_nodes nodes=ui.nodes only="default" }}
 
-        {{#if password}}
-            <hr />
-            <div id="user-password">
-                <h3>Password</h3>
-                {{> form submitLabel="Save" form=password}}
-            </div>
-        {{/if}}
+      <p>Profile</p>
+      {{> ui_nodes nodes=ui.nodes only="profile" }}
 
-        {{#if oidc}}
-            <hr />
-            <div id="user-oidc">
-                <h3>Social Sign In</h3>
-                {{> form form=oidc}}
-            </div>
-        {{/if}}
-    </div>
+      {{#if (onlyNodes ui.nodes "password")}}
+        <hr class="divider">
+        <p>Password</p>
+        {{> ui_nodes nodes=ui.nodes only="password" }}
+      {{/if}}
+
+      {{#if (onlyNodes ui.nodes "oidc")}}
+        <hr class="divider">
+        <p>Social Sign In</p>
+        {{> ui_nodes nodes=ui.nodes only="oidc" }}
+      {{/if}}
+    </form>
+  </div>
 </div>

@@ -185,3 +185,14 @@ h4 ~ h5 {
 .container a:hover {
     color: var(--base-white);
 }
+
+.messages {
+    margin-bottom: 1rem;
+    padding: 0 0.25rem;
+}
+
+.divider {
+    width: 100%;
+    border-color: var(--base-main);
+    margin: 1.5rem 0;
+}

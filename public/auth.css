@@ -21,12 +21,6 @@
     color: var(--base-white);
 }
 
-.auth .divider {
-    width: 100%;
-    border-color: var(--base-main);
-    margin: 2rem 0;
-}
-
 .auth .alternative-actions {
     display: flex;
     justify-content: space-between;

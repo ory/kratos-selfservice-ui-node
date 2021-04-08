@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 import config from '../config';
 import { Configuration, PublicApi } from '@oryd/kratos-client';
-import { isString } from '../helpers';
+import { isString } from '../helpers/sdk';
 import { AxiosError } from 'axios';
 
 const kratos = new PublicApi(new Configuration({ basePath: config.kratos.public }));

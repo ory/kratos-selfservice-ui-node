@@ -7,8 +7,8 @@ docker:
 .PHONY: build-sdk
 build-sdk:
 		(cd $$KRATOS_DIR; make sdk)
-		cp $$KRATOS_DIR/.schema/api.swagger.json ./contrib/sdk/api.swagger.json
-		npx @openapitools/openapi-generator-cli@cli-4.3.1 generate -i "./contrib/sdk/api.swagger.json" \
+		cp $$KRATOS_DIR/spec/openapi.json ./contrib/sdk/openapi.json
+		npx @openapitools/openapi-generator-cli generate -i "./contrib/sdk/openapi.json" \
 			-g typescript-axios \
 			-o "./contrib/sdk/generated" \
 			--git-user-id ory \

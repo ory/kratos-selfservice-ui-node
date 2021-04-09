@@ -1,22 +1,14 @@
 <div class="auth">
-    <div class="container">
+    <div class="container" id="registration">
         {{> icon_logo}}
         <h5 class="subheading">Welcome to SecureApp! <br/>
             Use the form below to sign up:</h5>
 
         {{> messages messages=messages className="global"}}
 
-        {{#if password}}
-            <div id="registration-password">
-                {{> form submitLabel="Sign up" form=password}}
-            </div>
-        {{/if}}
-
-        {{#if oidc}}
-            <div id="registration-oidc">
-                {{> form form=oidc}}
-            </div>
-        {{/if}}
+        <div id="ui">
+          {{> ui ui=ui}}
+        </div>
 
         <hr class="divider">
 

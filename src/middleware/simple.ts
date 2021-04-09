@@ -7,7 +7,7 @@
 //
 //   app.get("/dashboard", protect, (req, res) => { /* ... */ })
 
-import {Configuration, PublicApi} from "@oryd/kratos-client";
+import {Configuration, PublicApi} from "@ory/kratos-client";
 import config from "../config";
 import {NextFunction, Request, Response} from "express";
 import urljoin from "url-join";

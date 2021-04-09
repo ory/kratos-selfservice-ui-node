@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 import config from '../config';
-import { AdminApi, Configuration } from '@oryd/kratos-client';
-import { isString, methodConfig, redirectOnSoftError } from '../helpers';
+import { AdminApi, Configuration } from '@ory/kratos-client';
+import { isString, redirectOnSoftError } from '../helpers/sdk';
 
 // Variable config has keys:
 // kratos: {
@@ -38,12 +38,7 @@ const settingsHandler = (req: Request, res: Response, next: NextFunction) => {
       }
 
       // Render the data using a view (e.g. Jade Template):
-      res.render('settings', {
-        ...flow,
-        password: methodConfig(flow, 'password'),
-        profile: methodConfig(flow, 'profile'),
-        oidc: methodConfig(flow, 'oidc'),
-      });
+      res.render('settings', flow);
     })
     .catch(redirectOnSoftError(res, next, '/self-service/settings/browser'));
 };

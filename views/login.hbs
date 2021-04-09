@@ -1,21 +1,13 @@
 <div class="auth">
-    <div class="container">
+    <div class="container" id="login">
         {{> icon_logo}}
         <h5 class="subheading">Welcome to this example login screen!</h5>
 
         {{> messages messages=messages className="global"}}
 
-        {{#if password}}
-            <div id="login-password">
-                {{> form submitLabel="Sign in" form=password}}
-            </div>
-        {{/if}}
-
-        {{#if oidc}}
-            <div id="login-oidc">
-                {{> form form=oidc}}
-            </div>
-        {{/if}}
+        <div id="ui">
+            {{> ui ui=ui}}
+        </div>
 
         <hr class="divider">
 

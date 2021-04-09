@@ -7,7 +7,7 @@ import errorHandler from './routes/error'
 import dashboard from './routes/dashboard'
 import debug from './routes/debug'
 import config, { SECURITY_MODE_JWT } from './config'
-import { getTitle, toFormInputPartialName } from './translations'
+import { getTitle, onlyNodes, toUiNodePartial } from './helpers/ui'
 import * as stubs from './stub/payloads'
 import settingsHandler from './routes/settings'
 import verifyHandler from './routes/verification'
@@ -15,8 +15,8 @@ import recoveryHandler from './routes/recovery'
 import morgan from 'morgan'
 import * as https from 'https'
 import * as fs from 'fs'
-import protectOathkeeper from './middleware/oathkeeper'
 import protectSimple from './middleware/simple'
+import protectOathkeeper from './middleware/oathkeeper'
 
 export const protect =
   config.securityMode === SECURITY_MODE_JWT ? protectOathkeeper : protectSimple
@@ -47,8 +47,9 @@ app.engine(
       ...require('handlebars-helpers')(),
       json: (context: any) => JSON.stringify(context),
       jsonPretty: (context: any) => JSON.stringify(context, null, 2),
+      onlyNodes,
       getTitle,
-      toFormInputPartialName,
+      toUiNodePartial: toUiNodePartial,
       logoutUrl: () =>
         `${config.kratos.browser}/self-service/browser/flows/logout`,
     },

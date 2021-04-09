@@ -9,10 +9,8 @@
             <p>Verification successful!</p>
         {{/if}}
 
-        {{#if link}}
-            <div id="verification-token">
-                {{> form form=link submitLabel="Resend verification link"}}
-            </div>
-        {{/if}}
+        <div id="ui">
+          {{> ui submitLabel="Resend verification link" ui=ui}}
+        </div>
     </div>
 </div>

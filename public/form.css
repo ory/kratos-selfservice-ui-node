@@ -10,7 +10,6 @@ form input, form button {
 
 form fieldset {
     border: 0;
-    margin-bottom: 1rem;
     padding: 0;
 }
 
@@ -42,8 +41,12 @@ form button {
     border-width: 0;
     padding: 0.875em 0.5em;
     transition: background-color 0.1s ease-in-out, color 0.1s ease-in-out;
-    margin-top: 3rem;
+    margin: .5em 0 .5em;
     cursor: pointer;
+}
+
+form button[type="submit"] + fieldset {
+    margin-top: 1.5em;
 }
 
 form button:hover {
@@ -61,14 +64,17 @@ form label input {
     line-height: 168%;
     width: 100%;
     box-sizing: border-box;
-    margin-bottom: 8px;
+    margin: .5em 0 .5em;
     box-shadow: 0 0 8px rgba(255, 255, 255, 0.1);
 }
 
 fieldset .input-form-messages, .form-messages {
     font-size: 14px;
-    margin-bottom: 24px;
-    padding: 0 2px;
+}
+
+form .messages {
+    margin: .15em 0 .25em 0;
+    padding: 0;
 }
 
 fieldset .input-form-messages .info,
@@ -101,6 +107,6 @@ input[type="password"] ~ .password-visibility-toggle .eye-open {
 }
 
 input[type="password"] ~ .password-visibility-toggle .eye-closed,
-input[type="text"] ~ .password-visibility-toggle .eye-open  {
+input[type="text"] ~ .password-visibility-toggle .eye-open {
     display: none;
 }

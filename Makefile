@@ -7,8 +7,8 @@ docker:
 .PHONY: build-sdk
 build-sdk:
 		(cd $$KRATOS_DIR; make sdk)
-		cp $$KRATOS_DIR/.schema/api.swagger.json ./contrib/sdk/api.swagger.json
-		npx @openapitools/openapi-generator-cli@cli-4.3.1 generate -i "./contrib/sdk/api.swagger.json" \
+		cp $$KRATOS_DIR/spec/openapi.json ./contrib/sdk/openapi.json
+		npx @openapitools/openapi-generator-cli generate -i "./contrib/sdk/openapi.json" \
 			-g typescript-axios \
 			-o "./contrib/sdk/generated" \
 			--git-user-id ory \
@@ -16,16 +16,17 @@ build-sdk:
 			--git-host github.com \
 			-c ./contrib/sdk/typescript.yml
 		(cd ./contrib/sdk/generated; npm i; npm run build)
-		rm -rf node_modules/@oryd/kratos-client/*
-		cp -r ./contrib/sdk/generated/* node_modules/@oryd/kratos-client
+		rm -rf node_modules/@ory/kratos-client/*
+		cp -r ./contrib/sdk/generated/* node_modules/@ory/kratos-client
 
 .PHONY: publish-sdk
 publish-sdk: build-sdk
 		(cd ./contrib/sdk/generated/; \
 			npm --no-git-tag-version version v0.0.0-next.$(rand) && \
 			npm publish)
-		rm -rf node_modules/@oryd/kratos-client/*
-		npm i @oryd/kratos-client@0.0.0-next.$(rand)
+		rm -rf node_modules/@ory/kratos-client/*
+		sleep 5
+		npm i @ory/kratos-client@0.0.0-next.$(rand)
 
 .PHONY: build-sdk-docker
 build-sdk-docker: build-sdk
@@ -33,5 +34,5 @@ build-sdk-docker: build-sdk
 
 .PHONY: clean-sdk
 clean-sdk:
-		rm -rf node_modules/@oryd/kratos-client/
+		rm -rf node_modules/@ory/kratos-client/
 		npm i

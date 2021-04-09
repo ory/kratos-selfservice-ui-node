@@ -1,4 +1,4 @@
-npmName: "@oryd/kratos-client"
+npmName: "@ory/kratos-client"
 npmVersion: v0.0.1
 supportsES6: true
 ensureUniqueParams: true

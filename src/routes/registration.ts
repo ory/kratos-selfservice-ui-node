@@ -1,8 +1,8 @@
 import { NextFunction, Request, Response } from 'express';
-import { Configuration, PublicApi } from '@oryd/kratos-client';
+import { Configuration, PublicApi } from '@ory/kratos-client';
 
 import config from '../config';
-import { isString, methodConfig, redirectOnSoftError } from '../helpers';
+import { isString, redirectOnSoftError } from '../helpers/sdk';
 
 // Variable config has keys:
 // kratos: {
@@ -50,12 +50,10 @@ export default (
         return Promise.reject(flow);
       }
 
+      flow.ui.nodes
+
       // Render the data using a view (e.g. Jade Template):
-      res.render('registration', {
-        ...flow,
-        oidc: methodConfig(flow, 'oidc'),
-        password: methodConfig(flow, 'password')
-      });
+      res.render('registration', flow);
     })
     // Handle errors using ExpressJS' next functionality:
     .catch(redirectOnSoftError(res, next, '/self-service/registration/browser'));

@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
-import { Configuration, PublicApi } from '@oryd/kratos-client';
+import { Configuration, PublicApi } from '@ory/kratos-client';
 
 import config from '../config';
 import { isString, redirectOnSoftError } from '../helpers/sdk';

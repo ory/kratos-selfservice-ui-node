@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 import config from '../config';
-import { AdminApi, Configuration } from '@oryd/kratos-client';
+import { AdminApi, Configuration } from '@ory/kratos-client';
 import { isString, redirectOnSoftError } from '../helpers/sdk';
 
 // Variable config has keys:

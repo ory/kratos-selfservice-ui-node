@@ -1,10 +1,8 @@
-import { UiNode, UiNodeInputAttributes } from '@oryd/kratos-client';
+import { UiNode, UiNodeInputAttributes } from '@ory/kratos-client';
 import {
   UiNodeAnchorAttributes,
-  UiNodeAttributes,
-  UiNodeImageAttributes,
   UiNodeTextAttributes,
-} from '@oryd/kratos-client/api';
+} from '@ory/kratos-client/api';
 
 const ui: { [key: string]: { title: string } } = {
   // You could add custom translations here if you want to:

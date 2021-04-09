@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 import config from '../config';
-import { Configuration, PublicApi } from '@oryd/kratos-client';
+import { Configuration, PublicApi } from '@ory/kratos-client';
 import { isString } from '../helpers/sdk';
 import { AxiosError } from 'axios';
 

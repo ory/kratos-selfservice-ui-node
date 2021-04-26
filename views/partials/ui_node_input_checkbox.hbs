@@ -1,0 +1,10 @@
+<fieldset>
+  <label>
+    <input name="{{attributes.name}}" type="hidden" value="{{attributes.value}}">
+    <input name="{{attributes.name}}"
+           {{#if attributes.value}}checked{{/if}} type="{{attributes.type}}" value="true" placeholder="{{getTitle .}}"
+           {{#if attributes.disabled}}disabled{{/if}}>
+    <span>{{getTitle .}}</span>
+  </label>
+  {{> messages }}
+</fieldset>

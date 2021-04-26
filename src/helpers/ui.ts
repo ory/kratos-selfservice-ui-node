@@ -54,6 +54,8 @@ export const toUiNodePartial = (node: UiNode) => {
           return 'ui_node_input_password';
         case 'submit':
           return 'ui_node_input_button';
+        case 'checkbox':
+          return 'ui_node_input_checkbox';
         default:
           return 'ui_node_input_default';
       }

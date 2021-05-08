@@ -29,7 +29,7 @@ app.set('view engine', 'hbs')
 app.use((req: Request, res: Response, next: NextFunction) => {
   res.locals.projectName = config.projectName
   res.locals.baseUrl = config.baseUrl
-  res.locals.pathPrefix = config.baseUrl ? '' : '/'
+  res.locals.pathPrefix = config.baseUrl ? config.baseUrl + '/' : ''
   next()
 })
 

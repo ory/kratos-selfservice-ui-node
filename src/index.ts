@@ -15,6 +15,7 @@ import recoveryHandler from './routes/recovery'
 import morgan from 'morgan'
 import * as https from 'https'
 import * as fs from 'fs'
+import * as path from 'path'
 import protectSimple from './middleware/simple'
 import protectOathkeeper from './middleware/oathkeeper'
 
@@ -29,7 +30,7 @@ app.set('view engine', 'hbs')
 app.use((req: Request, res: Response, next: NextFunction) => {
   res.locals.projectName = config.projectName
   res.locals.baseUrl = config.baseUrl
-  res.locals.pathPrefix = config.baseUrl ? '' : '/'
+  res.locals.pathPrefix = path.join(config.baseUrl, './')
   next()
 })
 

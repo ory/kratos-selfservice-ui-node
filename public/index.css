@@ -7,12 +7,14 @@
     --base-main: #5A5B6A;
     --base-dark: #19191D;
     --base-black: #000000;
+    --base-highlight: #d2e2f9;
     --primary-light: #ECFDFE;
     --primary-half: #95E1F9;
     --primary-main: #3DACFC;
     --primary-dark: #2E0473;
     --red-strong: #F44336;
     --green-strong: #43A047;
+    --orange-strong: orange;
 }
 
 html, body {
@@ -57,7 +59,7 @@ body {
 }
 
 .content .header {
-    padding: 1.666rem 11.5rem;
+    padding: 0.666rem 1.5rem;
     display: flex;
     box-sizing: border-box;
     justify-content: space-between;
@@ -69,6 +71,11 @@ body {
 .content .header .icon-actions > div {
     display: inline;
     margin: 0 0.5rem;
+}
+
+.content .header a {
+    color: var(--primary-light);
+    text-decoration:none;
 }
 
 .content .header .icon-actions .fork path {

@@ -35,7 +35,7 @@ const settingsHandler = (req: Request, res: Response, next: NextFunction) => {
     .then(({ status, data: flow }) => {
       if (status !== 200) {
         return Promise.reject(flow);
-      }
+      } 
 
       // Render the data using a view (e.g. Jade Template):
       res.render('settings', flow);

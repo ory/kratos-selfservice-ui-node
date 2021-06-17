@@ -1,0 +1,526 @@
+<div class="content">
+  {{> header}}
+  <div class="container" id="settings">
+    <!--h2>Network</h2-->
+      <style>
+        .user {
+          transform: translate(26px, 28px) scale(0.015, 0.015);
+          fill: var(--base-light)
+        }
+        .svg
+        {
+          position: absolute;
+          width: 660;
+          height: 320;
+          left: 20px;
+          top: 100px;
+        }
+        .animated
+        {
+          /*will-change: transform;*/
+          transform: translateZ(0);
+        }
+        .path {
+          stroke-width: .2;
+          stroke-dasharray: 1;
+          stroke-dashoffset: 1;
+          animation: dash 30s linear infinite;
+        }
+
+        @keyframes dash {
+          from {
+            stroke-dashoffset: 100;
+          }
+          to {
+            stroke-dashoffset: 0;
+          }
+        }
+        .pop {
+          stroke: var(--green-strong);
+          stroke-width: 0.5;
+          r: .5px;
+          animation: radius 2s alternate infinite;
+        }
+        @keyframes radius {
+          from {
+            r: .5px;
+          }
+          to {
+            r: 1px;
+          }
+        }
+        .fpop
+        {
+          /*stroke: var(--primary-main)*/
+        }
+        .mpop
+        {
+          /*stroke: var(--orange-strong)*/
+        }
+        .lpop
+        {
+          /*stroke: var(--green-strong)*/
+        }
+        .marker
+        {
+          font: 2px sans-serif;
+          fill: var(--base-text)
+        }
+        .bubble
+        {
+          font: 2px sans-serif;
+          /*stroke-dasharray: .4;*/
+          font-weight: bold;
+          fill: none/*var(--base-main)*/;
+          stroke-width: .4
+        }
+        .label
+        {
+          font: 1.6px sans-serif;
+          background: var(--base-light);
+          font-weight: bold;
+          fill: var(--base-main);
+          padding: 1px;
+        }
+        .dropbtn {
+          background-color: var(--base-dark);
+          color: var(--base-light);
+          padding: 10px;
+          font-size: 16px;
+          border: none;
+          cursor: pointer;
+        }
+        .dropbtn {
+          background-color: var(--base-dark);
+          color: var(--base-light);
+          padding: 10px;
+          font-size: 16px;
+          border: none;
+          cursor: pointer;
+        }
+
+        .dropbtn:hover, .dropbtn:focus {
+          background-color: var(--primary-main);
+        }        
+
+        .dropdown {
+          position: absolute;
+          display: inline-block;
+          top: 90px;
+          left: 1200px;
+        }
+
+        .slider {
+          position: absolute;
+          display: inline-block;
+          top: 690px;
+          left: 636px;
+          width: 250px;
+        }
+
+        .playPause {
+          position: absolute;
+          display: inline-block;
+          top: 680px;
+          left: 890px;
+        }
+
+        .dropdown-content {
+          display: none;
+          position: absolute;
+          background-color:var(--base-dark);
+          min-width: 140px;
+          overflow: auto;
+          box-shadow: 0px 8px 16px 0px var(--base-main);
+          z-index: 1;
+        }
+
+        .dropdown-content a {
+          font: 12px sans-serif;
+          padding: 12px 12px;
+          text-decoration: none;
+          display: block;
+        }
+
+        .dropdown a:hover { 
+          background-color: var(--primary-main);
+          }
+
+        .show {display: block;}
+        
+      </style>
+      
+      {{> cworld}}
+      <svg viewBox="0 0 200 100" id="svgRoot" class="svg animated"><g>
+        <!--/line class="path" stroke="gray" id="caw-sin" x1="14" y1="30" x2="157" y2="55"/>
+        <line class="path" stroke="gray" id="sin-mum" x1="157" y1="55" x2="137" y2="45"  /-->
+
+        <text id="timeStamp" class="marker" x="84" y="88">timeStamp</text>>
+        <g id="legend">
+          <text class="marker" x="5" y="60" r=".5">Bigger is Better</text>
+          <circle cx="6" cy="63" class="bubble" stroke="var(--green-strong)" r="1.6"/>
+          <text class="marker" x="8" y="64" r=".5">Neuron</text>
+          <circle cx="6" cy="67" class="bubble" stroke="var(--base-white)" r="1.3" />
+          <text class="marker" x="8" y="68" r=".5">Internet</text>
+          <circle cx="6 " cy="71" class="bubble" stroke="var(--red-strong)" r="1" />
+          <text class="marker" x="8" y="72" r=".5">VPN</text>
+        </g>
+        
+        <g id="dynaElems"/>
+        <g id="user" class="user">
+          <rect x="-242.62599" y="112.119" width="71.390999" height="85.797997" id="rect2" transform="scale(-1,1)" />
+          <rect x="-171.782" y="123.773" width="79.581001" height="28.068001" id="rect4" transform="scale(-1,1)" />
+          <rect x="-154.573" y="175.80099" width="125.752" height="15.59" id="rect6"transform="scale(-1,1)" />
+          <circle cx="-180.50699" cy="35.944" r="35.944" id="circle8" transform="scale(-1,1)" />
+          <circle cx="-92.545998" cy="137.735" r="13.999" id="circle10" transform="scale(-1,1)" />
+          <circle cx="-154.30399" cy="183.55901" r="7.75" id="circle12" transform="scale(-1,1)" />
+          <rect x="-134.77299" y="158.315" width="100.838" height="11.484874" id="rect14" transform="scale(-1,1)" />
+          <rect x="-40.72599" y="186.606" width="11.976" height="11.38" id="rect16" transform="scale(-1,1)" />
+          <path d="M 29.588993,166.593 0.57599337,83.968 11.312993,80.197 l 29.013,82.625 z" id="path18" />
+          <circle cx="-134.53999" cy="163.996" r="5.6830001" id="circle20" transform="scale(-1,1)" />
+          <circle cx="-5.7340002" cy="81.429001" r="5.7340002" id="circle22" transform="scale(-1,1)" />
+          <circle cx="-34.012001" cy="165.01801" r="4.77" id="circle24" transform="scale(-1,1)" />
+          <ellipse cx="-207.00699" cy="111.141" rx="35.794998" ry="35.944" id="ellipse26" transform="scale(-1,1)" />
+        </g>
+        <g>            
+          <circle cx="138" cy="44" fill="var(--base-white)" r=".5"/>
+          <text class="marker" x="139" y="45" fill="var(--base-white)" r=".5">Jio</text>
+
+          <circle cx="140" cy="48" fill="var(--base-white)" r=".5"/>
+          <text class="marker" x="141" y="49" fill="var(--base-white)" r=".5">Flipkart</text>
+          
+          <circle id="ca-west" class="pop fpop" cx="14" cy="30"/>
+          <text class="marker" x="9" y="28">CA West</text>
+
+          <circle id="sin" class="pop mpop" cx="157" cy="55"/>
+          <text class="marker" x="153" y="58">Singapore</text>
+
+          <circle id="mum" class="pop lpop" cx="137" cy="45"/>
+          <text class="marker" x="132" y="48">Mumbai</text>
+
+          <circle id="lon" class="pop mpop" cx="89" cy="20"/>
+          <text class="marker" x="86" y="18">London</text>
+        </g>
+        </g>
+      </svg>
+      <input id="slider" onchange="onSliderChange(event)"  class="slider" type="range" min="0" max="10" value="5" step="1"/>
+      <button id="playPauseBtn" onclick="onPlayPause(event)" class="dropbtn playPause">Play</button>
+      <div class="dropdown">
+        <button onclick="onDropdownClick()" class="dropbtn">Routes</button>
+        <div id="testsDropdown" class="dropdown-content"/>
+      </div>
+      <script language="JavaScript">
+        let allTests = [];
+        let activeTest = "None";
+        let timer = null;
+        let vpnDefaults = {ping: 2977/*millsecs*/, dl:35/*seconds*/ };
+        class Metric
+        {
+          direct = 0;
+          vpn = 0;
+          neuron = 0;
+          
+          vpnFac()
+          {
+            return (1.0*this.vpn)/this.neuron;
+          }
+
+          directFac()
+          {
+            return this.direct/this.neuron;
+          }
+
+          formatFac(percentage)
+          {
+            if(percentage)
+            {
+              let vf = (this.vpnFac()-1)*100;
+              let df = (this.directFac()-1)*100;
+
+              return (vf > 1 ? "+" : "") + Math.round(vf) + "%";// (" + (df > 1 ? "+" : "") + df.toFixed(2) + "%)";
+            }
+            else
+            {
+              return this.vpnFac().toFixed(2) + "x";
+            }
+          }
+        }
+
+        function applyFilter()
+        {
+          allTests.forEach(
+            t => document.querySelectorAll('.' + t).forEach(
+              el => el.style.display = activeTest === 'All' || activeTest === t ? 'block' : 'none'));
+        }
+        
+        function onDropdownClick() {
+          document.getElementById("testsDropdown").classList.toggle("show");
+        }
+
+        function onSliderChange(event) {
+          populateCurrentMetrics();
+        }
+
+        function onPlayPause(event)
+        {
+          let btn = document.querySelector("#playPauseBtn");
+          if(timer)
+          {
+            clearInterval(timer);
+            timer = null;
+            btn.textContent = "Play";
+          }
+          else
+          {
+              timer = setInterval(() => {
+                let slider = document.querySelector("#slider");
+                if(slider.value == slider.max)
+                  slider.value = 0;
+                else
+                  slider.value++;
+                populateCurrentMetrics();
+              }, 1000);
+              btn.textContent = "Pause";
+          }
+        }
+
+        // Close the dropdown if the user clicks outside of it
+        window.onclick = function(event) {
+          if (!event.target.matches('.dropbtn')) {
+            var dropdowns = document.getElementsByClassName("dropdown-content");
+            var i;
+            for (i = 0; i < dropdowns.length; i++) {
+              var openDropdown = dropdowns[i];
+              if (openDropdown.classList.contains('show')) {
+                openDropdown.classList.remove('show');
+              }
+              
+              if(allTests.indexOf(event.target.id) != -1)
+              {
+                activeTest = event.target.id;
+                applyFilter();
+              }
+            }
+          }
+        }
+
+        function makeBG(test, elem) {
+          var svgns = "http://www.w3.org/2000/svg"
+          var bounds = elem.getBBox()
+          var bg = document.createElementNS(svgns, "rect")
+          var style = getComputedStyle(elem)
+          var padding_top = parseInt(style["padding-top"])
+          var padding_left = parseInt(style["padding-left"])
+          var padding_right = parseInt(style["padding-right"])
+          var padding_bottom = parseInt(style["padding-bottom"])
+          bg.setAttribute('class', test);
+          bg.setAttribute("x", bounds.x - parseInt(style["padding-left"]))
+          bg.setAttribute("y", bounds.y - parseInt(style["padding-top"]))
+          bg.setAttribute("width", bounds.width + padding_left + padding_right)
+          bg.setAttribute("height", bounds.height + padding_top + padding_bottom)
+          bg.setAttribute("fill", style["background-color"])
+          bg.setAttribute("rx", style["border-radius"])
+          bg.setAttribute("stroke-width", style["border-top-width"])
+          bg.setAttribute("stroke", style["border-top-color"])
+          if (elem.hasAttribute("transform")) {
+            bg.setAttribute("transform", elem.getAttribute("transform"))
+          }
+          elem.parentNode.insertBefore(bg, elem)
+      }
+      
+      function addLabel(test, parent, x, y, text)
+      {
+        var txt = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+        txt.setAttribute('x', x);
+        txt.setAttribute('y', y);
+        txt.setAttribute('class', 'label ' + test);
+        txt.textContent = text;
+        parent.appendChild(txt);
+        makeBG(test, txt);
+      }
+
+      function addBubble(test, parent, x, y, r, color, tooltip)
+      {
+        var txt = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+        txt.setAttribute('cx', x);
+        txt.setAttribute('cy', y);
+        txt.setAttribute('r', r);
+        txt.setAttribute('stroke', color);
+        txt.setAttribute('class', 'bubble ' + test);
+        var title = document.createElementNS('http://www.w3.org/2000/svg', 'title');
+        title.textContent = tooltip;
+        txt.appendChild(title);
+        parent.appendChild(txt);
+      }
+
+      function addBubbles(test, parent, x, y, value)
+      {
+        addBubble(test, parent, x, y, 1, "var(--red-strong)");//vpn
+        addBubble(test, parent, x, y, value.vpn/value.direct,  "var(--base-white)");//vpn
+        addBubble(test, parent, x, y, value.vpn/value.neuron,  "var(--green-strong)", "Latency: " + value.formatFac());//vpn
+      }
+
+      function addLine(test, parent, fromNode, toNode, color, pingValue, dlValue)
+      {
+        var ln = document.createElementNS('http://www.w3.org/2000/svg', 'line');              
+        let cx = fromNode.cx ? fromNode.cx.baseVal.value : 29;
+        let cy = fromNode.cy ? fromNode.cy.baseVal.value : 30;
+        ln.setAttribute('id', fromNode.id + "-" + toNode.id);
+        ln.setAttribute('x1', cx);
+        ln.setAttribute('y1', cy);
+        ln.setAttribute('x2', toNode.cx.baseVal.value);
+        ln.setAttribute('y2', toNode.cy.baseVal.value);
+        ln.setAttribute('stroke', color);
+        ln.setAttribute('class', 'path ' + test);
+        parent.appendChild(ln);
+        
+        if(dlValue) {
+            addBubbles(test, parent, (cx + toNode.cx.baseVal.value)/2 - 0, (cy + toNode.cy.baseVal.value)/2, dlValue);
+            addLabel(test, parent, (cx + toNode.cx.baseVal.value)/2 - 4, (cy + toNode.cy.baseVal.value)/2 + 6, "D: " + dlValue.formatFac());
+        }
+        if(pingValue) {
+            addLabel(test, parent, (cx + toNode.cx.baseVal.value)/2 - 4, (cy + toNode.cy.baseVal.value)/2 - 5, "S: " + pingValue.formatFac());
+          //addBubbles(test, parent, (cx + toNode.cx.baseVal.value)/2 - 0, (cy + toNode.cy.baseVal.value)/2 - 1, pingValue);
+        }
+        
+      }
+      function getAverage(test, ping)
+      {
+        let sum = 0;
+        let num = 0;
+        for(let site of test.getElementsByTagName("site"))
+        {
+            let ave = 0;
+            
+            if(ping)
+            {
+              let parts = site.textContent.split("/");
+              ave = parseInt(parts[parts.length-2]);
+            }
+            else
+            {
+              let parts1 = site.textContent.split(":");
+              let parts2 = parts1[parts1.length-3].split(' ');
+              ave = parseInt(parts2[0]);
+            }
+            sum += ave;
+            num++;
+        }
+        return sum/num;
+      }      
+
+      function addTest(test)
+      {
+        let allElem = document.createElement("A");
+        allElem.setAttribute('id', test);
+        allElem.textContent = test;
+        testsDropdown.appendChild(allElem);
+        allTests.push(test);
+      }
+
+      async function populateMetrics(vpnFile, pingFile, dlFile)
+      {
+        let svgRoot = document.querySelector("#svgRoot");
+        let dynaElems = svgRoot.querySelector("#dynaElems");
+        let user = svgRoot.querySelector("#user");
+        let testsDropdown = document.querySelector('#testsDropdown');        
+
+        let pingValue = new Metric();
+        pingValue.vpn = vpnDefaults.ping; //todo: read from a file
+        
+        let dlValue = new Metric();
+        dlValue.vpn = vpnDefaults.dl; //todo: read from a file
+        
+        // create dropdown entry for all
+        while(dynaElems.firstChild)
+          dynaElems.removeChild(dynaElems.firstChild);
+
+        while(testsDropdown.firstChild)
+          testsDropdown.removeChild(testsDropdown.firstChild);        
+        allTests = [];
+        addTest("None");
+        addTest("All");
+        
+        let vpnResponse = await fetch(vpnFile);
+        if(vpnResponse.ok)
+        {
+          let vpnDoc = (new window.DOMParser()).parseFromString(await vpnResponse.text(), "text/xml");
+          for(let vpnTest of vpnDoc.getElementsByTagName("test"))
+          {
+            let name = vpnTest.getAttribute("name").toLowerCase();
+            if(name.includes("ping"))
+              pingValue.vpn = getAverage(vpnTest, true);
+            else if(name.includes("download"))              
+              dlValue.vpn = getAverage(vpnTest, false);
+          }
+          if(isNaN(pingValue.vpn))
+            debugger;
+          console.log("VPN Ave: " + pingValue.vpn + " " + dlValue.vpn);
+        }
+
+        let pingResponse = await fetch(pingFile);
+        let dlResponse = await fetch(dlFile);
+        let pingDoc = (new window.DOMParser()).parseFromString(await pingResponse.text(), "text/xml");
+        let dlDoc = (new window.DOMParser()).parseFromString(await dlResponse.text(), "text/xml");
+        
+        let ts = pingDoc.documentElement.getAttribute("timeStamp");
+        document.querySelector("#timeStamp").textContent = "L: " + 
+          pingDoc.documentElement.getAttribute("timeStamp") + "   D: " +
+          dlDoc.documentElement.getAttribute("timeStamp");
+
+        for(let pingTest of pingDoc.getElementsByTagName("test"))
+        {
+          let fpop = svgRoot.querySelector("#" + pingTest.getAttribute("firstMile"));
+          let mpop = svgRoot.querySelector("#" + pingTest.getAttribute("middleMile"));
+          let lpop = svgRoot.querySelector("#" + pingTest.getAttribute("lastMile"));
+          let name = pingTest.getAttribute("name");
+          
+          let dlTest = dlDoc.getElementsByName(name)[0];
+          pingValue.neuron = getAverage(pingTest, true);
+          dlValue.neuron = getAverage(dlTest, false);
+          
+          if(fpop == null)
+          {
+            pingValue.direct = pingValue.neuron;
+            dlValue.direct = dlValue.neuron;
+            continue; // this is direct connection
+          }
+
+          addLine(name, dynaElems, user, fpop, "var(--base-light)");
+          if(mpop)
+          {
+            addLine(name, dynaElems, fpop, mpop, "var(--green-strong)", pingValue, dlValue);
+            addLine(name, dynaElems, mpop, lpop, "var(--green-strong)");
+          }
+          else
+          {
+            addLine(name, dynaElems, fpop, lpop, "var(--green-strong)", pingValue, dlValue);
+          }
+          
+          //add the test to the dropdown
+          addTest(name);
+        }
+        if(allTests.indexOf(activeTest) == -1)
+          activeTest = "None";
+        applyFilter();
+      }
+      
+      function populateCurrentMetrics()
+      {
+          let slider = document.querySelector("#slider");
+          populateMetrics("/metrics/vpn/" + slider.value, "/metrics/ping/" + slider.value, "/metrics/download/" + slider.value);
+      }
+      
+      async function initSlider()
+      {
+        let slider = document.querySelector("#slider");
+        let metrics = await (await fetch("/metrics")).json();
+        let max = metrics.count-1;
+        slider.max = max;
+        slider.value = max;
+        populateCurrentMetrics();
+      }
+      initSlider();
+    </script>
+  </div>
+</div>

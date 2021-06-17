@@ -15,13 +15,14 @@ import recoveryHandler from './routes/recovery'
 import morgan from 'morgan'
 import * as https from 'https'
 import * as fs from 'fs'
+import * as path from 'path'
 import protectSimple from './middleware/simple'
 import protectOathkeeper from './middleware/oathkeeper'
 
 export const protect =
   config.securityMode === SECURITY_MODE_JWT ? protectOathkeeper : protectSimple
 
-const app = express()
+export const app = express()
 app.use(morgan('tiny'))
 app.use(cookieParser())
 app.set('view engine', 'hbs')
@@ -29,7 +30,7 @@ app.set('view engine', 'hbs')
 app.use((req: Request, res: Response, next: NextFunction) => {
   res.locals.projectName = config.projectName
   res.locals.baseUrl = config.baseUrl
-  res.locals.pathPrefix = config.baseUrl.replace(/\/+$/, '') + '/'
+  res.locals.pathPrefix = path.join(config.baseUrl, './')
   next()
 })
 
@@ -79,7 +80,7 @@ if (process.env.NODE_ENV === 'stub') {
 } else {
   app.get('/', protect, dashboard)
   app.get('/dashboard', protect, dashboard)
-  app.get('/auth/registration', registrationHandler)
+  //app.get('/auth/registration', registrationHandler)
   app.get('/auth/login', loginHandler)
   app.get('/error', errorHandler)
   app.get('/settings', protect, settingsHandler)
@@ -90,9 +91,9 @@ if (process.env.NODE_ENV === 'stub') {
 app.get('/health', (_: Request, res: Response) => res.send('ok'))
 app.get('/debug', debug)
 
-app.get('*', (_: Request, res: Response) => {
+/*app.get('*', (_: Request, res: Response) => {
   res.redirect(config.baseUrl)
-})
+})*/
 
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
   console.error(err.stack)

@@ -7,24 +7,22 @@
 //
 //   app.get("/dashboard", protect, (req, res) => { /* ... */ })
 
-import {Configuration, PublicApi} from "@ory/kratos-client";
-import config from "../config";
-import {NextFunction, Request, Response} from "express";
-import urljoin from "url-join";
+import { Configuration, PublicApi } from '@ory/kratos-client';
+import config from '../config';
+import { NextFunction, Request, Response } from 'express';
+import urljoin from 'url-join';
 
-const kratos = new PublicApi(new Configuration({basePath: config.kratos.public}))
+const kratos = new PublicApi(new Configuration({ basePath: config.kratos.public }));
 
 export default (req: Request, res: Response, next: NextFunction) => {
-  kratos.whoami(
-    req.header("Cookie"),
-    req.header("Authorization"),
-  ).then(({data: session}) => {
+  kratos.toSession(undefined, req.cookies['ory_kratos_session']).then(({ data: session }) => {
     // `whoami` returns the session or an error. We're changing the type here
     // because express-session is not detected by TypeScript automatically.
-    (req as Request & { user: any }).user = {session}
-    next()
-  }).catch(() => {
+    (req as Request & { user: any }).user = { session };
+    next();
+  }).catch((err) => {
+    console.log(err);
     // If no session is found, redirect to login.
-    res.redirect(urljoin(config.baseUrl, '/auth/login'))
-  })
+    res.redirect(urljoin(config.baseUrl, '/auth/login'));
+  });
 }

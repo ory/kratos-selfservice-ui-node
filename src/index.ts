@@ -50,8 +50,6 @@ app.engine(
       onlyNodes,
       getTitle,
       toUiNodePartial: toUiNodePartial,
-      logoutUrl: () =>
-        `${config.kratos.browser}/self-service/browser/flows/logout`,
     },
   })
 )

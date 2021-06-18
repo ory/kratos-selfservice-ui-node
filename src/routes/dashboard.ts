@@ -1,6 +1,29 @@
 import { Request, Response } from 'express'
-import config from '../config'
+import { Configuration, PublicApi } from '@ory/kratos-client';
 import jd from 'jwt-decode'
+
+import config from '../config';
+import { isString, redirectOnSoftError } from '../helpers/sdk';
+
+// Variable config has keys:
+// kratos: {
+//
+//   // The browser config key is used to redirect the user. It reflects where ORY Kratos' Public API
+//   // is accessible from. Here, we're assuming traffic going to `http://example.org/.ory/kratos/public/`
+//   // will be forwarded to ORY Kratos' Public API.
+//   browser: 'https://kratos.example.org',
+//
+//   // The location of the ORY Kratos Admin API
+//   admin: 'https://ory-kratos-admin.example-org.vpc',
+//
+//   // The location of the ORY Kratos Public API within the cluster
+//   public: 'https://ory-kratos-public.example-org.vpc',
+// },
+
+// Uses the ORY Kratos NodeJS SDK - for more SDKs check:
+//
+//  https://www.ory.sh/kratos/docs/sdk/index
+const kratos = new PublicApi(new Configuration({ basePath: config.kratos.public }));
 
 type UserRequest = Request & { user: any }
 
@@ -46,18 +69,22 @@ export default (req: Request, res: Response) => {
   )
 
   const ai = authInfo(req as UserRequest)
-  res.render('dashboard', {
-    session: ai.claims.session,
-    token: ai,
-    headers: `GET ${req.path} HTTP/1.1
+
+  kratos.createSelfServiceLogoutUrlForBrowsers(req.cookies['ory_kratos_session']).then(({data}) => {
+    res.render('dashboard', {
+      session: ai.claims.session,
+      token: ai,
+      logoutUrl: data.logout_url,
+      headers: `GET ${req.path} HTTP/1.1
 
 ${interestingHeaders
-  .filter((header: string) =>
-    /User-Agent|Authorization|Content-Type|Host|Accept-Encoding|Accept-Language|Cookie|Connection|X-Forwarded-For/.test(
-      header
-    )
-  )
-  .join('\n')}
+        .filter((header: string) =>
+          /User-Agent|Authorization|Content-Type|Host|Accept-Encoding|Accept-Language|Cookie|Connection|X-Forwarded-For/.test(
+            header
+          )
+        )
+        .join('\n')}
 ...`
+    })
   })
 }

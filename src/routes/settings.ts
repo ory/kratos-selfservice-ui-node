@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 import config from '../config';
-import { AdminApi, Configuration } from '@ory/kratos-client';
+import { AdminApi, Configuration, PublicApi } from '@ory/kratos-client';
 import { isString, redirectOnSoftError } from '../helpers/sdk';
 
 // Variable config has keys:
@@ -18,7 +18,8 @@ import { isString, redirectOnSoftError } from '../helpers/sdk';
 //   public: 'https://ory-kratos-public.example-org.vpc',
 // },
 
-const kratos = new AdminApi(new Configuration({ basePath: config.kratos.admin }));
+const kratosPublic = new PublicApi(new Configuration({ basePath: config.kratos.public }));
+const kratosAdmin = new AdminApi(new Configuration({ basePath: config.kratos.admin }));
 
 const settingsHandler = (req: Request, res: Response, next: NextFunction) => {
   const flow = req.query.flow;
@@ -30,17 +31,19 @@ const settingsHandler = (req: Request, res: Response, next: NextFunction) => {
     return;
   }
 
-  kratos
-    .getSelfServiceSettingsFlow(flow)
-    .then(({ status, data: flow }) => {
-      if (status !== 200) {
-        return Promise.reject(flow);
-      }
+  kratosPublic.createSelfServiceLogoutUrlForBrowsers(req.cookies['ory_kratos_session']).then(({ data }) => {
+    kratosAdmin
+      .getSelfServiceSettingsFlow(flow)
+      .then(({ status, data: flow }) => {
+        if (status !== 200) {
+          return Promise.reject(flow);
+        }
 
-      // Render the data using a view (e.g. Jade Template):
-      res.render('settings', flow);
-    })
-    .catch(redirectOnSoftError(res, next, '/self-service/settings/browser'));
+        // Render the data using a view (e.g. Jade Template):
+        res.render('settings', { ...flow, logoutUrl: data.logout_url });
+      })
+      .catch(redirectOnSoftError(res, next, '/self-service/settings/browser'));
+  });
 };
 
 export default settingsHandler;

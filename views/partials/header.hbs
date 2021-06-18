@@ -8,11 +8,13 @@
                 {{> icon_gear}}
             </a>
         </div>
-        <div class="logout">
-            <a href="{{logoutUrl}}">
-                {{> icon_sign_out}}
-            </a>
-        </div>
+        {{#if logoutUrl}}
+          <div class="logout">
+              <a href="{{logoutUrl}}">
+                  {{> icon_sign_out}}
+              </a>
+          </div>
+        {{/if}}
         <div class="fork">
             <a href="https://github.com/ory/kratos-selfservice-ui-node" target="_blank">
                 {{> icon_repo_forked}}

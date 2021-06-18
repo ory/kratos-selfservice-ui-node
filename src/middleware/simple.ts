@@ -20,8 +20,7 @@ export default (req: Request, res: Response, next: NextFunction) => {
     // because express-session is not detected by TypeScript automatically.
     (req as Request & { user: any }).user = { session };
     next();
-  }).catch((err) => {
-    console.log(err);
+  }).catch(() => {
     // If no session is found, redirect to login.
     res.redirect(urljoin(config.baseUrl, '/auth/login'));
   });

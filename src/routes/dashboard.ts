@@ -73,13 +73,13 @@ export default async (req: Request, res: Response) => {
 
   try {
     var response = await (await fetch(url)).json()
+    if (isLocal) {
+      v4 = response['geoplugin_request']
+    }
   } catch (error) {
     console.error(error)
   }
 
-  if (isLocal) {
-    v4 = response['geoplugin_request']
-  }
 
   traits.system.geolocation = JSON.stringify(response).replace(/geoplugin_/g, '')
   const updateIdentity: UpdateIdentity = { traits }

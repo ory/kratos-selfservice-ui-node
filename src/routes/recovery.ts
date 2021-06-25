@@ -17,7 +17,7 @@ export default (req: Request, res: Response, next: NextFunction) => {
   }
 
   kratos
-    .getSelfServiceRecoveryFlow(flow)
+    .getSelfServiceRecoveryFlow(flow, req.header('Cookie'))
     .then(({ status, data: flow }) => {
       if (status !== 200) {
         return Promise.reject(flow);

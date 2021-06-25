@@ -42,7 +42,7 @@ export default (
     return;
   }
 
-  return kratos.getSelfServiceLoginFlow(flow)
+  return kratos.getSelfServiceLoginFlow(flow, req.header('cookie'))
     .then(({ status, data: flow, ...response }) => {
       if (status !== 200) {
         return Promise.reject(flow);

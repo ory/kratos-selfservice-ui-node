@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
-import { Configuration, PublicApi } from '@ory/kratos-client';
+import { Configuration, PublicApi, RegistrationFlow } from '@ory/kratos-client';
 
 import config from '../config';
 import { isString, redirectOnSoftError } from '../helpers/sdk';
@@ -45,7 +45,10 @@ export default (
   }
 
   kratos.getSelfServiceRegistrationFlow(flow)
-    .then(({ status, data: flow }) => {
+    .then((response) => {
+      const { status } = response
+      const flow: RegistrationFlow = response.data
+
       if (status !== 200) {
         return Promise.reject(flow);
       }

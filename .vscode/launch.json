@@ -17,14 +17,14 @@
             ],
             "type": "pwa-node",
             "env": {
-                "SECURITY_MODE":"cookie",
-                "KRATOS_BROWSER_URL":"http://127.0.0.1:4433/",
-                "KRATOS_PUBLIC_URL":"http://127.0.0.1:4433/",
-                "KRATOS_ADMIN_URL":"http://127.0.0.1:4434/",
-                "PORT":"4455",
-                "PROJECT_NAME":"Cerebral Systems",
-                "MEASURE_DIR":"../measure_files/cron-measure",
-                "STARTING_DATE" : "2021-04-17"
+                "SECURITY_MODE": "cookie",
+                "KRATOS_BROWSER_URL": "http://127.0.0.1:4433/",
+                "KRATOS_PUBLIC_URL": "http://127.0.0.1:4433/",
+                "KRATOS_ADMIN_URL": "http://127.0.0.1:4434/",
+                "PORT": "4455",
+                "PROJECT_NAME": "Cerebral Systems",
+                // "MEASURE_DIR":"../measure_files/cron-measure",
+                "STARTING_DATE": "2021-04-17"
             }
         }
     ]

@@ -50,7 +50,7 @@ app.engine(
       jsonPretty: (context: any) => JSON.stringify(context, null, 2),
       onlyNodes,
       getTitle,
-      toUiNodePartial: toUiNodePartial,
+      toUiNodePartial,
       logoutUrl: () =>
         `${config.kratos.browser}/self-service/browser/flows/logout`,
     },
@@ -80,7 +80,7 @@ if (process.env.NODE_ENV === 'stub') {
 } else {
   app.get('/', protect, dashboard)
   app.get('/dashboard', protect, dashboard)
-  //app.get('/auth/registration', registrationHandler)
+  app.get('/auth/registration', registrationHandler)
   app.get('/auth/login', loginHandler)
   app.get('/error', errorHandler)
   app.get('/settings', protect, settingsHandler)
@@ -91,9 +91,9 @@ if (process.env.NODE_ENV === 'stub') {
 app.get('/health', (_: Request, res: Response) => res.send('ok'))
 app.get('/debug', debug)
 
-/*app.get('*', (_: Request, res: Response) => {
+app.get('*', (_: Request, res: Response) => {
   res.redirect(config.baseUrl)
-})*/
+})
 
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
   console.error(err.stack)

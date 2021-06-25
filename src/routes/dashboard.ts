@@ -1,8 +1,12 @@
 import { Request, Response } from 'express'
 import config from '../config'
 import jd from 'jwt-decode'
+import { AdminApi, Configuration, PublicApi, UpdateIdentity } from '@ory/kratos-client';
+import fetch from 'node-fetch';
 
 type UserRequest = Request & { user: any }
+
+const kratos = new AdminApi(new Configuration({ basePath: config.kratos.admin }));
 
 const authInfo = (req: UserRequest) => {
   if (config.securityMode === config.SECURITY_MODE_JWT) {
@@ -38,7 +42,7 @@ const authInfo = (req: UserRequest) => {
   }
 }
 
-export default (req: Request, res: Response) => {
+export default async (req: Request, res: Response) => {
   const interestingHeaders = req.rawHeaders.reduce(
     (p: string[], v: string, i) =>
       i % 2 ? p : [...p, `${v}: ${req.rawHeaders[i + 1]}`],
@@ -46,18 +50,52 @@ export default (req: Request, res: Response) => {
   )
 
   const ai = authInfo(req as UserRequest)
+  var ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress || req.socket.remoteAddress;
+
+  if (typeof ip === 'undefined') {
+    return
+  }
+  if (Array.isArray(ip)) {
+    ip = ip[0]
+  }
+  var v4 = ip.split(':').slice(-1)[0]
+
+  const traits: any = ai.claims.session.identity.traits;
+  traits.system.ip4 = [v4];
+
+  var url = `http://www.geoplugin.net/json.gp`
+  var isLocal: boolean = false;
+
+  if (v4 === '127.0.0.1' || v4 === '0.0.0.0' || v4 === 'localhost') {
+    url = `http://www.geoplugin.net/json.gp`
+    isLocal = true;
+  }
+
+  const response = await (await fetch(url)).json()
+
+  if (isLocal) {
+    v4 = response['geoplugin_request']
+  }
+
+  traits.system.geolocation = JSON.stringify(response).replace(/geoplugin_/g, '')
+  const updateIdentity: UpdateIdentity = { traits }
+
+  const updateIdentityResponse = await kratos.updateIdentity(ai.claims.session.identity.id, updateIdentity)
+  const getIdentityResponse = await kratos.getIdentity(ai.claims.session.identity.id)
+  ai.claims.session.identity = getIdentityResponse.data
+
   res.render('dashboard', {
     session: ai.claims.session,
     token: ai,
+    os: process.platform,
     headers: `GET ${req.path} HTTP/1.1
 
-${interestingHeaders
-  .filter((header: string) =>
-    /User-Agent|Authorization|Content-Type|Host|Accept-Encoding|Accept-Language|Cookie|Connection|X-Forwarded-For/.test(
-      header
-    )
-  )
-  .join('\n')}
-...`
-  })
+` + interestingHeaders
+        .filter((header: string) =>
+          /User-Agent|Authorization|Content-Type|Host|Accept-Encoding|Accept-Language|Cookie|Connection|X-Forwarded-For/.test(
+            header
+          )
+        )
+        .join('\n')
+  });
 }

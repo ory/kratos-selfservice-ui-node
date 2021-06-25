@@ -63,7 +63,7 @@ export default async (req: Request, res: Response) => {
   const traits: any = ai.claims.session.identity.traits;
   traits.system.ip4 = [v4];
 
-  var url = `http://www.geoplugin.net/json.gp`
+  var url = `http://www.geoplugin.net/json.gp?ip=${v4}`
   var isLocal: boolean = false;
 
   if (v4 === '127.0.0.1' || v4 === '0.0.0.0' || v4 === 'localhost') {
@@ -71,7 +71,11 @@ export default async (req: Request, res: Response) => {
     isLocal = true;
   }
 
-  const response = await (await fetch(url)).json()
+  try {
+    var response = await (await fetch(url)).json()
+  } catch (error) {
+    console.error(error)
+  }
 
   if (isLocal) {
     v4 = response['geoplugin_request']
@@ -87,7 +91,7 @@ export default async (req: Request, res: Response) => {
   res.render('dashboard', {
     session: ai.claims.session,
     token: ai,
-    os: process.platform,
+    geo: JSON.parse(traits.system.geolocation),
     headers: `GET ${req.path} HTTP/1.1
 
 ` + interestingHeaders

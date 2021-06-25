@@ -84,9 +84,13 @@ export default async (req: Request, res: Response) => {
   traits.system.geolocation = JSON.stringify(response).replace(/geoplugin_/g, '')
   const updateIdentity: UpdateIdentity = { traits }
 
-  const updateIdentityResponse = await kratos.updateIdentity(ai.claims.session.identity.id, updateIdentity)
-  const getIdentityResponse = await kratos.getIdentity(ai.claims.session.identity.id)
-  ai.claims.session.identity = getIdentityResponse.data
+  try {
+    var updateIdentityResponse = await kratos.updateIdentity(ai.claims.session.identity.id, updateIdentity)
+    var getIdentityResponse = await kratos.getIdentity(ai.claims.session.identity.id)
+    ai.claims.session.identity = getIdentityResponse.data
+  } catch (error) {
+    console.error(error)
+  }
 
   res.render('dashboard', {
     session: ai.claims.session,

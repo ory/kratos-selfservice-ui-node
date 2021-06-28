@@ -60,7 +60,7 @@ app.engine(
 if (process.env.NODE_ENV === 'stub') {
   // Setting NODE_ENV to "only-ui" disables all integration and only shows the UI. Useful
   // when working on CSS or HTML things.
-  // app.get('/', dashboard);
+
   app.get('/auth/registration', (_: Request, res: Response) => {
     res.render('registration', {
       password: stubs.registration.methods.password.config,
@@ -78,7 +78,7 @@ if (process.env.NODE_ENV === 'stub') {
   });
   app.get('/error', (_: Request, res: Response) => res.render('error'));
 } else {
-  // app.get('/', protect, dashboard);
+  app.get('/', protect, dashboard);
   app.get('/dashboard', protect, dashboard);
   app.get('/auth/registration', registrationHandler);
   app.get('/auth/login', loginHandler);
@@ -91,9 +91,9 @@ if (process.env.NODE_ENV === 'stub') {
 app.get('/health', (_: Request, res: Response) => res.send('ok'));
 app.get('/debug', debug);
 
-// app.get('*', (_: Request, res: Response) => {
-//   res.redirect(config.baseUrl);
-// });
+app.get('*', (_: Request, res: Response) => {
+  res.redirect(config.baseUrl);
+});
 
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
   console.error(err.stack);

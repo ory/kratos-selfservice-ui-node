@@ -27,4 +27,4 @@ export default (req: Request, res: Response, next: NextFunction) => {
       res.render('recovery', flow);
     })
     .catch(redirectOnSoftError(res, next, '/self-service/recovery/browser'));
-}
+};

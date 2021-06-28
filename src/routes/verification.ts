@@ -19,7 +19,7 @@ export default (req: Request, res: Response, next: NextFunction) => {
   kratos
     .getSelfServiceVerificationFlow(flow)
     .then(({ status, data: flow }) => {
-     if (status != 200) {
+      if (status !== 200) {
         return Promise.reject(flow);
       }
 
@@ -27,4 +27,4 @@ export default (req: Request, res: Response, next: NextFunction) => {
       res.render('verification', flow);
     })
     .catch(redirectOnSoftError(res, next, '/self-service/verification/browser'));
-}
+};

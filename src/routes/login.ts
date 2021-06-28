@@ -30,7 +30,7 @@ const kratos = new PublicApi(new Configuration({ basePath: config.kratos.public 
 export default (
   req: Request,
   res: Response,
-  next: NextFunction,
+  next: NextFunction
 ) => {
   const flow = req.query.flow;
 
@@ -53,4 +53,4 @@ export default (
     })
     // Handle errors using ExpressJS' next functionality:
     .catch(redirectOnSoftError(res, next, '/self-service/login/browser'));
-}
+};

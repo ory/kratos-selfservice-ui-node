@@ -30,7 +30,7 @@ const kratos = new PublicApi(new Configuration({ basePath: config.kratos.public 
 export default (
   req: Request,
   res: Response,
-  next: NextFunction,
+  next: NextFunction
 ) => {
   const flow = req.query.flow;
 
@@ -39,25 +39,23 @@ export default (
   if (!flow || !isString(flow)) {
     console.log('No flow ID found in URL, initializing registration flow.');
     res.redirect(
-      `${config.kratos.browser}/self-service/registration/browser`,
+      `${config.kratos.browser}/self-service/registration/browser`
     );
     return;
   }
 
   kratos.getSelfServiceRegistrationFlow(flow)
     .then((response) => {
-      const { status } = response
-      const flow: RegistrationFlow = response.data
+      const { status } = response;
+      const flow: RegistrationFlow = response.data;
 
       if (status !== 200) {
         return Promise.reject(flow);
       }
-
-      flow.ui.nodes
 
       // Render the data using a view (e.g. Jade Template):
       res.render('registration', flow);
     })
     // Handle errors using ExpressJS' next functionality:
     .catch(redirectOnSoftError(res, next, '/self-service/registration/browser'));
-}
+};

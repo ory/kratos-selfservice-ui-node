@@ -1,7 +1,7 @@
 import { UiNode, UiNodeInputAttributes } from '@ory/kratos-client';
 import {
   UiNodeAnchorAttributes,
-  UiNodeTextAttributes,
+  UiNodeTextAttributes
 } from '@ory/kratos-client/api';
 
 const ui: { [key: string]: { title: string } } = {
@@ -15,7 +15,7 @@ const ui: { [key: string]: { title: string } } = {
 type Translations = typeof ui
 
 export const onlyNodes = (nodes: Array<UiNode>, only?: string) => {
-  nodes = nodes.filter(({ attributes }) => !(attributes as UiNodeInputAttributes).name.startsWith("traits.system."));
+  nodes = nodes.filter(({ attributes }) => !(attributes as UiNodeInputAttributes).name.startsWith('traits.system.'));
   if (!only) {
     return nodes;
   }

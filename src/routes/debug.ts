@@ -1,5 +1,5 @@
-import { Request, Response } from 'express'
+import { Request, Response } from 'express';
 
 export default (req: Request, res: Response) => {
-  res.send(req.rawHeaders)
-}
+  res.send(req.rawHeaders);
+};

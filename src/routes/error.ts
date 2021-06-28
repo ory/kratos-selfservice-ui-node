@@ -20,15 +20,15 @@ export default (req: Request, res: Response, next: NextFunction) => {
     .then(({ status, data: body }) => {
       if ('errors' in body) {
         res.status(500).render('error', {
-          message: JSON.stringify(body.errors, null, 2),
+          message: JSON.stringify(body.errors, null, 2)
         });
         return Promise.resolve();
       }
 
       return Promise.reject(
-        `expected errorContainer to contain "errors" but got ${JSON.stringify(
-          body,
-        )}`,
+        new Error(
+          `expected errorContainer to contain "errors" but got ${JSON.stringify(body)}`
+        )
       );
     })
     .catch((err: AxiosError) => {
@@ -45,4 +45,4 @@ export default (req: Request, res: Response, next: NextFunction) => {
 
       next(err);
     });
-}
+};

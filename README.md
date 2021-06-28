@@ -150,8 +150,9 @@ make clean-sdk
 
 3 steps:
 
-Step 1: install the ESLint plugin in your code editor, Step 2: install ESLint
-through npm (`npm i eslint`), Step 3: Add this to your `settings.json` file:
+Step 1: install the ESLint plugin in your code editor
+Step 2: install ESLint through npm (`npm i eslint`)
+Step 3: Add this to your `settings.json` file:
 
 ```
   "editor.codeActionsOnSave": {

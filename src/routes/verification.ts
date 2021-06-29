@@ -17,7 +17,7 @@ export default (req: Request, res: Response, next: NextFunction) => {
   }
 
   kratos
-    .getSelfServiceVerificationFlow(flow)
+    .getSelfServiceVerificationFlow(flow,req.header('Cookie'))
     .then(({ status, data: flow }) => {
      if (status != 200) {
         return Promise.reject(flow);

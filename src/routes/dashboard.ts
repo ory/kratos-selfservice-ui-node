@@ -70,7 +70,7 @@ export default (req: Request, res: Response) => {
 
   const ai = authInfo(req as UserRequest)
 
-  kratos.createSelfServiceLogoutUrlForBrowsers(req.cookies['ory_kratos_session']).then(({data}) => {
+  kratos.createSelfServiceLogoutUrlForBrowsers(req.header('Cookie')).then(({data}) => {
     res.render('dashboard', {
       session: ai.claims.session,
       token: ai,

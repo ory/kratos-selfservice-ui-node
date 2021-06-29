@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 import config from '../config';
-import { AdminApi, Configuration, PublicApi } from '@ory/kratos-client';
+import { Configuration, PublicApi } from '@ory/kratos-client';
 import { isString, redirectOnSoftError } from '../helpers/sdk';
 
 // Variable config has keys:
@@ -18,8 +18,7 @@ import { isString, redirectOnSoftError } from '../helpers/sdk';
 //   public: 'https://ory-kratos-public.example-org.vpc',
 // },
 
-const kratosPublic = new PublicApi(new Configuration({ basePath: config.kratos.public }));
-const kratosAdmin = new AdminApi(new Configuration({ basePath: config.kratos.admin }));
+const kratos = new PublicApi(new Configuration({ basePath: config.kratos.public }));
 
 const settingsHandler = (req: Request, res: Response, next: NextFunction) => {
   const flow = req.query.flow;
@@ -31,9 +30,11 @@ const settingsHandler = (req: Request, res: Response, next: NextFunction) => {
     return;
   }
 
-  kratosPublic.createSelfServiceLogoutUrlForBrowsers(req.cookies['ory_kratos_session']).then(({ data }) => {
-    kratosAdmin
-      .getSelfServiceSettingsFlow(flow)
+  console.log(req.header('cookie'));
+
+  kratos.createSelfServiceLogoutUrlForBrowsers(req.header('Cookie')).then(({ data }) => {
+    kratos
+      .getSelfServiceSettingsFlow(flow, undefined, req.header('Cookie'))
       .then(({ status, data: flow }) => {
         if (status !== 200) {
           return Promise.reject(flow);

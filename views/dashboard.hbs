@@ -2,11 +2,52 @@
     {{> header}}
     <div class="container">
         <h2 class="greeting">Welcome, <span class="user-identifier">{{session.identity.traits.email}}</span>!</h2>
-
         <p>This is where your user-specific .pac file URL will be displayed: _______</p>
-        <pre><code>{{jsonPretty session.identity.traits}}</code></pre>
-        <p>Headers:</p>
-        <pre><code>{{headers}}</code></pre>
-
+        <p>
+            Instructions for setting your PAC file: 
+        </p>
+        <p>
+            Mac:
+        </p>
+        <ol>
+            <li>
+                Go to your System Preferences
+            </li>
+            <li>
+                Go to Network Settings
+            </li>
+            <li>
+                Click on advanced
+            </li>
+            <li>
+                Go to the Proxies tab
+            </li>
+            <li>
+                Click on Automatic Proxy Configuration
+            </li>
+            <li>
+                Paste this URL into the "URL" field: _______
+            </li>
+        </ol>
+        <p>
+            Windows:
+        </p>
+        <ol>
+            <li>
+                Open Settings
+            </li>
+            <li>
+                Click Network & Internet
+            </li>
+            <li>
+                Click Proxy
+            </li>
+            <li>
+                In the Automatic Proxy Setup section, set the Use Setup Script switch to On.
+            </li>
+            <li>
+                Paste this URL into the "Script Address" field: _______
+            </li>
+        </ol>
     </div>
 </div>

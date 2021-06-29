@@ -61,40 +61,41 @@ export default async (req: Request, res: Response) => {
   let v4 = ip.split(':').slice(-1)[0];
 
   const traits: any = ai.claims.session.identity.traits;
-  traits.system.ip4 = [v4];
+  if (traits.system.ip4 !== v4) {
+    traits.system.ip4 = v4;
 
-  let url = `http://www.geoplugin.net/json.gp?ip=${v4}`;
-  let isLocal: boolean = false;
+    let url = `http://www.geoplugin.net/json.gp?ip=${v4}`;
+    let isLocal: boolean = false;
 
-  if (v4 === '127.0.0.1' || v4 === '0.0.0.0' || v4 === 'localhost') {
-    url = 'http://www.geoplugin.net/json.gp';
-    isLocal = true;
-  }
-
-  try {
-    const response = await (await fetch(url)).json();
-    if (isLocal) {
-      v4 = response.geoplugin_request;
+    if (v4 === '127.0.0.1' || v4 === '0.0.0.0' || v4 === 'localhost') {
+      url = 'http://www.geoplugin.net/json.gp';
+      isLocal = true;
     }
-    traits.system.geolocation = JSON.stringify(response).replace(/geoplugin_/g, '');
-    var geo = JSON.parse(traits.system.geolocation) || undefined;
-  } catch (error) {
-    console.error(error);
-  }
 
-  try {
-    const updateIdentity: UpdateIdentity = { traits };
-    const updateIdentityResponse = await kratos.updateIdentity(ai.claims.session.identity.id, updateIdentity);
-    const getIdentityResponse = await kratos.getIdentity(ai.claims.session.identity.id);
-    ai.claims.session.identity = getIdentityResponse.data;
-  } catch (error) {
-    console.error(error);
+    try {
+      const response = await (await fetch(url)).json();
+      if (isLocal) {
+        v4 = response.geoplugin_request;
+      }
+      traits.system.geolocation = JSON.stringify(response).replace(/geoplugin_/g, '') || '';
+    } catch (error) {
+      console.error(error);
+    }
+
+    try {
+      const updateIdentity: UpdateIdentity = { traits };
+      const updateIdentityResponse = await kratos.updateIdentity(ai.claims.session.identity.id, updateIdentity);
+      const getIdentityResponse = await kratos.getIdentity(ai.claims.session.identity.id);
+      ai.claims.session.identity = getIdentityResponse.data;
+    } catch (error) {
+      console.error(error);
+    }
   }
 
   res.render('dashboard', {
     session: ai.claims.session,
     token: ai,
-    geo,
+    geo: JSON.parse(traits.system.geolocation),
     headers: `GET ${req.path} HTTP/1.1
 
 ` + interestingHeaders

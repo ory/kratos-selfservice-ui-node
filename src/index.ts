@@ -106,8 +106,8 @@ const port = Number(process.env.PORT) || 3000;
 
 const listener = () => {
   const proto = config.https.enabled ? 'https' : 'http';
-  console.log(`Listening on ${proto}://0.0.0.0:${port}`);
-  console.log(`Security mode: ${config.securityMode}`);
+  // console.log(`Listening on ${proto}://0.0.0.0:${port}`);
+  // console.log(`Security mode: ${config.securityMode}`);
 };
 
 if (config.https.enabled) {

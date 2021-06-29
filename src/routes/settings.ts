@@ -30,9 +30,11 @@ const settingsHandler = (req: Request, res: Response, next: NextFunction) => {
     return;
   }
 
+  console.log(req.header('cookie'));
+
   kratos.createSelfServiceLogoutUrlForBrowsers(req.header('Cookie')).then(({ data }) => {
     kratos
-      .getSelfServiceSettingsFlow(flow,req.header('Cookie'))
+      .getSelfServiceSettingsFlow(flow, undefined, req.header('Cookie'))
       .then(({ status, data: flow }) => {
         if (status !== 200) {
           return Promise.reject(flow);

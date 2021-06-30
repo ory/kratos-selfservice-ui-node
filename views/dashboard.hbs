@@ -2,7 +2,7 @@
     {{> header}}
     <div class="container">
         <h2 class="greeting">Welcome, <span class="user-identifier">{{session.identity.traits.email}}</span>!</h2>
-        <p>This is where your user-specific .pac file URL will be displayed: _______</p>
+        <p>This is where your user-specific .pac file URL will be displayed: <a href="https://{{url}}/pac/{{session.identity.id}}.pac">https://{{url}}/pac/{{session.identity.id}}.pac</a></p>
         <p>
             Instructions for setting your PAC file: 
         </p>
@@ -26,7 +26,7 @@
                 Click on Automatic Proxy Configuration
             </li>
             <li>
-                Paste this URL into the "URL" field: _______
+                Paste the URL above into the "URL" field
             </li>
         </ol>
         <p>
@@ -46,7 +46,7 @@
                 In the Automatic Proxy Setup section, set the Use Setup Script switch to On.
             </li>
             <li>
-                Paste this URL into the "Script Address" field: _______
+                Paste the URL above into the "Script Address" field
             </li>
         </ol>
     </div>

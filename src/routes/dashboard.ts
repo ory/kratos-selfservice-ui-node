@@ -59,9 +59,8 @@ export default async (req: Request, res: Response) => {
     }
     let v4 = ip.split(':').slice(-1)[0];
 
-    
     // if the ip address is the same as before - dont update it and make no calls to geo plugin
-    if(v4 !== traits.system.ip4) {
+    if (v4 !== traits.system.ip4) {
       traits.system.ip4 = v4;
 
       let url = `http://www.geoplugin.net/json.gp?ip=${v4}`;
@@ -96,6 +95,7 @@ export default async (req: Request, res: Response) => {
   res.render('dashboard', {
     session: ai.claims.session,
     token: ai,
+    url: req.hostname,
     geo: traits.system.geolocation ? JSON.parse(traits.system.geolocation) : {},
     headers: `GET ${req.path} HTTP/1.1
 

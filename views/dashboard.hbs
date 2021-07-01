@@ -2,7 +2,6 @@
     {{> header}}
     <div class="container">
         <h2 class="greeting">Welcome, <span class="user-identifier">{{session.identity.traits.email}}</span>!</h2>
-        <p>This is where your user-specific .pac file URL will be displayed: <a href="https://{{url}}/pac/{{session.identity.id}}.pac">https://{{url}}/pac/{{session.identity.id}}.pac</a></p>
         <p>
             Instructions for setting your PAC file: 
         </p>
@@ -35,8 +34,9 @@
                 Click on Automatic Proxy Configuration
             </li>
             <li>
-                Paste the URL above into the "URL" field
+                Paste this URL into the URL field
                 <div>
+                    <p class="pac-file">https://{{url}}/pac/{{session.identity.id}}.pac</p>
                     <img class="instruction_image" src="Mac_steps_456.jpg" alt="">
                 </div>
             </li>

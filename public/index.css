@@ -30,6 +30,11 @@ body {
   background: var(--base-dark);
 }
 
+.pac-file {
+  color: #0077ee;
+  text-decoration: underline;
+}
+
 .instruction_image {
   max-width: 36rem;
 }

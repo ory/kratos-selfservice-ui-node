@@ -8,8 +8,8 @@
     "serve": "node lib/index.js",
     "start": "ts-node-dev --watch public,views --respawn src/index.ts",
     "test": "npm-run-all build",
-    "format": "prettier --parser typescript --no-semi --single-quote --trailing-comma es5 --write src/**.ts",
-    "check-format": "prettier --parser typescript --no-semi --single-quote --trailing-comma es5 --check src/**.ts"
+    "format": "prettier --write src/**/*.ts",
+    "check-format": "prettier --check src/**/*.ts"
   },
   "repository": {
     "type": "git",

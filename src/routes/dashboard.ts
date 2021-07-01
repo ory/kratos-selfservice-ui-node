@@ -1,9 +1,9 @@
 import { Request, Response } from 'express'
-import { Configuration, PublicApi } from '@ory/kratos-client';
+import { Configuration, PublicApi } from '@ory/kratos-client'
 import jd from 'jwt-decode'
 
-import config from '../config';
-import { isString, redirectOnSoftError } from '../helpers/sdk';
+import config from '../config'
+import { isString, redirectOnSoftError } from '../helpers/sdk'
 
 // Variable config has keys:
 // kratos: {
@@ -23,7 +23,9 @@ import { isString, redirectOnSoftError } from '../helpers/sdk';
 // Uses the ORY Kratos NodeJS SDK - for more SDKs check:
 //
 //  https://www.ory.sh/kratos/docs/sdk/index
-const kratos = new PublicApi(new Configuration({ basePath: config.kratos.public }));
+const kratos = new PublicApi(
+  new Configuration({ basePath: config.kratos.public })
+)
 
 type UserRequest = Request & { user: any }
 
@@ -70,21 +72,23 @@ export default (req: Request, res: Response) => {
 
   const ai = authInfo(req as UserRequest)
 
-  kratos.createSelfServiceLogoutUrlForBrowsers(req.header('Cookie')).then(({data}) => {
-    res.render('dashboard', {
-      session: ai.claims.session,
-      token: ai,
-      logoutUrl: data.logout_url,
-      headers: `GET ${req.path} HTTP/1.1
+  kratos
+    .createSelfServiceLogoutUrlForBrowsers(req.header('Cookie'))
+    .then(({ data }) => {
+      res.render('dashboard', {
+        session: ai.claims.session,
+        token: ai,
+        logoutUrl: data.logout_url,
+        headers: `GET ${req.path} HTTP/1.1
 
 ${interestingHeaders
-        .filter((header: string) =>
-          /User-Agent|Authorization|Content-Type|Host|Accept-Encoding|Accept-Language|Cookie|Connection|X-Forwarded-For/.test(
-            header
-          )
-        )
-        .join('\n')}
-...`
+  .filter((header: string) =>
+    /User-Agent|Authorization|Content-Type|Host|Accept-Encoding|Accept-Language|Cookie|Connection|X-Forwarded-For/.test(
+      header
+    )
+  )
+  .join('\n')}
+...`,
+      })
     })
-  })
 }

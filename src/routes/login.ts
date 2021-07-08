@@ -1,34 +1,14 @@
 import { NextFunction, Request, Response } from 'express'
 import { Configuration, V0alpha1Api } from '@ory/kratos-client'
-
-import config from '../config'
 import { isString, redirectOnSoftError } from '../helpers/sdk'
+import config from '../config'
 
-// Variable config has keys:
-// kratos: {
-//
-//   // The browser config key is used to redirect the user. It reflects where ORY Kratos' Public API
-//   // is accessible from. Here, we're assuming traffic going to `http://example.org/.ory/kratos/public/`
-//   // will be forwarded to ORY Kratos' Public API.
-//   browser: 'https://kratos.example.org',
-//
-//   // The location of the ORY Kratos Admin API
-//   admin: 'https://ory-kratos-admin.example-org.vpc',
-//
-//   // The location of the ORY Kratos Public API within the cluster
-//   public: 'https://ory-kratos-public.example-org.vpc',
-// },
-
-// Uses the ORY Kratos NodeJS SDK - for more SDKs check:
-//
-//  https://www.ory.sh/kratos/docs/sdk/index
+// Uses the ORY Kratos NodeJS SDK:
 const kratos = new V0alpha1Api(
   new Configuration({ basePath: config.kratos.public })
 )
 
-// A simple express handler that shows the login / registration screen.
-// Argument "type" can either be "login" or "registration" and will
-// fetch the form data from ORY Kratos's Public API.
+// A simple express handler that shows the login screen.
 export default (req: Request, res: Response, next: NextFunction) => {
   const flow = req.query.flow
 

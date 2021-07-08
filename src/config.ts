@@ -17,6 +17,22 @@ switch ((process.env.SECURITY_MODE || '').toLowerCase()) {
     securityMode = SECURITY_MODE_STANDALONE
 }
 
+
+// Variable config has keys:
+// kratos: {
+//
+//   // The browser config key is used to redirect the user. It reflects where ORY Kratos' Public API
+//   // is accessible from. Here, we're assuming traffic going to `http://example.org/.ory/kratos/public/`
+//   // will be forwarded to ORY Kratos' Public API.
+//   browser: 'https://kratos.example.org',
+//
+//   // The location of the ORY Kratos Admin API
+//   admin: 'https://ory-kratos-admin.example-org.vpc',
+//
+//   // The location of the ORY Kratos Public API within the cluster
+//   public: 'https://ory-kratos-public.example-org.vpc',
+// },
+
 export default {
   kratos: {
     browser: browserUrl.replace(/\/+$/, ''),

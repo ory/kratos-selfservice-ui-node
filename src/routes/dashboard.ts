@@ -1,13 +1,11 @@
 import { Request, Response } from 'express'
-import { Configuration, PublicApi } from '@ory/kratos-client'
+import { Configuration, V0alpha1Api } from '@ory/kratos-client'
 import jd from 'jwt-decode'
 
 import config from '../config'
-import { isString, redirectOnSoftError } from '../helpers/sdk'
 
 // Variable config has keys:
 // kratos: {
-//
 //   // The browser config key is used to redirect the user. It reflects where ORY Kratos' Public API
 //   // is accessible from. Here, we're assuming traffic going to `http://example.org/.ory/kratos/public/`
 //   // will be forwarded to ORY Kratos' Public API.
@@ -23,7 +21,7 @@ import { isString, redirectOnSoftError } from '../helpers/sdk'
 // Uses the ORY Kratos NodeJS SDK - for more SDKs check:
 //
 //  https://www.ory.sh/kratos/docs/sdk/index
-const kratos = new PublicApi(
+const kratos = new V0alpha1Api(
   new Configuration({ basePath: config.kratos.public })
 )
 
@@ -73,7 +71,7 @@ export default (req: Request, res: Response) => {
   const ai = authInfo(req as UserRequest)
 
   kratos
-    .createSelfServiceLogoutUrlForBrowsers(req.header('Cookie'))
+    .createSelfServiceLogoutFlowUrlForBrowsers(req.header('Cookie'))
     .then(({ data }) => {
       res.render('dashboard', {
         session: ai.claims.session,

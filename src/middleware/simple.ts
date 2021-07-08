@@ -7,18 +7,18 @@
 //
 //   app.get("/dashboard", protect, (req, res) => { /* ... */ })
 
-import { Configuration, PublicApi } from '@ory/kratos-client'
+import { Configuration, V0alpha1Api } from '@ory/kratos-client'
 import config from '../config'
 import { NextFunction, Request, Response } from 'express'
 import urljoin from 'url-join'
 
-const kratos = new PublicApi(
+const kratos = new V0alpha1Api(
   new Configuration({ basePath: config.kratos.public })
 )
 
 export default (req: Request, res: Response, next: NextFunction) => {
   kratos
-    .toSession(undefined, req.cookies['ory_kratos_session'])
+    .toSession(undefined, req.header('Cookie'))
     .then(({ data: session }) => {
       // `whoami` returns the session or an error. We're changing the type here
       // because express-session is not detected by TypeScript automatically.

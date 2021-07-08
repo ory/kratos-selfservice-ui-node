@@ -1,9 +1,9 @@
 import { NextFunction, Request, Response } from 'express'
 import config from '../config'
-import { Configuration, PublicApi } from '@ory/kratos-client'
+import { Configuration, V0alpha1Api } from '@ory/kratos-client'
 import { isString, redirectOnSoftError } from '../helpers/sdk'
 
-const kratos = new PublicApi(
+const kratos = new V0alpha1Api(
   new Configuration({ basePath: config.kratos.public })
 )
 

@@ -23,7 +23,7 @@
                 "KRATOS_ADMIN_URL": "http://127.0.0.1:4434/",
                 "PORT": "4455",
                 "PROJECT_NAME": "Cerebral Systems",
-                // "MEASURE_DIR":"../measure_files/cron-measure",
+                "MEASURE_DIR":"../measure_files/cron-measure",
                 "STARTING_DATE": "2021-04-17"
             }
         }

@@ -1,7 +1,11 @@
 <div class="content">
     {{> header}}
-    <div class="container">
+    <div class="page-container">
         <h2 class="greeting">Welcome, <span class="user-identifier">{{session.identity.traits.email}}</span>!</h2>
+        <p>Allowing geolocation can improve performance but isn't necessary. Click below to prompt geolocation permissions</p>
+        <div class="flex-container">
+            <button id="geolocate">Prompt Geolocation</button>
+        </div>
         <p>
             Instructions for setting your PAC file: <span class="pac-file">https://{{url}}/pac/{{session.identity.id}}.pac</span>
         </p>
@@ -72,4 +76,45 @@
             </li>
         </ol>
     </div>
+    <style>
+        .flex-container {
+            display: flex;
+            justify-content: center;
+        }
+
+        #geolocate {
+            width: 12rem;
+            height: 3rem;
+        }
+
+        #geolocate:hover {
+            cursor: pointer;
+        }
+    </style>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+        function cloneAsObject(obj) {
+            if (obj === null || !(obj instanceof Object)) {
+                return obj;
+            }
+            var temp = (obj instanceof Array) ? [] : {};
+            for (var key in obj) {
+                temp[key] = cloneAsObject(obj[key]);
+            }
+            return temp;
+        }
+
+        function successFunction(locationData) {
+            $.ajax({
+                url: '/geolocation',
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({ location: cloneAsObject(locationData) })
+            })
+        }
+
+        document.getElementById('geolocate').onclick = function (event) {
+            navigator.geolocation.getCurrentPosition(successFunction, console.error)
+        }
+    </script>
 </div>

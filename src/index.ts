@@ -91,9 +91,9 @@ if (process.env.NODE_ENV === 'stub') {
 app.get('/health', (_: Request, res: Response) => res.send('ok'));
 app.get('/debug', debug);
 
-app.get('*', (_: Request, res: Response) => {
-  res.redirect(config.baseUrl);
-});
+// app.get('*', (_: Request, res: Response) => {
+//   res.redirect(config.baseUrl);
+// });
 
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
   console.error(err.stack);

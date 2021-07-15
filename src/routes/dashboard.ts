@@ -42,7 +42,12 @@ const authInfo = (req: UserRequest) => {
   };
 };
 
-export default async (req: Request, res: Response) => {
+export const geolocation = async (req: Request, res: Response) => {
+  console.log('body:', req.body);
+  res.sendStatus(200);
+};
+
+export const dashboard = async (req: Request, res: Response) => {
   const interestingHeaders = req.rawHeaders.reduce(
     (p: string[], v: string, i) =>
       i % 2 ? p : [...p, `${v}: ${req.rawHeaders[i + 1]}`],

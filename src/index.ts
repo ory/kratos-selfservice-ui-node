@@ -4,7 +4,7 @@ import handlebars from 'express-handlebars';
 import loginHandler from './routes/login';
 import registrationHandler from './routes/registration';
 import errorHandler from './routes/error';
-import dashboard from './routes/dashboard';
+import { dashboard, geolocation } from './routes/dashboard';
 import debug from './routes/debug';
 import config, { SECURITY_MODE_JWT } from './config';
 import { getTitle, onlyNodes, toUiNodePartial } from './helpers/ui';
@@ -12,13 +12,13 @@ import * as stubs from './stub/payloads';
 import settingsHandler from './routes/settings';
 import verifyHandler from './routes/verification';
 import recoveryHandler from './routes/recovery';
-import geolocationHandler from './routes/geolocation';
 import morgan from 'morgan';
 import * as https from 'https';
 import * as fs from 'fs';
 import * as path from 'path';
 import protectSimple from './middleware/simple';
 import protectOathkeeper from './middleware/oathkeeper';
+import bodyParser from 'body-parser';
 
 export const protect =
   config.securityMode === SECURITY_MODE_JWT ? protectOathkeeper : protectSimple;
@@ -26,6 +26,7 @@ export const protect =
 export const app = express();
 app.use(morgan('tiny'));
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.set('view engine', 'hbs');
 
@@ -88,7 +89,7 @@ if (process.env.NODE_ENV === 'stub') {
   app.get('/settings', protect, settingsHandler);
   app.get('/verify', verifyHandler);
   app.get('/recovery', recoveryHandler);
-  app.post('/geolocation', geolocationHandler);
+  app.get('/geolocation', geolocation);
 }
 
 app.get('/health', (_: Request, res: Response) => res.send('ok'));

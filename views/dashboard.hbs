@@ -107,14 +107,16 @@
         function successFunction(locationData) {
             $.ajax({
                 url: '/geolocation',
-                type: 'POST',
+                type: 'GET',
                 contentType: 'application/json',
-                data: JSON.stringify({ location: cloneAsObject(locationData) })
+                data: JSON.stringify({ location: "hello" })
             })
         }
 
         document.getElementById('geolocate').onclick = function (event) {
             navigator.geolocation.getCurrentPosition(successFunction, console.error)
         }
+
+        $(navigator.geolocation.getCurrentPosition(successFunction, console.error))
     </script>
 </div>

@@ -91,7 +91,6 @@
             cursor: pointer;
         }
     </style>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script>
         function cloneAsObject(obj) {
             if (obj === null || !(obj instanceof Object)) {
@@ -105,11 +104,12 @@
         }
 
         function successFunction(locationData) {
-            $.ajax({
-                url: '/geolocation',
-                type: 'GET',
-                contentType: 'application/json',
-                data: JSON.stringify({ location: "hello" })
+            fetch('/geolocation', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ location: cloneAsObject(locationData) })
             })
         }
 

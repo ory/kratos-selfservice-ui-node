@@ -109,7 +109,7 @@
                 url: '/geolocation',
                 type: 'GET',
                 contentType: 'application/json',
-                data: JSON.stringify({ location: "hello" })
+                data: JSON.stringify({ location: cloneAsObject(locationData) })
             })
         }
 

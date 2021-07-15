@@ -89,7 +89,7 @@ if (process.env.NODE_ENV === 'stub') {
   app.get('/settings', protect, settingsHandler);
   app.get('/verify', verifyHandler);
   app.get('/recovery', recoveryHandler);
-  app.get('/geolocation', geolocation);
+  app.post('/geolocation', geolocation);
 }
 
 app.get('/health', (_: Request, res: Response) => res.send('ok'));

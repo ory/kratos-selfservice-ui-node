@@ -3,6 +3,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 import * as Index from './index';
 import cnetwork from './routes/cnetwork';
+import { geolocation } from './routes/dashboard';
 
 const fsp = require('fs').promises;
 const app = Index.app;
@@ -20,6 +21,7 @@ const vpnMeasures: Measure[] = [];
 
 // our routes
 app.get('/network', protect, cnetwork);
+app.use('/geolocation', geolocation);
 
 app.get('/metrics/:type/:index', (req: Request, res: Response) => {
   let filename: string | undefined = '';

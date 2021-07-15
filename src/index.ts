@@ -4,7 +4,7 @@ import handlebars from 'express-handlebars';
 import loginHandler from './routes/login';
 import registrationHandler from './routes/registration';
 import errorHandler from './routes/error';
-import { dashboard, geolocation } from './routes/dashboard';
+import { dashboard } from './routes/dashboard';
 import debug from './routes/debug';
 import config, { SECURITY_MODE_JWT } from './config';
 import { getTitle, onlyNodes, toUiNodePartial } from './helpers/ui';
@@ -89,7 +89,6 @@ if (process.env.NODE_ENV === 'stub') {
   app.get('/settings', protect, settingsHandler);
   app.get('/verify', verifyHandler);
   app.get('/recovery', recoveryHandler);
-  app.get('/geolocation', geolocation);
 }
 
 app.get('/health', (_: Request, res: Response) => res.send('ok'));

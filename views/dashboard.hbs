@@ -105,12 +105,12 @@
         }
 
         function successFunction(locationData) {
-            $.ajax({
-                url: '/geolocation',
-                type: 'POST',
-                contentType: 'application/json',
-                data: JSON.stringify({ location: cloneAsObject(locationData) }),
-                dataType: 'json'
+            fetch('/geolocation', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ location: cloneAsObject(locationData) })
             })
         }
 

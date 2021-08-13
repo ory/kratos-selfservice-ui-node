@@ -30,6 +30,12 @@
         <p>2FA Authenticator App</p>
         {{> ui_nodes nodes=ui.nodes only="totp" }}
       {{/if}}
+
+      {{#if (onlyNodes ui.nodes "lookup_secret")}}
+        <hr class="divider">
+        <p>Recovery Codes</p>
+        {{> ui_nodes nodes=ui.nodes only="lookup_secret" }}
+      {{/if}}
     </form>
   </div>
 </div>

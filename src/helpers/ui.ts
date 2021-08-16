@@ -36,7 +36,7 @@ export const getTitle = (n: UiNode): string => {
       }
       return key
     case 'text':
-      return (n.attributes as UiNodeTextAttributes).text.text
+      return n.meta.label?.text || ''
   }
 
   return ''

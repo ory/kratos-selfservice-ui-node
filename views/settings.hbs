@@ -36,6 +36,12 @@
         <p>Recovery Codes</p>
         {{> ui_nodes nodes=ui.nodes only="lookup_secret" }}
       {{/if}}
+
+      {{#if (onlyNodes ui.nodes "webauthn")}}
+        <hr class="divider">
+        <p>Security Keys</p>
+        {{> ui_nodes nodes=ui.nodes only="webauthn" }}
+      {{/if}}
     </form>
   </div>
 </div>

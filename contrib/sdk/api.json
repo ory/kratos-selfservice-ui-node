@@ -13,7 +13,7 @@
             "type": "string"
           },
           "state": {
-            "description": "State is the identity's state."
+            "$ref": "#/components/schemas/identityState"
           },
           "traits": {
             "description": "Traits represent an identity's traits. The identity is able to create, modify, and delete traits\nin a self-service manner. The input will always be validated against the JSON Schema defined\nin `schema_id`.",
@@ -154,11 +154,6 @@
           }
         },
         "type": "object"
-      },
-      "CredentialsType": {
-        "description": "and so on.",
-        "title": "CredentialsType  represents several different credential types, like password credentials, passwordless credentials,",
-        "type": "string"
       },
       "ErrorResponse": {
         "properties": {
@@ -923,6 +918,17 @@
         ],
         "type": "object"
       },
+      "authenticatorAssuranceLevel": {
+        "description": "The authenticator assurance level can be one of \"aal1\", \"aal2\", or \"aal3\". A higher number means that it is harder\nfor an attacker to compromise the account.\n\nGenerally, \"aal1\" implies that one authentication factor was used while AAL2 implies that two factors (e.g.\npassword + TOTP) have been used.\n\nTo learn more about these levels please head over to: https://www.ory.sh/kratos/docs/concepts/credentials",
+        "enum": [
+          "aal0",
+          "aal1",
+          "aal2",
+          "aal3"
+        ],
+        "title": "Authenticator Assurance Level (AAL)",
+        "type": "string"
+      },
       "genericError": {
         "properties": {
           "code": {
@@ -937,7 +943,7 @@
             "type": "string"
           },
           "details": {
-            "additionalProperties": true,
+            "additionalProperties": false,
             "description": "Further error details",
             "type": "object"
           },
@@ -1023,7 +1029,7 @@
             "type": "string"
           },
           "state": {
-            "description": "State is the identity's state."
+            "$ref": "#/components/schemas/identityState"
           },
           "state_changed_at": {
             "$ref": "#/components/schemas/nullTime"
@@ -1049,7 +1055,6 @@
           "id",
           "schema_id",
           "schema_url",
-          "state",
           "traits"
         ],
         "title": "Identity represents an Ory Kratos identity",
@@ -1074,7 +1079,7 @@
             "type": "array"
           },
           "type": {
-            "$ref": "#/components/schemas/CredentialsType"
+            "$ref": "#/components/schemas/identityCredentialsType"
           },
           "updated_at": {
             "description": "UpdatedAt is a helper struct field for gobuffalo.pop.",
@@ -1084,12 +1089,31 @@
         },
         "type": "object"
       },
+      "identityCredentialsType": {
+        "description": "and so on.",
+        "enum": [
+          "password",
+          "totp",
+          "oidc"
+        ],
+        "title": "CredentialsType  represents several different credential types, like password credentials, passwordless credentials,",
+        "type": "string"
+      },
       "identityList": {
         "items": {
           "$ref": "#/components/schemas/identity"
         },
         "title": "A list of identities.",
         "type": "array"
+      },
+      "identityState": {
+        "description": "The state can either be `active` or `inactive`.",
+        "enum": [
+          "active",
+          "inactive"
+        ],
+        "title": "An Identity's State",
+        "type": "string"
       },
       "identityTraits": {
         "description": "Traits represent an identity's traits. The identity is able to create, modify, and delete traits\nin a self-service manner. The input will always be validated against the JSON Schema defined\nin `schema_url`."
@@ -1161,7 +1185,7 @@
         "description": "This object represents a login flow. A login flow is initiated at the \"Initiate Login API / Browser Flow\"\nendpoint by a client.\n\nOnce a login flow is completed successfully, a session cookie or session token will be issued.",
         "properties": {
           "active": {
-            "$ref": "#/components/schemas/CredentialsType"
+            "$ref": "#/components/schemas/identityCredentialsType"
           },
           "created_at": {
             "description": "CreatedAt is a helper struct field for gobuffalo.pop.",
@@ -1174,7 +1198,7 @@
             "type": "string"
           },
           "forced": {
-            "description": "Forced stores whether this login flow should enforce re-authentication.",
+            "description": "Refresh stores whether this login flow should enforce re-authentication.",
             "type": "boolean"
           },
           "id": {
@@ -1188,6 +1212,9 @@
           "request_url": {
             "description": "RequestURL is the initial URL that was requested from Ory Kratos. It can be used\nto forward information contained in the URL's path or query for example.",
             "type": "string"
+          },
+          "requested_aal": {
+            "$ref": "#/components/schemas/authenticatorAssuranceLevel"
           },
           "type": {
             "$ref": "#/components/schemas/selfServiceFlowType"
@@ -1296,7 +1323,7 @@
       "selfServiceRegistrationFlow": {
         "properties": {
           "active": {
-            "$ref": "#/components/schemas/CredentialsType"
+            "$ref": "#/components/schemas/identityCredentialsType"
           },
           "expires_at": {
             "description": "ExpiresAt is the time (UTC) when the flow expires. If the user still wishes to log in,\na new flow has to be initiated.",
@@ -1446,13 +1473,19 @@
         "description": "A Session",
         "properties": {
           "active": {
-            "description": "Whether or not the session is active.",
+            "description": "Active state. If false the session is no longer active.",
             "type": "boolean"
           },
           "authenticated_at": {
-            "description": "The Session Authentication Timestamp\n\nWhen this session was authenticated at.",
+            "description": "The Session Authentication Timestamp\n\nWhen this session was authenticated at. If multi-factor authentication was used this\nis the time when the last factor was authenticated (e.g. the TOTP code challenge was completed).",
             "format": "date-time",
             "type": "string"
+          },
+          "authentication_methods": {
+            "$ref": "#/components/schemas/sessionAuthenticationMethods"
+          },
+          "authenticator_assurance_level": {
+            "$ref": "#/components/schemas/authenticatorAssuranceLevel"
           },
           "expires_at": {
             "description": "The Session Expiry\n\nWhen this session expires at.",
@@ -1466,7 +1499,7 @@
             "$ref": "#/components/schemas/identity"
           },
           "issued_at": {
-            "description": "The Session Issuance Timestamp\n\nWhen this session was authenticated at.",
+            "description": "The Session Issuance Timestamp\n\nWhen this session was issued at. Usually equal or close to `authenticated_at`.",
             "format": "date-time",
             "type": "string"
           }
@@ -1475,6 +1508,45 @@
           "id",
           "identity"
         ],
+        "type": "object"
+      },
+      "sessionAuthenticationMethod": {
+        "description": "A singular authenticator used during authentication / login.",
+        "properties": {
+          "completed_at": {
+            "description": "When the authentication challenge was completed.",
+            "format": "date-time",
+            "type": "string"
+          },
+          "method": {
+            "enum": [
+              "link_recovery",
+              "password",
+              "totp",
+              "oidc"
+            ],
+            "title": "The method used",
+            "type": "string"
+          }
+        },
+        "title": "AuthenticationMethod identifies an authentication method",
+        "type": "object"
+      },
+      "sessionAuthenticationMethods": {
+        "description": "A list of authenticators which were used to authenticate the session.",
+        "items": {
+          "$ref": "#/components/schemas/sessionAuthenticationMethod"
+        },
+        "title": "List of (Used) AuthenticationMethods",
+        "type": "array"
+      },
+      "sessionDevice": {
+        "properties": {
+          "user_agent": {
+            "description": "UserAgent of this device",
+            "type": "string"
+          }
+        },
         "type": "object"
       },
       "settingsProfileFormConfig": {
@@ -1505,15 +1577,44 @@
         "discriminator": {
           "mapping": {
             "oidc": "#/components/schemas/submitSelfServiceLoginFlowWithOidcMethodBody",
-            "password": "#/components/schemas/submitSelfServiceLoginFlowWithPasswordMethodBody"
+            "password": "#/components/schemas/submitSelfServiceLoginFlowWithPasswordMethodBody",
+            "totp": "#/components/schemas/submitSelfServiceLoginFlowWithTotpMethodBody"
           },
           "propertyName": "method"
         },
         "oneOf": [
           {
             "$ref": "#/components/schemas/submitSelfServiceLoginFlowWithPasswordMethodBody"
+          },
+          {
+            "$ref": "#/components/schemas/submitSelfServiceLoginFlowWithOidcMethodBody"
+          },
+          {
+            "$ref": "#/components/schemas/submitSelfServiceLoginFlowWithTotpMethodBody"
           }
         ]
+      },
+      "submitSelfServiceLoginFlowWithLookupSecretMethodBody": {
+        "properties": {
+          "csrf_token": {
+            "description": "Sending the anti-csrf token is only required for browser login flows.",
+            "type": "string"
+          },
+          "lookup_secret": {
+            "description": "The lookup secret.",
+            "type": "string"
+          },
+          "method": {
+            "description": "Method should be set to \"lookup_secret\" when logging in using the lookup_secret strategy.",
+            "type": "string"
+          }
+        },
+        "required": [
+          "method",
+          "lookup_secret"
+        ],
+        "title": "submitSelfServiceLoginFlowWithLookupSecretMethodBody is used to decode the login form payload.",
+        "type": "object"
       },
       "submitSelfServiceLoginFlowWithOidcMethodBody": {
         "description": "SubmitSelfServiceLoginFlowWithOidcMethodBody is used to decode the login form payload\nwhen using the oidc method.",
@@ -1547,7 +1648,8 @@
             "description": "Method should be set to \"password\" when logging in using the identifier and password strategy.",
             "enum": [
               "password",
-              "oidc"
+              "oidc",
+              "totp"
             ],
             "type": "string"
           },
@@ -1566,6 +1668,49 @@
           "password_identifier"
         ],
         "title": "submitSelfServiceLoginFlowWithPasswordMethodBody is used to decode the login form payload.",
+        "type": "object"
+      },
+      "submitSelfServiceLoginFlowWithTotpMethodBody": {
+        "properties": {
+          "csrf_token": {
+            "description": "Sending the anti-csrf token is only required for browser login flows.",
+            "type": "string"
+          },
+          "method": {
+            "description": "Method should be set to \"totp\" when logging in using the TOTP strategy.",
+            "type": "string"
+          },
+          "totp_code": {
+            "description": "The TOTP code.",
+            "type": "string"
+          }
+        },
+        "required": [
+          "method",
+          "totp_code"
+        ],
+        "title": "submitSelfServiceLoginFlowWithTotpMethodBody is used to decode the login form payload.",
+        "type": "object"
+      },
+      "submitSelfServiceLoginFlowWithWebAuthnMethodBody": {
+        "properties": {
+          "csrf_token": {
+            "description": "Sending the anti-csrf token is only required for browser login flows.",
+            "type": "string"
+          },
+          "method": {
+            "description": "Method should be set to \"webAuthn\" when logging in using the WebAuthn strategy.",
+            "type": "string"
+          },
+          "webauthn_login": {
+            "description": "Login a WebAuthn Security Key\n\nThis must contain the ID of the WebAuthN connection.",
+            "type": "string"
+          }
+        },
+        "required": [
+          "method"
+        ],
+        "title": "submitSelfServiceLoginFlowWithWebAuthnMethodBody is used to decode the login form payload.",
         "type": "object"
       },
       "submitSelfServiceLogoutFlowWithoutBrowserBody": {
@@ -1607,8 +1752,7 @@
           "method": {
             "description": "Method supports `link` only right now.",
             "enum": [
-              "password",
-              "oidc"
+              "link"
             ],
             "type": "string"
           }
@@ -1691,7 +1835,8 @@
           "mapping": {
             "oidc": "#/components/schemas/submitSelfServiceSettingsFlowWithOidcMethodBody",
             "password": "#/components/schemas/submitSelfServiceSettingsFlowWithPasswordMethodBody",
-            "profile": "#/components/schemas/submitSelfServiceSettingsFlowWithProfileMethodBody"
+            "profile": "#/components/schemas/submitSelfServiceSettingsFlowWithProfileMethodBody",
+            "totp": "#/components/schemas/submitSelfServiceSettingsFlowWithTotpMethodBody"
           },
           "propertyName": "method"
         },
@@ -1701,8 +1846,42 @@
           },
           {
             "$ref": "#/components/schemas/submitSelfServiceSettingsFlowWithProfileMethodBody"
+          },
+          {
+            "$ref": "#/components/schemas/submitSelfServiceSettingsFlowWithOidcMethodBody"
+          },
+          {
+            "$ref": "#/components/schemas/submitSelfServiceSettingsFlowWithTotpMethodBody"
           }
         ]
+      },
+      "submitSelfServiceSettingsFlowWithLookupMethodBody": {
+        "properties": {
+          "csrf_token": {
+            "description": "CSRFToken is the anti-CSRF token",
+            "type": "string"
+          },
+          "lookup_secret_confirm": {
+            "description": "If set to true will save the regenerated lookup secrets",
+            "type": "boolean"
+          },
+          "lookup_secret_regenerate": {
+            "description": "If set to true will regenerate the lookup secrets",
+            "type": "boolean"
+          },
+          "lookup_secret_reveal": {
+            "description": "If set to true will reveal the lookup secrets",
+            "type": "boolean"
+          },
+          "method": {
+            "description": "Method\n\nShould be set to \"lookup\" when trying to add, update, or remove a lookup pairing.",
+            "type": "string"
+          }
+        },
+        "required": [
+          "method"
+        ],
+        "type": "object"
       },
       "submitSelfServiceSettingsFlowWithOidcMethodBody": {
         "description": "nolint:deadcode,unused",
@@ -1740,7 +1919,8 @@
             "enum": [
               "password",
               "profile",
-              "oidc"
+              "oidc",
+              "totp"
             ],
             "type": "string"
           },
@@ -1777,6 +1957,58 @@
         ],
         "type": "object"
       },
+      "submitSelfServiceSettingsFlowWithTotpMethodBody": {
+        "properties": {
+          "csrf_token": {
+            "description": "CSRFToken is the anti-CSRF token",
+            "type": "string"
+          },
+          "method": {
+            "description": "Method\n\nShould be set to \"totp\" when trying to add, update, or remove a totp pairing.",
+            "type": "string"
+          },
+          "totp_code": {
+            "description": "ValidationTOTP must contain a valid TOTP based on the",
+            "type": "string"
+          },
+          "totp_unlink": {
+            "description": "UnlinkTOTP if true will remove the TOTP pairing,\neffectively removing the credential. This can be used\nto set up a new TOTP device.",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "method"
+        ],
+        "type": "object"
+      },
+      "submitSelfServiceSettingsFlowWithWebAuthnMethodBody": {
+        "properties": {
+          "csrf_token": {
+            "description": "CSRFToken is the anti-CSRF token",
+            "type": "string"
+          },
+          "method": {
+            "description": "Method\n\nShould be set to \"webauthn\" when trying to add, update, or remove a webAuthn pairing.",
+            "type": "string"
+          },
+          "webauthn_register": {
+            "description": "Register a WebAuthn Security Key\n\nIt is expected that the JSON returned by the WebAuthn registration process\nis included here.",
+            "type": "string"
+          },
+          "webauthn_register_displayname": {
+            "description": "Name of the WebAuthn Security Key to be Added\n\nA human-readable name for the security key which will be added.",
+            "type": "string"
+          },
+          "webauthn_remove": {
+            "description": "Remove a WebAuthn Security Key\n\nThis must contain the ID of the WebAuthN connection.",
+            "type": "string"
+          }
+        },
+        "required": [
+          "method"
+        ],
+        "type": "object"
+      },
       "submitSelfServiceVerificationFlowBody": {
         "description": "nolint:deadcode,unused",
         "discriminator": {
@@ -1804,8 +2036,7 @@
           "method": {
             "description": "Method supports `link` only right now.",
             "enum": [
-              "password",
-              "oidc"
+              "link"
             ],
             "type": "string"
           }
@@ -1927,13 +2158,18 @@
             "description": "The link's href (destination) URL.\n\nformat: uri",
             "type": "string"
           },
+          "id": {
+            "description": "A unique identifier",
+            "type": "string"
+          },
           "title": {
             "$ref": "#/components/schemas/uiText"
           }
         },
         "required": [
           "href",
-          "title"
+          "title",
+          "id"
         ],
         "title": "AnchorAttributes represents the attributes of an anchor node.",
         "type": "object"
@@ -1960,13 +2196,18 @@
       },
       "uiNodeImageAttributes": {
         "properties": {
+          "id": {
+            "description": "A unique identifier",
+            "type": "string"
+          },
           "src": {
             "description": "The image's source URL.\n\nformat: uri",
             "type": "string"
           }
         },
         "required": [
-          "src"
+          "src",
+          "id"
         ],
         "title": "ImageAttributes represents the attributes of an image node.",
         "type": "object"
@@ -1986,6 +2227,10 @@
           },
           "name": {
             "description": "The input's element name.",
+            "type": "string"
+          },
+          "onclick": {
+            "description": "OnClick may contain javascript which should be executed on click. This is primarily\nused for WebAuthn.",
             "type": "string"
           },
           "pattern": {
@@ -2013,12 +2258,17 @@
       },
       "uiNodeTextAttributes": {
         "properties": {
+          "id": {
+            "description": "A unique identifier",
+            "type": "string"
+          },
           "text": {
             "$ref": "#/components/schemas/uiText"
           }
         },
         "required": [
-          "text"
+          "text",
+          "id"
         ],
         "title": "TextAttributes represents the attributes of a text node.",
         "type": "object"
@@ -2123,9 +2373,9 @@
     },
     "securitySchemes": {
       "oryAccessToken": {
-        "description": "This security mechanism is only applicable when using the [Ory Platform](https://console.ory.sh) by\ncreating an [Ory Personal Access Token](https://www.ory.sh/docs/guides/create-personal-access-token).\nIf you are using the open source version, this security mechanism\nwill not work out of the box as you will need to add a security mechanism yourself.\n",
-        "scheme": "bearer",
-        "type": "http"
+        "in": "header",
+        "name": "Authorization",
+        "type": "apiKey"
       }
     }
   },
@@ -2179,7 +2429,7 @@
         },
         "summary": "Check HTTP Server Status",
         "tags": [
-          "admin"
+          "metadata"
         ]
       }
     },
@@ -2232,7 +2482,7 @@
         },
         "summary": "Check HTTP Server and Database Status",
         "tags": [
-          "admin"
+          "metadata"
         ]
       }
     },
@@ -2567,7 +2817,7 @@
         },
         "summary": "Get snapshot metrics from the service. If you're using k8s, you can then add annotations to\nyour deployment like so:",
         "tags": [
-          "admin"
+          "metadata"
         ]
       }
     },
@@ -2831,6 +3081,14 @@
             "schema": {
               "type": "boolean"
             }
+          },
+          {
+            "description": "Request a Specific AuthenticationMethod Assurance Level\n\nUse this parameter to upgrade an existing session's authenticator assurance level (AAL). This\nallows you to ask for multi-factor authentication. When an identity sign in using e.g. username+password,\nthe AAL is 1. If you wish to \"upgrade\" the session's security by asking the user to perform TOTP / WebAuth/ ...\nyou would set this to \"aal2\".",
+            "in": "query",
+            "name": "aal",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -2882,6 +3140,14 @@
             "name": "refresh",
             "schema": {
               "type": "boolean"
+            }
+          },
+          {
+            "description": "Request a Specific AuthenticationMethod Assurance Level\n\nUse this parameter to upgrade an existing session's authenticator assurance level (AAL). This\nallows you to ask for multi-factor authentication. When an identity sign in using e.g. username+password,\nthe AAL is 1. If you wish to \"upgrade\" the session's security by asking the user to perform TOTP / WebAuth/ ...\nyou would set this to \"aal2\".",
+            "in": "query",
+            "name": "aal",
+            "schema": {
+              "type": "string"
             }
           }
         ],
@@ -4215,7 +4481,7 @@
         },
         "summary": "Return Running Software Version.",
         "tags": [
-          "admin"
+          "metadata"
         ]
       }
     }

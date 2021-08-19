@@ -11,7 +11,7 @@ const kratos = new V0alpha1Api(
 
 // A simple express handler that shows the error screen.
 export default (req: Request, res: Response, next: NextFunction) => {
-  const error = req.query.error
+  const error = req.query.id
 
   if (!error || !isString(error)) {
     // No error was send, redirecting back to home.

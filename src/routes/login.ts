@@ -16,7 +16,21 @@ export default (req: Request, res: Response, next: NextFunction) => {
   // return data like the csrf_token and so on.
   if (!flow || !isString(flow)) {
     console.log('No flow ID found in URL, initializing login flow.')
-    res.redirect(`${config.kratos.browser}/self-service/login/browser`)
+    const redirectTo = new URL(
+      `${config.kratos.browser}/self-service/login/browser`
+    )
+
+    // If AAL (e.g. 2FA) is requested, forward that to Ory Kratos
+    if (req.query.aal) {
+      redirectTo.searchParams.set('aal', req.query.aal.toString())
+    }
+
+    // If refresh is requested, forward that to Ory Kratos
+    if (req.query.refresh) {
+      redirectTo.searchParams.set('refresh', 'true')
+    }
+
+    res.redirect(redirectTo.toString())
     return
   }
 

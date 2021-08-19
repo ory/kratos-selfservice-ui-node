@@ -24,6 +24,24 @@
         <p>Social Sign In</p>
         {{> ui_nodes nodes=ui.nodes only="oidc" }}
       {{/if}}
+
+      {{#if (onlyNodes ui.nodes "totp")}}
+        <hr class="divider">
+        <p>2FA Authenticator App</p>
+        {{> ui_nodes nodes=ui.nodes only="totp" }}
+      {{/if}}
+
+      {{#if (onlyNodes ui.nodes "lookup_secret")}}
+        <hr class="divider">
+        <p>Recovery Codes</p>
+        {{> ui_nodes nodes=ui.nodes only="lookup_secret" }}
+      {{/if}}
+
+      {{#if (onlyNodes ui.nodes "webauthn")}}
+        <hr class="divider">
+        <p>Security Keys</p>
+        {{> ui_nodes nodes=ui.nodes only="webauthn" }}
+      {{/if}}
     </form>
   </div>
 </div>

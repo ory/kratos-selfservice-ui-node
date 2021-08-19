@@ -36,7 +36,7 @@ export const getTitle = (n: UiNode): string => {
       }
       return key
     case 'text':
-      return (n.attributes as UiNodeTextAttributes).text.text
+      return n.meta.label?.text || ''
   }
 
   return ''
@@ -45,6 +45,10 @@ export const getTitle = (n: UiNode): string => {
 // This helper function translates the html input type to the corresponding partial name.
 export const toUiNodePartial = (node: UiNode) => {
   switch (node.type) {
+    case 'img':
+      return 'ui_node_image'
+    case 'text':
+      return 'ui_node_text'
     case 'input': {
       const attributes = node.attributes as UiNodeInputAttributes
       switch (attributes.type) {

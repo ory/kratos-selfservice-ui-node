@@ -2093,8 +2093,7 @@
           }
         },
         "required": [
-          "flow",
-          "identity"
+          "flow"
         ],
         "type": "object"
       },
@@ -2196,6 +2195,11 @@
       },
       "uiNodeImageAttributes": {
         "properties": {
+          "height": {
+            "description": "Height of the image",
+            "format": "int64",
+            "type": "integer"
+          },
           "id": {
             "description": "A unique identifier",
             "type": "string"
@@ -2203,6 +2207,11 @@
           "src": {
             "description": "The image's source URL.\n\nformat: uri",
             "type": "string"
+          },
+          "width": {
+            "description": "Width of the image",
+            "format": "int64",
+            "type": "integer"
           }
         },
         "required": [
@@ -3908,11 +3917,11 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/successfulSelfServiceSettingsWithoutBrowser"
+                  "$ref": "#/components/schemas/selfServiceSettingsFlow"
                 }
               }
             },
-            "description": "successfulSelfServiceSettingsWithoutBrowser"
+            "description": "selfServiceSettingsFlow"
           },
           "302": {
             "$ref": "#/components/responses/emptyResponse"

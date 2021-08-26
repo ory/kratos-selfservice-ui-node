@@ -7,13 +7,13 @@
 //
 //   app.get("/dashboard", protect, (req, res) => { /* ... */ })
 
-import { Configuration, V0alpha1Api } from '@ory/kratos-client'
+import { Configuration, V0alpha2Api } from '@ory/kratos-client'
 import config from '../config'
 import { NextFunction, Request, Response } from 'express'
 import urljoin from 'url-join'
 import { AxiosError } from 'axios'
 
-const kratos = new V0alpha1Api(
+const kratos = new V0alpha2Api(
   new Configuration({ basePath: config.kratos.public })
 )
 

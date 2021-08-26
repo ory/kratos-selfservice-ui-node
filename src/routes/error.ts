@@ -1,11 +1,11 @@
 import { NextFunction, Request, Response } from 'express'
 import config from '../config'
-import { Configuration, V0alpha1Api } from '@ory/kratos-client'
+import { Configuration, V0alpha2Api } from '@ory/kratos-client'
 import { isString } from '../helpers/sdk'
 import { AxiosError } from 'axios'
 
 // Uses the ORY Kratos NodeJS SDK:
-const kratos = new V0alpha1Api(
+const kratos = new V0alpha2Api(
   new Configuration({ basePath: config.kratos.public })
 )
 

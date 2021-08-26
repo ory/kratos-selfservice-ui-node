@@ -1,8 +1,8 @@
-import { UiNode, UiNodeInputAttributes } from '@ory/kratos-client'
 import {
+  UiNode,
   UiNodeAnchorAttributes,
-  UiNodeTextAttributes,
-} from '@ory/kratos-client/api'
+  UiNodeInputAttributes,
+} from '@ory/kratos-client'
 
 const ui: { [key: string]: { title: string } } = {
   // You could add custom translations here if you want to:
@@ -57,6 +57,8 @@ export const toUiNodePartial = (node: UiNode) => {
         case 'password':
           return 'ui_node_input_password'
         case 'submit':
+          return 'ui_node_input_button'
+        case 'button':
           return 'ui_node_input_button'
         case 'checkbox':
           return 'ui_node_input_checkbox'

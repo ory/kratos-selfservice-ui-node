@@ -1,10 +1,10 @@
 import { Request, Response } from 'express'
-import { Configuration, V0alpha1Api } from '@ory/kratos-client'
+import { Configuration, V0alpha2Api } from '@ory/kratos-client'
 import jd from 'jwt-decode'
 import config from '../config'
 
 // Uses the ORY Kratos NodeJS SDK:
-const kratos = new V0alpha1Api(
+const kratos = new V0alpha2Api(
   new Configuration({ basePath: config.kratos.public })
 )
 

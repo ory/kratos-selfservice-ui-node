@@ -46,7 +46,7 @@ const redirectToLogin = (req: Request, res: Response, next: NextFunction) => {
 
   const state = crypto.randomBytes(48).toString('hex')
   req.session.hydraLoginState = state
-  req.session.save(error => {
+  req.session.save((error) => {
     if (error) {
       next(error)
       return
@@ -144,15 +144,15 @@ export const hydraLogin = (req: Request, res: Response, next: NextFunction) => {
         return
       }
 
-    //   const kratosSessionCookie = req.cookies.ory_kratos_session
-    //   if (!kratosSessionCookie) {
-    //     // The state was set but we did not receive a session. Let's retry.
-    //     console.debug(
-    //       'Redirecting to login page because no ORY Kratos session cookie was set.'
-    //     )
-    //     redirectToLogin(req, res, next)
-    //     return
-    //   }
+      //   const kratosSessionCookie = req.cookies.ory_kratos_session
+      //   if (!kratosSessionCookie) {
+      //     // The state was set but we did not receive a session. Let's retry.
+      //     console.debug(
+      //       'Redirecting to login page because no ORY Kratos session cookie was set.'
+      //     )
+      //     redirectToLogin(req, res, next)
+      //     return
+      //   }
 
       if (hydraLoginState !== req.session?.hydraLoginState) {
         // States mismatch, retry.
@@ -168,10 +168,7 @@ export const hydraLogin = (req: Request, res: Response, next: NextFunction) => {
       return (
         kratosClient
           // We need to know who the user is for hydra
-          .toSession(
-            undefined,
-            req.header('Cookie'),
-          )
+          .toSession(undefined, req.header('Cookie'))
           .then(({ data: body }) => {
             // We need to get the email of the user. We don't want to do that via traits as
             // they are dynamic. They would be part of the PublicAPI. That's not true
@@ -179,7 +176,8 @@ export const hydraLogin = (req: Request, res: Response, next: NextFunction) => {
             const subject = body.identity.id
 
             // User is authenticated, accept the LoginRequest and tell Hydra
-            let acceptLoginRequest: AcceptLoginRequest = {} as AcceptLoginRequest
+            let acceptLoginRequest: AcceptLoginRequest =
+              {} as AcceptLoginRequest
             acceptLoginRequest.subject = subject
             acceptLoginRequest.context = body
 

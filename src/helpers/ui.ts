@@ -49,6 +49,8 @@ export const toUiNodePartial = (node: UiNode) => {
       return 'ui_node_image'
     case 'text':
       return 'ui_node_text'
+    case 'script':
+      return 'ui_node_script'
     case 'input': {
       const attributes = node.attributes as UiNodeInputAttributes
       switch (attributes.type) {

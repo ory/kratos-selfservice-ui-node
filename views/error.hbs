@@ -1,7 +1,13 @@
-<div class="content">
-    {{> header}}
-    <div class="container">
-        <h1>An error occurred</h1>
-        <pre><code>{{message}}</code></pre>
+<div class="container-fluid">
+  <div class="app-container welcome">
+    <div class="card">
+      <h2 class="typography-h2 card-title">An error occurred</h2>
+      <pre class="code-box"><code>{{message}}</code></pre>
     </div>
+    <div class="card">
+      <div class="card-action">
+        <a class="typography-link typography-h2" data-testid="back-button" href="{{baseUrl}}login">Go back</a>
+      </div>
+    </div>
+  </div>
 </div>

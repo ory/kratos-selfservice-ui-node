@@ -1,12 +1,14 @@
-<div class="content">
-    {{> header}}
-    <div class="container" id="recovery">
-        <h4>Recover your account</h4>
+<div class="auth app-container" id="recovery">
+  <div class="card">
+    <h2 class="typography-h2 card-title">Recover your account</h2>
 
-        {{> messages messages=messages className="global"}}
+    {{> messages messages=messages className="global"}}
 
-        <div id="ui">
-          {{> ui submitLabel="Send recovery link" ui=ui}}
-        </div>
+    {{> ui ui=ui}}
+  </div>
+  <div class="card">
+    <div class="card-action">
+      <a class="typography-link typography-h2" data-testid="back-button" href="{{baseUrl}}login">Go back</a>
     </div>
+  </div>
 </div>

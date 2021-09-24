@@ -1,19 +1,14 @@
-<div class="auth">
-    <div class="container" id="registration">
-        {{> icon_logo}}
-        <h5 class="subheading">Welcome to SecureApp! <br/>
-            Use the form below to sign up:</h5>
+<div class="auth app-container" id="signup">
+  <div class="card">
+    <h2 class="typography-h2 card-title">Create an account</h2>
 
-        {{> messages messages=messages className="global"}}
+    {{> messages messages=messages className="global"}}
 
-        <div id="ui">
-          {{> ui ui=ui}}
-        </div>
-
-        <hr class="divider">
-
-        <div class="alternative-actions">
-            <a href="{{pathPrefix}}auth/login">Already have an account? Log in instead</a>
-        </div>
+    {{> ui ui=ui}}
+  </div>
+  <div class="card">
+    <div class="card-action">
+      <a class="typography-link typography-h2" data-testid="cta-link" href="{{signInUrl}}">Sign in</a>
     </div>
+  </div>
 </div>

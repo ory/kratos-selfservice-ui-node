@@ -1,7 +1,18 @@
-<fieldset>
-    <label>
-        <input onclick="{{attributes.onclick}}" name="{{attributes.name}}" type="{{attributes.type}}" value="{{attributes.value}}" placeholder="{{getTitle .}}" {{#if attributes.disabled}}disabled{{/if}}>
-        <span>{{getTitle .}}</span>
-    </label>
+<fieldset class="text-input-fieldset"
+          data-testid="node-{{attributes.name}}">
+  <label>
+    <span class="typography-h3">{{getNodeLabel .}}{{#if attributes.required}}<span class="required-indicator">*</span>{{/if}}</span>
+    <input class="text-input"
+           name="{{attributes.name}}"
+           type="{{attributes.type}}"
+           value="{{attributes.value}}"
+           placeholder="{{getNodeLabel .}}"
+      {{#if attributes.disabled}}disabled{{/if}}
+    >
+  </label>
+  {{#if messages}}
+  <div class="typography-caption">
     {{> messages }}
+  </div>
+  {{/if}}
 </fieldset>

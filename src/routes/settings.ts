@@ -1,46 +1,54 @@
-import { NextFunction, Request, Response } from 'express'
-import config from '../config'
-import { Configuration, V0alpha2Api } from '@ory/kratos-client'
-import { isString, redirectOnSoftError } from '../helpers/sdk'
+import {
+  defaultConfig,
+  getUrlForFlow,
+  isQuerySet,
+  logger,
+  redirectOnSoftError,
+  removeTrailingSlash,
+  requireAuth,
+  RouteCreator,
+  RouteRegistrator,
+  withReturnTo
+} from '../pkg'
 
-// Uses the ORY Kratos NodeJS SDK:
-const kratos = new V0alpha2Api(
-  new Configuration({ basePath: config.kratos.public })
-)
+export const createSettingsRoute: RouteCreator =
+  (createHelpers) => (req, res, next) => {
+    res.locals.projectName = 'Account settings'
 
-// A simple express handler that shows the settings screen.
-const settingsHandler = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  const flow = req.query.flow
-  // The flow ID is used to identify the account settings flow and
-  // return data like the csrf_token and so on.
-  if (!flow || !isString(flow)) {
-    console.log('No flow found in URL, initializing flow.')
-    res.redirect(`${config.kratos.browser}/self-service/settings/browser`)
-    return
+    const { flow } = req.query
+    const helpers = createHelpers(req)
+    const { sdk, apiBaseUrl, basePath, getFormActionUrl } = helpers
+    const initFlowUrl = getUrlForFlow(apiBaseUrl, 'settings')
+
+    // The flow is used to identify the settings and registration flow and
+    // return data like the csrf_token and so on.
+    if (!isQuerySet(flow)) {
+      logger.debug('No flow ID found in URL query initializing login flow', {
+        query: req.query
+      })
+      res.redirect(303, withReturnTo(initFlowUrl, req.query))
+      return
+    }
+
+    return sdk
+      .getSelfServiceSettingsFlow(flow, undefined, req.header('cookie'))
+      .then(({ status, data: flow }) => {
+        flow.ui.action = getFormActionUrl(flow.ui.action)
+
+        // Render the data using a view (e.g. Jade Template):
+        res.render('settings', { ...flow, baseUrl: basePath })
+      })
+      .catch(redirectOnSoftError(res, next, initFlowUrl))
   }
 
-  // Create a logout URL
-  const {
-    data: { logout_url: logoutUrl },
-  } = await kratos.createSelfServiceLogoutFlowUrlForBrowsers(
-    req.header('Cookie')
+export const registerSettingsRoute: RouteRegistrator = (
+  app,
+  createHelpers = defaultConfig,
+  basePath = '/'
+) => {
+  app.get(
+    removeTrailingSlash(basePath) + '/settings',
+    requireAuth(createHelpers),
+    createSettingsRoute(createHelpers)
   )
-
-  kratos
-    .getSelfServiceSettingsFlow(flow, undefined, req.header('Cookie'))
-    .then(({ status, data: flow }) => {
-      if (status !== 200) {
-        return Promise.reject(flow)
-      }
-
-      // Render the data using a view (e.g. Jade Template):
-      res.render('settings', { ...flow, logoutUrl })
-    })
-    .catch(redirectOnSoftError(res, next, '/self-service/settings/browser'))
 }
-
-export default settingsHandler

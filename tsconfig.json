@@ -10,10 +10,8 @@
     "outDir": "./lib",
     "rootDir": "./src",
     "strict": true,
-    "typeRoots": [
-      "./typings"
-    ],
-    "esModuleInterop": true
+    "esModuleInterop": true,
+    "typeRoots": ["./types"]
   },
-  "exclude": ["contrib"]
+  "exclude": ["contrib"],
 }

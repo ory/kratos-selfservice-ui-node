@@ -1,37 +1,55 @@
-import { NextFunction, Request, Response } from 'express'
-import { Configuration, V0alpha2Api } from '@ory/kratos-client'
-import { isString, redirectOnSoftError } from '../helpers/sdk'
-import config from '../config'
-
-// Uses the ORY Kratos NodeJS SDK:
-const kratos = new V0alpha2Api(
-  new Configuration({ basePath: config.kratos.public })
-)
+import {
+  defaultConfig,
+  getUrlForFlow,
+  isQuerySet,
+  logger,
+  redirectOnSoftError,
+  removeTrailingSlash,
+  requireUnauth,
+  RouteCreator,
+  RouteRegistrator,
+  withReturnTo
+} from '../pkg'
 
 // A simple express handler that shows the registration screen.
-export default (req: Request, res: Response, next: NextFunction) => {
-  const flow = req.query.flow
+export const createRegistrationRoute: RouteCreator =
+  (createHelpers) => (req, res, next) => {
+    res.locals.projectName = 'Create account'
 
-  // The flow is used to identify the login and registration flow and
-  // return data like the csrf_token and so on.
-  if (!flow || !isString(flow)) {
-    console.log('No flow ID found in URL, initializing registration flow.')
-    res.redirect(`${config.kratos.browser}/self-service/registration/browser`)
-    return
+    const { flow } = req.query
+    const helpers = createHelpers(req)
+    const { sdk, apiBaseUrl, basePath, getFormActionUrl } = helpers
+    const initFlowUrl = getUrlForFlow(apiBaseUrl, 'registration')
+
+    // The flow is used to identify the settings and registration flow and
+    // return data like the csrf_token and so on.
+    if (!isQuerySet(flow)) {
+      logger.debug('No flow ID found in URL query initializing login flow', {
+        query: req.query
+      })
+      res.redirect(303, withReturnTo(initFlowUrl, req.query))
+      return
+    }
+
+    sdk
+      .getSelfServiceRegistrationFlow(flow, req.header('Cookie'))
+      .then(({ data: flow }) => {
+        flow.ui.action = getFormActionUrl(flow.ui.action)
+
+        // Render the data using a view (e.g. Jade Template):
+        res.render('registration', { ...flow, baseUrl: basePath })
+      })
+      .catch(redirectOnSoftError(res, next, initFlowUrl))
   }
 
-  kratos
-    .getSelfServiceRegistrationFlow(flow, req.header('Cookie'))
-    .then(({ status, data: flow }) => {
-      if (status !== 200) {
-        return Promise.reject(flow)
-      }
-
-      flow.ui.nodes
-
-      // Render the data using a view (e.g. Jade Template):
-      res.render('registration', flow)
-    })
-    // Handle errors using ExpressJS' next functionality:
-    .catch(redirectOnSoftError(res, next, '/self-service/registration/browser'))
+export const registerRegistrationRoute: RouteRegistrator = (
+  app,
+  createHelpers = defaultConfig,
+  basePath = '/'
+) => {
+  app.get(
+    removeTrailingSlash(basePath) + '/registration',
+    requireUnauth(createHelpers),
+    createRegistrationRoute(createHelpers)
+  )
 }

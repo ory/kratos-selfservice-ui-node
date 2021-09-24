@@ -1,8 +1,19 @@
 <div data-testid="text-{{attributes.id}}">
-  <p data-testid="text-{{attributes.id}}-label">
-    {{getTitle .}}
+  <p style="margin-bottom: .5rem" data-testid="text-{{attributes.id}}-label" class="typography-paragraph">
+    {{getNodeLabel .}}
   </p>
-  <p data-testid="text-{{attributes.id}}-content">
-    {{attributes.text.text}}
-  </p>
+  {{#if (eq attributes.text.id 1050015)}}
+    <!-- lookup_secret -->
+    <div class="container-fluid">
+      <div class="row">
+        {{#each attributes.text.context.secrets}}
+          <!-- Used lookup_secret has ID 1050014 -->
+          <div class="col-xs-3 recovery-code">{{#if (eq id 1050014)}}<code>Used</code>{{else}}<code>{{text}}</code>{{/if}}</div>
+        {{/each}}
+      </div>
+      <!--Recovery Code-->
+    </div>
+  {{else}}
+    <pre style="margin-top: 0"><code data-testid="text-{{attributes.id}}-content">{{attributes.text.text}}</code></pre>
+  {{/if}}
 </div>

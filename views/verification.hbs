@@ -1,16 +1,14 @@
-<div class="content">
-    {{> header}}
-    <div class="container">
-        <h4>Verify your email address</h4>
+<div class="auth app-container" id="verification">
+  <div class="card">
+    <h2 class="typography-h2 card-title">Verify your account</h2>
 
-        {{> messages messages=messages className="global"}}
+    {{> messages messages=messages className="global"}}
 
-        {{#if (eq state "passed_challenge")}}
-            <p>Verification successful!</p>
-        {{/if}}
-
-        <div id="ui">
-          {{> ui submitLabel="Resend verification link" ui=ui}}
-        </div>
+    {{> ui ui=ui}}
+  </div>
+  <div class="card">
+    <div class="card-action">
+      <a class="typography-link typography-h2" data-testid="back-button" href="{{baseUrl}}login">Go back</a>
     </div>
+  </div>
 </div>

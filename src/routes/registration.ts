@@ -39,7 +39,7 @@ export const createRegistrationRoute: RouteCreator =
         // Render the data using a view (e.g. Jade Template):
         res.render('registration', { ...flow, baseUrl: basePath })
       })
-      .catch(redirectOnSoftError(res, next, initFlowUrl))
+      .catch(redirectOnSoftError(res, next, withReturnTo(initFlowUrl, req.query)))
   }
 
 export const registerRegistrationRoute: RouteRegistrator = (

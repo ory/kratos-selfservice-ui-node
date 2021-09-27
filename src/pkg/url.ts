@@ -10,16 +10,17 @@ export function withReturnTo(
     u = new URLSearchParams(url.split('?')[1])
   }
 
-  // If AAL (e.g. 2FA) is requested, forward that to Ory Kratos
+  // If AAL (e.g. 2FA) is requested, forward that to the initialization API
   if (query.aal) {
     u.set('aal', query.aal.toString())
   }
 
-  // If refresh is requested, forward that to Ory Kratos
+  // If refresh is requested, forward that to the initialization API
   if (query.refresh) {
     u.set('refresh', 'true')
   }
 
+  // If return_to is requested, forward that to the initialization API
   if (typeof query.return_to === 'string') {
     u.set('return_to', query.return_to)
     return url + '?' + u.toString()

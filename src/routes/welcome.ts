@@ -18,9 +18,9 @@ export const createWelcomeRoute: RouteCreator =
     // Create a logout URL
     const logoutUrl = getFormActionUrl(
       (
-        await sdk.createSelfServiceLogoutFlowUrlForBrowsers(
-          req.header('cookie')
-        )
+        await sdk
+          .createSelfServiceLogoutFlowUrlForBrowsers(req.header('cookie'))
+          .catch(() => ({ data: { logout_url: '' } }))
       ).data.logout_url || ''
     )
 

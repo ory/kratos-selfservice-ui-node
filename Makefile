@@ -25,7 +25,7 @@ publish-sdk: build-sdk
 			npm --no-git-tag-version version v0.0.0-next.$(rand) && \
 			npm publish)
 		rm -rf node_modules/@ory/kratos-client/*
-		sleep 5
+		sleep 15
 		npm i @ory/kratos-client@0.0.0-next.$(rand)
 
 .PHONY: build-sdk-docker

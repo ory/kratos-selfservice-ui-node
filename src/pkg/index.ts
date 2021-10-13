@@ -1,5 +1,6 @@
 import { AxiosError } from 'axios'
 import { NextFunction, Response } from 'express'
+import qs from 'querystring'
 
 import { RouteOptionsCreator } from './route'
 import sdk, { apiBaseUrl } from './sdk'
@@ -13,10 +14,10 @@ export const removeTrailingSlash = (s: string) => s.replace(/\/$/, '')
 export const getUrlForFlow = (
   base: string,
   flow: string,
-  query?: URLSearchParams
+  query?: { [key: string]: any }
 ) =>
   `${removeTrailingSlash(base)}/self-service/${flow}/browser${
-    query ? `?${query.toString()}` : ''
+    query ? `?${qs.encode(query)}` : ''
   }`
 
 export const defaultConfig: RouteOptionsCreator = () => {

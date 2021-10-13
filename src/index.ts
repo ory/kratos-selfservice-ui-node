@@ -16,7 +16,8 @@ import {
 import { toUiNodePartial } from './pkg/ui';
 import { middleware as middlewareLogger } from './pkg/logger';
 import { ui } from '@ory/integrations';
-import { UiNode } from '@ory/client';
+import * as fs from 'fs';
+import * as https from 'https';
 
 const app = express();
 
@@ -34,10 +35,7 @@ app.engine(
       ...require('handlebars-helpers')(),
       jsonPretty: (context: any) => JSON.stringify(context, null, 2),
       onlyNodes: ui.filterNodesByGroups,
-      toUiNodePartial: (node: UiNode) => {
-        console.log(node)
-        return toUiNodePartial(node)
-      },
+      toUiNodePartial,
       getNodeLabel: ui.getNodeLabel,
     },
   }),
@@ -64,3 +62,8 @@ const listener = () => {
 };
 
 app.listen(port, listener);
+
+  https.createServer(options, app).listen(port, listener('https'));
+} else {
+  app.listen(port, listener('http'));
+}

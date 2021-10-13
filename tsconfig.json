@@ -1,17 +1,21 @@
 {
   "compilerOptions": {
-    "resolveJsonModule": true,
     "target": "es5",
-    "module": "commonjs",
-    "lib": [
-      "es2019",
-      "dom"
-    ],
+    "module": "esnext",
+    "lib": ["dom", "dom.iterable", "esnext"],
     "outDir": "./lib",
     "rootDir": "./src",
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "typeRoots": ["./types"],
+    "allowJs": true,
+    "skipLibCheck": true,
     "strict": true,
-    "esModuleInterop": true,
-    "typeRoots": ["./types"]
+    "forceConsistentCasingInFileNames": true,
+    "noEmit": true,
+    "esModuleInterop": true
   },
-  "exclude": ["contrib"],
+  "include": ["src/**/*.ts"],
+  "exclude": ["contrib", "node_modules"],
 }

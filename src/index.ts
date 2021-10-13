@@ -57,11 +57,16 @@ register404Route(app);
 register500Route(app);
 
 const port = Number(process.env.PORT) || 3000;
-const listener = () => {
-  console.log(`Listening on http://0.0.0.0:${port}`);
+
+let listener = (proto: 'http' | 'https') => () => {
+  console.log(`Listening on ${proto}://0.0.0.0:${port}`);
 };
 
-app.listen(port, listener);
+if (process.env.TLS_CERT_PATH?.length && process.env.TLS_KEY_PATH?.length) {
+  const options = {
+    cert: fs.readFileSync(process.env.TLS_CERT_PATH),
+    key: fs.readFileSync(process.env.TLS_KEY_PATH),
+  };
 
   https.createServer(options, app).listen(port, listener('https'));
 } else {

@@ -24,9 +24,6 @@ This application can be configured using two environment variables:
 - `KRATOS_PUBLIC_URL` (required): The URL where ORY Kratos's Public API is located at. If
   this app and ORY Kratos are running in the same private network, this should
   be the private network address (e.g. `kratos-public.svc.cluster.local`).
-- `BASE_URL` (optional): The base url of this app. If served e.g. behind a proxy or via
-  GitHub pages this would be the path, e.g. `https://mywebsite.com/kratos-selfservice-ui-node/`.
-  **Must be absolute!**
 - `TLS_CERT_PATH` (optional): Path to certificate file. Should be set up together with `TLS_KEY_PATH` to enable HTTPS.
 - `TLS_KEY_PATH` (optional): Path to key file Should be set up together with `TLS_CERT_PATH` to enable HTTPS.
 

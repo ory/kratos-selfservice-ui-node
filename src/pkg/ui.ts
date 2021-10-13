@@ -1,13 +1,19 @@
-import { ui } from '@ory/integrations'
+import {
+  isUiNodeAnchorAttributes,
+  isUiNodeImageAttributes,
+  isUiNodeInputAttributes,
+  isUiNodeScriptAttributes,
+  isUiNodeTextAttributes
+} from '@ory/integrations/ui'
 import { UiNode } from '@ory/kratos-client'
 
 // This helper function translates the html input type to the corresponding partial name.
 export const toUiNodePartial = (node: UiNode) => {
-  if (ui.isUiNodeAnchorAttributes(node.attributes)) {
+  if (isUiNodeAnchorAttributes(node.attributes)) {
     return 'ui_node_anchor'
-  } else if (ui.isUiNodeImageAttributes(node.attributes)) {
+  } else if (isUiNodeImageAttributes(node.attributes)) {
     return 'ui_node_image'
-  } else if (ui.isUiNodeInputAttributes(node.attributes)) {
+  } else if (isUiNodeInputAttributes(node.attributes)) {
     switch (node.attributes.type) {
       case 'hidden':
         return 'ui_node_input_hidden'
@@ -20,9 +26,9 @@ export const toUiNodePartial = (node: UiNode) => {
       default:
         return 'ui_node_input_default'
     }
-  } else if (ui.isUiNodeScriptAttributes(node.attributes)) {
+  } else if (isUiNodeScriptAttributes(node.attributes)) {
     return 'ui_node_script'
-  } else if (ui.isUiNodeTextAttributes(node.attributes)) {
+  } else if (isUiNodeTextAttributes(node.attributes)) {
     return 'ui_node_text'
   }
 

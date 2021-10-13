@@ -15,7 +15,7 @@ import {
 } from './routes';
 import { toUiNodePartial } from './pkg/ui';
 import { middleware as middlewareLogger } from './pkg/logger';
-import { ui } from '@ory/integrations';
+import { filterNodesByGroups, getNodeLabel} from '@ory/integrations/ui';
 import * as fs from 'fs';
 import * as https from 'https';
 
@@ -34,9 +34,9 @@ app.engine(
     helpers: {
       ...require('handlebars-helpers')(),
       jsonPretty: (context: any) => JSON.stringify(context, null, 2),
-      onlyNodes: ui.filterNodesByGroups,
+      onlyNodes: filterNodesByGroups,
       toUiNodePartial,
-      getNodeLabel: ui.getNodeLabel,
+      getNodeLabel: getNodeLabel,
     },
   }),
 );

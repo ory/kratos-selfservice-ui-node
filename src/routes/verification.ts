@@ -51,7 +51,6 @@ export const registerVerificationRoute: RouteRegistrator = (
 ) => {
   app.get(
     removeTrailingSlash(basePath) + '/verification',
-    requireAuth(createHelpers),
     createVerificationRoute(createHelpers)
   )
 }

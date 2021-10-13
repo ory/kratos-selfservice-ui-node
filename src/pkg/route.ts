@@ -1,8 +1,8 @@
-import { V0alpha2Api } from '@ory/client'
+import { V0alpha2ApiInterface } from '@ory/kratos-client'
 import { Application, NextFunction, Request, Response } from 'express'
 
 export interface RouteOptions {
-  sdk: V0alpha2Api
+  sdk: V0alpha2ApiInterface
   basePath: string
   apiBaseUrl: string
   kratosBrowserUrl: string

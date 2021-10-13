@@ -2,7 +2,7 @@ import { expressHandler } from '@ory/themes/css/express'
 import express, { NextFunction, Request, Response } from 'express'
 
 import { defaultConfig, removeTrailingSlash } from '../pkg'
-import { RouteRegistrator } from '../pkg/route'
+import { RouteRegistrator } from '../pkg'
 
 export const registerStaticRoutes: RouteRegistrator = (
   app,

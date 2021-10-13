@@ -16,10 +16,10 @@ export const createRegistrationRoute: RouteCreator =
   (createHelpers) => (req, res, next) => {
     res.locals.projectName = 'Create account'
 
-    const { flow } = req.query
+    const { flow, return_to } = req.query
     const helpers = createHelpers(req)
     const { sdk, apiBaseUrl, basePath, getFormActionUrl } = helpers
-    const initFlowUrl = getUrlForFlow(apiBaseUrl, 'registration')
+    const initFlowUrl = getUrlForFlow(apiBaseUrl, 'registration', { return_to })
 
     // The flow is used to identify the settings and registration flow and
     // return data like the csrf_token and so on.
@@ -27,7 +27,7 @@ export const createRegistrationRoute: RouteCreator =
       logger.debug('No flow ID found in URL query initializing login flow', {
         query: req.query
       })
-      res.redirect(303, withReturnTo(initFlowUrl, req.query))
+      res.redirect(303, initFlowUrl)
       return
     }
 
@@ -37,9 +37,15 @@ export const createRegistrationRoute: RouteCreator =
         flow.ui.action = getFormActionUrl(flow.ui.action)
 
         // Render the data using a view (e.g. Jade Template):
-        res.render('registration', { ...flow, baseUrl: basePath })
+        res.render('registration', {
+          ...flow,
+          baseUrl: basePath,
+          signInUrl: withReturnTo('/login', req.query, flow)
+        })
       })
-      .catch(redirectOnSoftError(res, next, withReturnTo(initFlowUrl, req.query)))
+      .catch(
+        redirectOnSoftError(res, next, withReturnTo(initFlowUrl, req.query))
+      )
   }
 
 export const registerRegistrationRoute: RouteRegistrator = (

@@ -23,13 +23,13 @@
   "homepage": "https://github.com/ory/kratos-selfservice-ui-node#readme",
   "dependencies": {
     "@ory/client": "^0.0.1-alpha.19",
-    "@ory/integrations": "0.0.11",
+    "@ory/integrations": "0.1.0",
     "@ory/kratos-client": "^0.0.0-next.04fdf92d4fc5",
-    "@ory/themes": "^0.0.42",
-    "axios": "^0.21.1",
+    "@ory/themes": "0.0.100",
+    "axios": "^0.23.0",
     "cookie-parser": "^1.4.5",
     "express": "^4.17.1",
-    "express-handlebars": "^5.3.2",
+    "express-handlebars": "^5.3.4",
     "express-jwt": "^6.0.0",
     "express-winston": "^4.1.0",
     "handlebars-helpers": "^0.10.0",
@@ -44,12 +44,15 @@
     "@types/express-handlebars": "^5.3.1",
     "@types/handlebars-helpers": "^0.5.2",
     "@types/jwt-decode": "^3.1.0",
-    "@types/node": "^16.3.2",
+    "@types/next": "^9.0.0",
+    "@types/node": "^16.10.5",
+    "@types/react": "^17.0.29",
+    "@types/react-dom": "^17.0.9",
     "nodemon": "^2.0.12",
     "npm-run-all": "^4.1.5",
     "ory-prettier-styles": "^1.1.2",
     "prettier": "^2.3.2",
-    "ts-node": "^9.1.1",
-    "typescript": "^4.3.5"
+    "ts-node": "^10.3.0",
+    "typescript": "^4.4.4"
   }
 }

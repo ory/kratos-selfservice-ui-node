@@ -112,3 +112,8 @@ fieldset {
 .recovery-code {
     margin-bottom: .5rem;
 }
+
+form img {
+    margin: 0 auto;
+    display: block;
+}

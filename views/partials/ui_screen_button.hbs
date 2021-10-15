@@ -2,17 +2,17 @@
   <div class="box">
     <div class="input-button">
       <a class="button"
-        data-testid="{{testId}}"
+         data-testid="{{testId}}"
         {{#if disabled}}
          aria-disabled="true"
          onclick="return false"
         {{else}}
          aria-disabled="false"
-          {{#if link}}
+           {{#if link}}
          href="{{baseUrl}}{{link}}"
-          {{else}}
+           {{else}}
          href="{{href}}"
-          {{/if}}
+           {{/if}}
         {{/if}}
       >{{label}}
       </a>

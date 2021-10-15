@@ -1,13 +1,17 @@
 <fieldset class="checkbox">
   <div class="checkbox-inner">
-    <input name="{{attributes.name}}" type="hidden" value="false">
-    <input name="{{attributes.name}}"
-           id="{{attributes.name}}"
-           {{#if attributes.value}}checked{{/if}}
-           type="{{attributes.type}}"
-           value="true"
-           placeholder="{{getNodeLabel .}}"
-           {{#if attributes.disabled}}disabled{{/if}}>
+    <input
+      name="{{attributes.name}}"
+      type="hidden"
+      value="false" />
+    <input
+      name="{{attributes.name}}"
+      id="{{attributes.name}}"
+      type="{{attributes.type}}"
+      value="true"
+      placeholder="{{getNodeLabel .}}"
+      {{#if attributes.value}}checked{{/if}}
+      {{#if attributes.disabled}}disabled{{/if}} />
     <label for="{{attributes.name}}">
       <svg
         width="8"

@@ -1,5 +1,10 @@
 <div class="input-button">
-  <a class="button" data-testid="node/anchor/{{attributes.id}}" href="{{attributes.href}}" >{{attributes.title.text}}</a>
+  <a class="button"
+     href="{{attributes.href}}"
+     data-testid="node/anchor/{{attributes.id}}"
+  >
+    {{attributes.title.text}}
+  </a>
   {{#if messages}}
     <span class="button-helper">
       {{> messages }}

@@ -1,21 +1,14 @@
-# ORY Kratos ExpressJS Self-Service UI Reference
+# Ory Kratos NodeJS / ExpressJS User Interface Reference Implementation
 
 [![CircleCI](https://circleci.com/gh/ory/kratos-selfservice-ui-node.svg?style=badge)](https://circleci.com/gh/ory/kratos-selfservice-ui-node)
 
-This is an exemplary Self Service UI for [Ory Kratos](https://github.com/ory/kratos) Self Service features:
+This repository contains a reference implementation for Ory Kratos' in NodeJS / ExpressJS / Handlerbas /
+NextJS. It implements all Ory Kratos flows (login, registration, account
+settings, account recovery, account verification).
 
-- Registration
-- Login
-- Logout
-- User settings
-  - Update profile
-  - Change password
-- Password reset
-- ORY Kratos user error page
-
-Additionally:
-
-- Dashboard (requires login)
+If you only want to add authentication to your app, and not customize the login,
+registration, account recovery, ... screens, please check out the
+[Ory Kratos Quickstart](https://www.ory.sh/kratos/docs/quickstart).
 
 ## Configuration
 

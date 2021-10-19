@@ -21,7 +21,7 @@ export const setSession =
             getUrlForFlow(
               apiBaseUrl,
               'login',
-              new URLSearchParams([['aal', 'aal2']])
+              new URLSearchParams({ aal: 'aal2' })
             )
           )
           return
@@ -33,11 +33,11 @@ export const setSession =
 export const requireUnauth =
   (createHelpers: RouteOptionsCreator) =>
   (req: Request, res: Response, next: NextFunction) => {
-    const { sdk, basePath } = createHelpers(req)
+    const { sdk } = createHelpers(req)
     sdk
       .toSession(undefined, req.header('cookie'))
       .then(() => {
-        res.redirect(basePath + '/welcome')
+        res.redirect('welcome')
       })
       .catch(() => {
         next()

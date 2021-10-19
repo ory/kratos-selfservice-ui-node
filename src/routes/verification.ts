@@ -17,7 +17,7 @@ export const createVerificationRoute: RouteCreator =
 
     const { flow } = req.query
     const helpers = createHelpers(req)
-    const { sdk, apiBaseUrl, basePath, getFormActionUrl } = helpers
+    const { sdk, apiBaseUrl } = helpers
     const initFlowUrl = getUrlForFlow(apiBaseUrl, 'verification')
 
     // The flow is used to identify the settings and registration flow and
@@ -33,11 +33,9 @@ export const createVerificationRoute: RouteCreator =
     return (
       sdk
         .getSelfServiceVerificationFlow(flow, req.header('cookie'))
-        .then(({ status, data: flow }) => {
-          flow.ui.action = getFormActionUrl(flow.ui.action)
-
+        .then(({ data: flow }) => {
           // Render the data using a view (e.g. Jade Template):
-          res.render('verification', { ...flow, baseUrl: basePath })
+          res.render('verification', flow)
         })
         // Handle errors using ExpressJS' next functionality:
         .catch(redirectOnSoftError(res, next, initFlowUrl))
@@ -46,11 +44,7 @@ export const createVerificationRoute: RouteCreator =
 
 export const registerVerificationRoute: RouteRegistrator = (
   app,
-  createHelpers = defaultConfig,
-  basePath = '/'
+  createHelpers = defaultConfig
 ) => {
-  app.get(
-    removeTrailingSlash(basePath) + '/verification',
-    createVerificationRoute(createHelpers)
-  )
+  app.get('/verification', createVerificationRoute(createHelpers))
 }

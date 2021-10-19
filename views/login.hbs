@@ -1,6 +1,6 @@
 <div class="auth app-container" id="login">
   <div class="card">
-    {{#if forced}}
+    {{#if refresh}}
       <h2 class="typography-h2 card-title">Confirm Action</h2>
     {{else if (eq requested_aal "aal2")}}
       <h2 class="typography-h2 card-title">Two-Factor Authentication</h2>
@@ -27,7 +27,7 @@
     </div>
     <div class="card">
       <div class="card-action">
-        <a class="typography-link typography-h2" data-testid="forgot-password" href="{{baseUrl}}recovery">Recover
+        <a class="typography-link typography-h2" data-testid="forgot-password" href="recovery">Recover
           your account</a>
       </div>
     </div>

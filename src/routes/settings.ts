@@ -17,7 +17,7 @@ export const createSettingsRoute: RouteCreator =
 
     const { flow } = req.query
     const helpers = createHelpers(req)
-    const { sdk, apiBaseUrl, basePath, getFormActionUrl } = helpers
+    const { sdk, apiBaseUrl } = helpers
     const initFlowUrl = getUrlForFlow(apiBaseUrl, 'settings')
 
     // The flow is used to identify the settings and registration flow and
@@ -32,22 +32,19 @@ export const createSettingsRoute: RouteCreator =
 
     return sdk
       .getSelfServiceSettingsFlow(flow, undefined, req.header('cookie'))
-      .then(({ status, data: flow }) => {
-        flow.ui.action = getFormActionUrl(flow.ui.action)
-
+      .then(({ data: flow }) => {
         // Render the data using a view (e.g. Jade Template):
-        res.render('settings', { ...flow, baseUrl: basePath })
+        res.render('settings', flow)
       })
       .catch(redirectOnSoftError(res, next, initFlowUrl))
   }
 
 export const registerSettingsRoute: RouteRegistrator = (
   app,
-  createHelpers = defaultConfig,
-  basePath = '/'
+  createHelpers = defaultConfig
 ) => {
   app.get(
-    removeTrailingSlash(basePath) + '/settings',
+    '/settings',
     requireAuth(createHelpers),
     createSettingsRoute(createHelpers)
   )

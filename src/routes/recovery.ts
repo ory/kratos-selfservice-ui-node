@@ -4,7 +4,6 @@ import {
   isQuerySet,
   logger,
   redirectOnSoftError,
-  removeTrailingSlash,
   requireUnauth,
   RouteCreator,
   RouteRegistrator,
@@ -17,7 +16,7 @@ export const createRecoveryRoute: RouteCreator =
 
     const { flow } = req.query
     const helpers = createHelpers(req)
-    const { sdk, apiBaseUrl, basePath, getFormActionUrl } = helpers
+    const { sdk, apiBaseUrl } = helpers
     const initFlowUrl = getUrlForFlow(apiBaseUrl, 'recovery')
 
     // The flow is used to identify the settings and registration flow and
@@ -33,20 +32,17 @@ export const createRecoveryRoute: RouteCreator =
     return sdk
       .getSelfServiceRecoveryFlow(flow, req.header('cookie'))
       .then(({ data: flow }) => {
-        flow.ui.action = getFormActionUrl(flow.ui.action)
-
-        res.render('recovery', { ...flow, baseUrl: basePath })
+        res.render('recovery', flow)
       })
       .catch(redirectOnSoftError(res, next, initFlowUrl))
   }
 
 export const registerRecoveryRoute: RouteRegistrator = (
   app,
-  createHelpers = defaultConfig,
-  basePath = '/'
+  createHelpers = defaultConfig
 ) => {
   app.get(
-    removeTrailingSlash(basePath) + '/recovery',
+    '/recovery',
     requireUnauth(createHelpers),
     createRecoveryRoute(createHelpers)
   )

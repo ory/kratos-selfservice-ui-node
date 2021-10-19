@@ -4,7 +4,6 @@ import {
   isQuerySet,
   logger,
   redirectOnSoftError,
-  removeTrailingSlash,
   requireUnauth,
   RouteCreator,
   RouteRegistrator,
@@ -16,10 +15,14 @@ export const createRegistrationRoute: RouteCreator =
   (createHelpers) => (req, res, next) => {
     res.locals.projectName = 'Create account'
 
-    const { flow, return_to } = req.query
+    const { flow, return_to = '' } = req.query
     const helpers = createHelpers(req)
-    const { sdk, apiBaseUrl, basePath, getFormActionUrl } = helpers
-    const initFlowUrl = getUrlForFlow(apiBaseUrl, 'registration', { return_to })
+    const { sdk, apiBaseUrl } = helpers
+    const initFlowUrl = getUrlForFlow(
+      apiBaseUrl,
+      'registration',
+      new URLSearchParams({ return_to: return_to.toString() })
+    )
 
     // The flow is used to identify the settings and registration flow and
     // return data like the csrf_token and so on.
@@ -34,12 +37,9 @@ export const createRegistrationRoute: RouteCreator =
     sdk
       .getSelfServiceRegistrationFlow(flow, req.header('Cookie'))
       .then(({ data: flow }) => {
-        flow.ui.action = getFormActionUrl(flow.ui.action)
-
         // Render the data using a view (e.g. Jade Template):
         res.render('registration', {
           ...flow,
-          baseUrl: basePath,
           signInUrl: withReturnTo('/login', req.query, flow)
         })
       })
@@ -50,11 +50,10 @@ export const createRegistrationRoute: RouteCreator =
 
 export const registerRegistrationRoute: RouteRegistrator = (
   app,
-  createHelpers = defaultConfig,
-  basePath = '/'
+  createHelpers = defaultConfig
 ) => {
   app.get(
-    removeTrailingSlash(basePath) + '/registration',
+    '/registration',
     requireUnauth(createHelpers),
     createRegistrationRoute(createHelpers)
   )

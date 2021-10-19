@@ -3,11 +3,9 @@ import { Application, NextFunction, Request, Response } from 'express'
 
 export interface RouteOptions {
   sdk: V0alpha2ApiInterface
-  basePath: string
   apiBaseUrl: string
   kratosBrowserUrl: string
   baseUrlWithoutTrailingSlash?: string
-  getFormActionUrl: (url: string) => string
 }
 
 export type RouteOptionsCreator = (req: Request) => RouteOptions
@@ -18,6 +16,5 @@ export type RouteCreator = (
 
 export type RouteRegistrator = (
   app: Application,
-  createHelpers?: RouteOptionsCreator,
-  basePath?: string
+  createHelpers?: RouteOptionsCreator
 ) => void

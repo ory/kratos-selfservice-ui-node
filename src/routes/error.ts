@@ -18,11 +18,11 @@ export const createErrorRoute: RouteCreator =
     const { id } = req.query
 
     // Get the SDK
-    const { sdk, basePath } = createHelpers(req)
+    const { sdk } = createHelpers(req)
 
     if (!isQuerySet(id)) {
       // No error was send, redirecting back to home.
-      res.redirect(basePath + '/welcome')
+      res.redirect('welcome')
       return
     }
 
@@ -41,7 +41,7 @@ export const createErrorRoute: RouteCreator =
 
         if (err.response.status === 404) {
           // The error could not be found, redirect back to home.
-          res.redirect(basePath + '/welcome')
+          res.redirect('welcome')
           return
         }
 
@@ -51,11 +51,7 @@ export const createErrorRoute: RouteCreator =
 
 export const registerErrorRoute: RouteRegistrator = (
   app,
-  createHelpers = defaultConfig,
-  basePath = '/'
+  createHelpers = defaultConfig
 ) => {
-  app.get(
-    removeTrailingSlash(basePath) + '/error',
-    createErrorRoute(createHelpers)
-  )
+  app.get('/error', createErrorRoute(createHelpers))
 }

@@ -13,17 +13,25 @@ export const createLoginRoute: RouteCreator =
   (createHelpers) => async (req, res, next) => {
     res.locals.projectName = 'Sign in'
 
-    const { flow, aal, refresh, return_to } = req.query
+    const { flow, aal = '', refresh = '', return_to = '' } = req.query
     const helpers = createHelpers(req)
-    const { sdk, apiBaseUrl, basePath, getFormActionUrl } = helpers
-    const initFlowUrl = getUrlForFlow(apiBaseUrl, 'login', {
-      aal,
-      refresh,
-      return_to
-    })
-    const initRegistrationUrl = getUrlForFlow(apiBaseUrl, 'registration', {
-      return_to
-    })
+    const { sdk, apiBaseUrl } = helpers
+    const initFlowUrl = getUrlForFlow(
+      apiBaseUrl,
+      'login',
+      new URLSearchParams({
+        aal: aal.toString(),
+        refresh: refresh.toString(),
+        return_to: return_to.toString()
+      })
+    )
+    const initRegistrationUrl = getUrlForFlow(
+      apiBaseUrl,
+      'registration',
+      new URLSearchParams({
+        return_to: return_to.toString()
+      })
+    )
 
     // The flow is used to identify the settings and registration flow and
     // return data like the csrf_token and so on.
@@ -38,24 +46,20 @@ export const createLoginRoute: RouteCreator =
     // It is probably a bit strange to have a logout URL here, however this screen
     // is also used for 2FA flows. If something goes wrong there, we probably want
     // to give the user the option to sign out!
-    const logoutUrl = getFormActionUrl(
+    const logoutUrl =
       (
         await sdk
           .createSelfServiceLogoutFlowUrlForBrowsers(req.header('cookie'))
           .catch(() => ({ data: { logout_url: '' } }))
       ).data.logout_url || ''
-    )
 
     return sdk
       .getSelfServiceLoginFlow(flow, req.header('cookie'))
       .then(({ data: flow }) => {
-        flow.ui.action = getFormActionUrl(flow.ui.action)
-
         // Render the data using a view (e.g. Jade Template):
         res.render('login', {
           ...flow,
-          isAuthenticated: flow.forced || flow.requested_aal === 'aal2',
-          basePath,
+          isAuthenticated: flow.refresh || flow.requested_aal === 'aal2',
           signUpUrl: initRegistrationUrl,
           logoutUrl: logoutUrl
         })
@@ -65,11 +69,7 @@ export const createLoginRoute: RouteCreator =
 
 export const registerLoginRoute: RouteRegistrator = (
   app,
-  createHelpers = defaultConfig,
-  basePath = '/'
+  createHelpers = defaultConfig
 ) => {
-  app.get(
-    removeTrailingSlash(basePath) + '/login',
-    createLoginRoute(createHelpers)
-  )
+  app.get('/login', createLoginRoute(createHelpers))
 }

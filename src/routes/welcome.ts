@@ -2,27 +2,25 @@ import { Request, Response } from 'express'
 
 import {
   defaultConfig,
-  removeTrailingSlash,
   RouteCreator,
   RouteRegistrator,
   setSession
 } from '../pkg'
 
 export const createWelcomeRoute: RouteCreator =
-  (createHelpers) => async (req, res, next) => {
+  (createHelpers) => async (req, res) => {
     res.locals.projectName = 'Welcome to Ory'
 
-    const { sdk, getFormActionUrl } = createHelpers(req)
+    const { sdk } = createHelpers(req)
     const session = req.session
 
     // Create a logout URL
-    const logoutUrl = getFormActionUrl(
+    const logoutUrl =
       (
         await sdk
           .createSelfServiceLogoutFlowUrlForBrowsers(req.header('cookie'))
           .catch(() => ({ data: { logout_url: '' } }))
       ).data.logout_url || ''
-    )
 
     res.render('welcome', {
       session: session
@@ -36,18 +34,14 @@ Please sign in to receive one.`,
 
 export const registerWelcomeRoute: RouteRegistrator = (
   app,
-  createHelpers = defaultConfig,
-  basePath = '/'
+  createHelpers = defaultConfig
 ) => {
   app.get(
-    removeTrailingSlash(basePath) + '/welcome',
+    '/welcome',
     setSession(createHelpers),
     createWelcomeRoute(createHelpers)
   )
-  app.get(
-    removeTrailingSlash(basePath) + '/',
-    (req: Request, res: Response) => {
-      res.redirect(removeTrailingSlash(basePath) + '/welcome')
-    }
-  )
+  app.get('/', (req: Request, res: Response) => {
+    res.redirect('welcome')
+  })
 }

@@ -4,7 +4,7 @@ import {
   isQuerySet,
   logger,
   redirectOnSoftError,
-  requireUnauth,
+  requireNoAuth,
   RouteCreator,
   RouteRegistrator,
   withReturnTo
@@ -43,7 +43,7 @@ export const registerRecoveryRoute: RouteRegistrator = (
 ) => {
   app.get(
     '/recovery',
-    requireUnauth(createHelpers),
+    requireNoAuth(createHelpers),
     createRecoveryRoute(createHelpers)
   )
 }

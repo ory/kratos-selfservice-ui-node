@@ -4,7 +4,7 @@ import {
   isQuerySet,
   logger,
   redirectOnSoftError,
-  requireUnauth,
+  requireNoAuth,
   RouteCreator,
   RouteRegistrator,
   withReturnTo
@@ -54,7 +54,7 @@ export const registerRegistrationRoute: RouteRegistrator = (
 ) => {
   app.get(
     '/registration',
-    requireUnauth(createHelpers),
+    requireNoAuth(createHelpers),
     createRegistrationRoute(createHelpers)
   )
 }

@@ -4,21 +4,23 @@ import {
   isQuerySet,
   logger,
   redirectOnSoftError,
-  removeTrailingSlash,
   requireAuth,
   RouteCreator,
-  RouteRegistrator,
-  withReturnTo
+  RouteRegistrator
 } from '../pkg'
 
 export const createSettingsRoute: RouteCreator =
   (createHelpers) => (req, res, next) => {
     res.locals.projectName = 'Account settings'
 
-    const { flow } = req.query
+    const { flow, return_to = '' } = req.query
     const helpers = createHelpers(req)
-    const { sdk, apiBaseUrl } = helpers
-    const initFlowUrl = getUrlForFlow(apiBaseUrl, 'settings')
+    const { sdk, kratosBrowserUrl } = helpers
+    const initFlowUrl = getUrlForFlow(
+      kratosBrowserUrl,
+      'settings',
+      new URLSearchParams({ return_to: return_to.toString() })
+    )
 
     // The flow is used to identify the settings and registration flow and
     // return data like the csrf_token and so on.
@@ -26,7 +28,7 @@ export const createSettingsRoute: RouteCreator =
       logger.debug('No flow ID found in URL query initializing login flow', {
         query: req.query
       })
-      res.redirect(303, withReturnTo(initFlowUrl, req.query))
+      res.redirect(303, initFlowUrl)
       return
     }
 

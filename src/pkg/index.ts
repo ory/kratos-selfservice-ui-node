@@ -6,7 +6,6 @@ import sdk, { apiBaseUrl } from './sdk'
 
 export * from './middleware'
 export * from './route'
-export * from './url'
 export * from './logger'
 
 export const removeTrailingSlash = (s: string) => s.replace(/\/$/, '')

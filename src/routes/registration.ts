@@ -6,8 +6,7 @@ import {
   redirectOnSoftError,
   requireNoAuth,
   RouteCreator,
-  RouteRegistrator,
-  withReturnTo
+  RouteRegistrator
 } from '../pkg'
 
 // A simple express handler that shows the registration screen.
@@ -50,9 +49,7 @@ export const createRegistrationRoute: RouteCreator =
           signInUrl: initLoginUrl
         })
       })
-      .catch(
-        redirectOnSoftError(res, next, withReturnTo(initFlowUrl, req.query))
-      )
+      .catch(redirectOnSoftError(res, next, initFlowUrl))
   }
 
 export const registerRegistrationRoute: RouteRegistrator = (

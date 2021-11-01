@@ -23,6 +23,13 @@ export const createRegistrationRoute: RouteCreator =
       'registration',
       new URLSearchParams({ return_to: return_to.toString() })
     )
+    const initLoginUrl = getUrlForFlow(
+      apiBaseUrl,
+      'login',
+      new URLSearchParams({
+        return_to: return_to.toString()
+      })
+    )
 
     // The flow is used to identify the settings and registration flow and
     // return data like the csrf_token and so on.
@@ -40,7 +47,7 @@ export const createRegistrationRoute: RouteCreator =
         // Render the data using a view (e.g. Jade Template):
         res.render('registration', {
           ...flow,
-          signInUrl: withReturnTo('/login', req.query, flow)
+          signInUrl: initLoginUrl
         })
       })
       .catch(

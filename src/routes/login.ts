@@ -25,6 +25,7 @@ export const createLoginRoute: RouteCreator =
         return_to: return_to.toString()
       })
     )
+
     const initRegistrationUrl = getUrlForFlow(
       apiBaseUrl,
       'registration',

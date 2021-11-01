@@ -1,6 +1,6 @@
 {
-  "name": "kratos-selfservice-ui-node",
-  "version": "0.0.1",
+  "name": "@ory/kratos-selfservice-ui-node",
+  "version": "0.0.3",
   "description": "A reference implementation of a selfservice UI for ORY Kratos in node.js",
   "main": "src/index.ts",
   "scripts": {
@@ -9,7 +9,8 @@
     "start": "nodemon",
     "test": "exit 0",
     "format": "prettier --write '{src,views,types}/**/*.{ts,js,css}'",
-    "format:check": "prettier --check '{src,views,types}/**/*.{ts,js,css}'"
+    "format:check": "prettier --check '{src,views,types}/**/*.{ts,js,css}'",
+    "prepublish": "npm run build"
   },
   "repository": {
     "type": "git",

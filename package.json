@@ -10,7 +10,7 @@
     "test": "exit 0",
     "format": "prettier --write '{src,views,types}/**/*.{ts,js,css}'",
     "format:check": "prettier --check '{src,views,types}/**/*.{ts,js,css}'",
-    "prepublish": "npm run build"
+    "prepublishOnly": "npm run build"
   },
   "repository": {
     "type": "git",

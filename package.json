@@ -1,6 +1,6 @@
 {
   "name": "@ory/kratos-selfservice-ui-node",
-  "version": "0.0.11",
+  "version": "0.0.12",
   "description": "A reference implementation of a selfservice UI for ORY Kratos in node.js",
   "main": "src/index.ts",
   "scripts": {

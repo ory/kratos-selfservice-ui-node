@@ -36,7 +36,7 @@ export const createLoginRoute: RouteCreator =
 
     const initRecoveryUrl = getUrlForFlow(
       kratosBrowserUrl,
-      'registration',
+      'recovery',
       new URLSearchParams({
         return_to: return_to.toString()
       })
@@ -71,7 +71,7 @@ export const createLoginRoute: RouteCreator =
           isAuthenticated: flow.refresh || flow.requested_aal === 'aal2',
           signUpUrl: initRegistrationUrl,
           logoutUrl: logoutUrl,
-          recoveryUrl: initRecoveryUrl
+          initRecoveryUrl
         })
       })
       .catch(redirectOnSoftError(res, next, initFlowUrl))

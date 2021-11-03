@@ -34,6 +34,14 @@ export const createLoginRoute: RouteCreator =
       })
     )
 
+    const initRecoveryUrl = getUrlForFlow(
+      kratosBrowserUrl,
+      'registration',
+      new URLSearchParams({
+        return_to: return_to.toString()
+      })
+    )
+
     // The flow is used to identify the settings and registration flow and
     // return data like the csrf_token and so on.
     if (!isQuerySet(flow)) {
@@ -62,7 +70,8 @@ export const createLoginRoute: RouteCreator =
           ...flow,
           isAuthenticated: flow.refresh || flow.requested_aal === 'aal2',
           signUpUrl: initRegistrationUrl,
-          logoutUrl: logoutUrl
+          logoutUrl: logoutUrl,
+          recoveryUrl: initRecoveryUrl
         })
       })
       .catch(redirectOnSoftError(res, next, initFlowUrl))

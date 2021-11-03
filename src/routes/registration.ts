@@ -16,14 +16,15 @@ export const createRegistrationRoute: RouteCreator =
 
     const { flow, return_to = '' } = req.query
     const helpers = createHelpers(req)
-    const { sdk, apiBaseUrl } = helpers
+    const { sdk, kratosBrowserUrl } = helpers
     const initFlowUrl = getUrlForFlow(
-      apiBaseUrl,
+      kratosBrowserUrl,
       'registration',
       new URLSearchParams({ return_to: return_to.toString() })
     )
+
     const initLoginUrl = getUrlForFlow(
-      apiBaseUrl,
+      kratosBrowserUrl,
       'login',
       new URLSearchParams({
         return_to: return_to.toString()

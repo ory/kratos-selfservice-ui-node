@@ -1,5 +1,5 @@
 import { filterNodesByGroups, getNodeLabel } from '@ory/integrations/ui'
-import express from 'express'
+import express, { Request, Response } from 'express'
 import handlebars from 'express-handlebars'
 import * as fs from 'fs'
 import * as https from 'https'
@@ -55,6 +55,10 @@ registerWelcomeRoute(app)
 
 register404Route(app)
 register500Route(app)
+
+app.get('/', (req: Request, res: Response) => {
+  res.redirect('welcome')
+})
 
 const port = Number(process.env.PORT) || 3000
 

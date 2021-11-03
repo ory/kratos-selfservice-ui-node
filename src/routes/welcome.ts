@@ -34,14 +34,8 @@ Please sign in to receive one.`,
 
 export const registerWelcomeRoute: RouteRegistrator = (
   app,
-  createHelpers = defaultConfig
+  createHelpers = defaultConfig,
+  route = '/welcome'
 ) => {
-  app.get(
-    '/welcome',
-    setSession(createHelpers),
-    createWelcomeRoute(createHelpers)
-  )
-  app.get('/', (req: Request, res: Response) => {
-    res.redirect('welcome')
-  })
+  app.get(route, setSession(createHelpers), createWelcomeRoute(createHelpers))
 }

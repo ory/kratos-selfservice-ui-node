@@ -16,5 +16,6 @@ export type RouteCreator = (
 
 export type RouteRegistrator = (
   app: Application,
-  createHelpers?: RouteOptionsCreator
+  createHelpers?: RouteOptionsCreator,
+  route?: string
 ) => void

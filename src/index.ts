@@ -53,12 +53,12 @@ registerWelcomeRoute(app)
 registerErrorRoute(app)
 registerWelcomeRoute(app)
 
+app.get('/', (req: Request, res: Response) => {
+  res.redirect('welcome', 303)
+})
+
 register404Route(app)
 register500Route(app)
-
-app.get('/', (req: Request, res: Response) => {
-  res.redirect('welcome')
-})
 
 const port = Number(process.env.PORT) || 3000
 

@@ -20,6 +20,7 @@ This application can be configured using two environment variables:
 - `TLS_CERT_PATH` (optional): Path to certificate file. Should be set up together with `TLS_KEY_PATH` to enable HTTPS.
 - `TLS_KEY_PATH` (optional): Path to key file Should be set up together with `TLS_CERT_PATH` to enable HTTPS.
 - `KRATOS_BROWSER_URL` (optional) The browser accessible URL where ORY Kratos's public API is located, only needed if it differs from `KRATOS_PUBLIC_URL`
+- `BASE_PATH` (optional) The base path (e.g. `/auth`) this location is served at.
 
 This is the easiest mode as it requires no additional set up. This app runs on port `:4455`
 and ORY Kratos `KRATOS_PUBLIC_URL` URL.
@@ -30,6 +31,12 @@ where applications run on separate subdomains, check out [Multi-Domain Cookies](
 
 To authenticate incoming requests, this app uses ORY Kratos' `whoami` API to check
 whether the session is valid or not.
+
+### Base Path
+
+If you host this application at a sub-path, you can set the `BASE_PATH` environment variable. Please note that
+the app itself still expects to be served at `/`. Usually, you can configure your reverse proxy or API gateway
+to strip the path prefix. For example, in [Kong you would use the `strip_path` option](https://docs.konghq.com/kubernetes-ingress-controller/1.3.x/guides/using-rewrites/).
 
 ## Development
 

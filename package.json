@@ -34,9 +34,10 @@
     "express-jwt": "^6.0.0",
     "express-winston": "^4.1.0",
     "handlebars-helpers": "^0.10.0",
-    "jwks-rsa": "^2.0.2",
+    "jwks-rsa": "^2.0.5",
     "react": "^17.0.2",
-    "winston": "^3.3.3"
+    "winston": "^3.3.3",
+    "async": "^3.2.3"
   },
   "devDependencies": {
     "@trivago/prettier-plugin-sort-imports": "^3.0.0",

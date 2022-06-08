@@ -1,7 +1,7 @@
 blank_issues_enabled: false
 contact_links:
   - name: Ory Kratos SelfService UI Node Example Forum
-    url: https://github.com/ory/kratos-selfservice-ui-node/discussions
+    url: https://github.com/orgs/ory/discussions
     about:
       Please ask and answer questions here, show your implementations and
       discuss ideas.

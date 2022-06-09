@@ -51,7 +51,6 @@ registerSettingsRoute(app)
 registerVerificationRoute(app)
 registerWelcomeRoute(app)
 registerErrorRoute(app)
-registerWelcomeRoute(app)
 
 app.get('/', (req: Request, res: Response) => {
   res.redirect('welcome', 303)

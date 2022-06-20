@@ -1,7 +1,19 @@
 <div class="container-fluid">
   <div class="app-container welcome">
     <div class="card">
-      <h2 class="typography-h2">User Interface Screens</h2>
+        <div class="col-md-8 col-xs-12">
+          <div class="box">
+          {{#if hasSession}}   
+            <div>You are logged in!</div>  
+          {{else}}   
+            <div>You are not logged in</div>  
+          {{/if}}
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2 class="typography-h2">Other User Interface Screens</h2>
       <div class="row">
         {{> ui_screen_button testId="login" link="login" label="Sign In" disabled=hasSession}}
         {{> ui_screen_button testId="sign-up" link="registration" label="Sign Up" disabled=hasSession}}

@@ -32,9 +32,9 @@ export const registerStaticRoutes: RouteRegistrator = (app) => {
 
       primaryAccent: '#FF80FF',
 
-      primary30: '#af3a03',
-      primary60: '#d65d0e',
-      primary70: '#9d0006',
+      primary30: '#301f73',
+      primary60: '#6E56D1',
+      primary70: '#b6aae7',
 
       borderRadius: '4px',
 

@@ -36,6 +36,7 @@
     "handlebars-helpers": "^0.10.0",
     "jwks-rsa": "^2.0.2",
     "react": "^17.0.2",
+    "react-is": "^18.2.0",
     "winston": "^3.3.3"
   },
   "devDependencies": {

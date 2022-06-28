@@ -53,7 +53,7 @@ registerWelcomeRoute(app)
 registerErrorRoute(app)
 
 app.get('/', (req: Request, res: Response) => {
-  res.redirect('welcome', 303)
+  res.redirect(`${process.env.BASE_URL}/welcome`, 303)
 })
 
 register404Route(app)

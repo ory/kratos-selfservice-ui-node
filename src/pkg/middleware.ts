@@ -91,11 +91,15 @@ export const setSession =
 export const requireNoAuth =
   (createHelpers: RouteOptionsCreator) =>
   (req: Request, res: Response, next: NextFunction) => {
-    const { sdk } = createHelpers(req)
+    const { sdk, baseUrlWithoutTrailingSlash } = createHelpers(req)
     sdk
       .toSession(undefined, req.header('cookie'))
       .then(() => {
-        res.redirect('welcome')
+        res.redirect(
+          baseUrlWithoutTrailingSlash
+            ? baseUrlWithoutTrailingSlash + '/welcome'
+            : 'welcome'
+        )
       })
       .catch(() => {
         next()

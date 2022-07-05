@@ -22,8 +22,7 @@ export const defaultConfig: RouteOptionsCreator = () => {
   return {
     apiBaseUrl: apiBaseUrl,
     kratosBrowserUrl: apiBaseUrl,
-    sdk,
-    baseUrlWithoutTrailingSlash: removeTrailingSlash(process.env.BASE_URL || '')
+    sdk
   }
 }
 

@@ -1,13 +1,14 @@
-html,
-body {
-  text-rendering: geometricPrecision;
+@import url('theme.css');
+
+html, body {
+    text-rendering: geometricPrecision;
 }
 
 body {
-  min-height: 100vh;
-  background: var(--grey5);
-  display: flex;
-  flex-direction: column;
+    min-height: 100vh;
+    background: var(--palettes-light-background-surface);
+    display: flex;
+    flex-direction: column;
 }
 
 main {
@@ -35,34 +36,10 @@ main {
   padding-right: 12px;
 }
 
-.card {
-  border: 1px solid var(--grey10);
-  background: var(--grey0);
-  margin-bottom: 18px;
-  padding: 20px;
-}
-
-.card-title {
-  text-align: center;
-  color: var(--primary60);
-}
-
-.card-action {
-  text-align: center;
-}
-
-.card-action a {
-  font-size: 15px;
-}
-
 fieldset {
   border: none;
   padding: 0;
   margin: 0;
-}
-
-.text-input {
-  box-sizing: border-box;
 }
 
 .messages .message {
@@ -115,6 +92,6 @@ fieldset {
 }
 
 form img {
-  margin: 0 auto;
-  display: block;
+    margin: 0 auto;
+    display: block;
 }

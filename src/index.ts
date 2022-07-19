@@ -16,8 +16,9 @@ import {
   registerSettingsRoute,
   registerStaticRoutes,
   registerVerificationRoute,
-  registerWelcomeRoute,
-} from "./routes"
+  registerWelcomeRoute
+} from './routes'
+import {UiNode} from "@ory/client";
 
 const app = express()
 
@@ -34,7 +35,11 @@ app.engine(
     helpers: {
       ...require("handlebars-helpers")(),
       jsonPretty: (context: any) => JSON.stringify(context, null, 2),
-      onlyNodes: filterNodesByGroups,
+      onlyNodes: (nodes: Array<UiNode>, groups: string, attributes: string) => filterNodesByGroups({
+        groups: groups,
+        attributes: attributes,
+        nodes: nodes
+      }),
       toUiNodePartial,
       getNodeLabel: getNodeLabel,
     },

@@ -11,9 +11,16 @@
       <h2 class="typography-h2 card-title">Sign In</h2>
     {{/if}}
 
+    {{> ui ui=ui groups="oidc" attributes="submit"}}
+
     {{> messages messages=messages className="global"}}
 
-    {{> ui ui=ui}}
+    {{> ui ui=ui groups="password" attributes="password,text" }}
+
+    <a href="recovery" class="" data-testid="forgot-password-link">Forgot Password?</a>
+
+    {{> ui ui=ui groups="password" attributes="submit" }}
+
   </div>
 
   {{#if isAuthenticated}}

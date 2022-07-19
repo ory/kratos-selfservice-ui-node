@@ -1,4 +1,4 @@
-import { UiNode } from "@ory/client"
+import { UiNodeInputAttributes, UiNode } from "@ory/client"
 import {
   isUiNodeAnchorAttributes,
   isUiNodeImageAttributes,
@@ -18,7 +18,12 @@ export const toUiNodePartial = (node: UiNode) => {
       case "hidden":
         return "ui_node_input_hidden"
       case "submit":
-        return "ui_node_input_button"
+        const attrs = node.attributes as UiNodeInputAttributes
+        const isSocial =
+          (attrs.name === "provider" || attrs.name === "link") &&
+          node.group === "oidc"
+
+        return isSocial ? "ui_node_input_social_button" : "ui_node_input_button"
       case "button":
         return "ui_node_input_button"
       case "checkbox":

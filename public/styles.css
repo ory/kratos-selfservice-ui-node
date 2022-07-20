@@ -6,6 +6,7 @@ html, body {
 
 body {
     min-height: 100vh;
+    min-width: 100vw;
     background: var(--palettes-light-background-surface);
     display: flex;
     flex-direction: column;
@@ -15,25 +16,55 @@ main {
   flex: 1;
 }
 
+/*By default set the container size to mobile*/
 .app-container {
-  display: flex;
-  flex-direction: column;
-  align-items: stretch;
-  max-width: 680px;
-  margin: 0 auto;
-  padding-top: 70px;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    max-width: 24.375em;
+    padding-top: 4rem;
 }
 
-.auth.app-container {
-  max-width: 335px;
-  padding-top: 70px;
+.card {
+    max-width: 18.375rem;
 }
 
-.welcome.app-container {
-  max-width: 980px;
-  padding-top: 70px;
-  padding-left: 12px;
-  padding-right: 12px;
+/*Set the viewports for md*/
+@media only screen and (min-width: 48em) {
+    .app-container {
+        max-width: 48em;
+    }
+    .card {
+        max-width: 21rem;
+    }
+}
+
+/*Set the viewport for lg*/
+@media only screen and (min-width: 90em) {
+    .app-container {
+        max-width: 90em;
+    }
+    .card {
+        max-width: 21rem;
+    }
+}
+
+.container-center {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.divider {
+    width: 4rem;
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+}
+
+.card-oidc {
+    display: flex;
+    gap: 1rem;
 }
 
 fieldset {
@@ -75,23 +106,6 @@ fieldset {
   overflow-wrap: break-word;
 }
 
-.input-button a.button {
-  display: block;
-  box-sizing: border-box;
-  text-decoration: none;
-}
-
-.input-button a.button[aria-disabled="true"],
-.input-button a.button[aria-disabled="true"]:hover {
-  color: #b4b4bb;
-  background-color: #e1e1e3;
-}
-
 .recovery-code {
   margin-bottom: 0.5rem;
-}
-
-form img {
-    margin: 0 auto;
-    display: block;
 }

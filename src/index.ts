@@ -1,4 +1,6 @@
+import { UiNode } from "@ory/client"
 import { filterNodesByGroups, getNodeLabel } from "@ory/integrations/ui"
+import * as theme from "@ory/themes/lib"
 import express, { Request, Response } from "express"
 import handlebars from "express-handlebars"
 import * as fs from "fs"
@@ -16,9 +18,8 @@ import {
   registerSettingsRoute,
   registerStaticRoutes,
   registerVerificationRoute,
-  registerWelcomeRoute
-} from './routes'
-import {UiNode} from "@ory/client";
+  registerWelcomeRoute,
+} from "./routes"
 
 const app = express()
 
@@ -35,13 +36,17 @@ app.engine(
     helpers: {
       ...require("handlebars-helpers")(),
       jsonPretty: (context: any) => JSON.stringify(context, null, 2),
-      onlyNodes: (nodes: Array<UiNode>, groups: string, attributes: string) => filterNodesByGroups({
-        groups: groups,
-        attributes: attributes,
-        nodes: nodes
-      }),
+      onlyNodes: (nodes: Array<UiNode>, groups: string, attributes: string) =>
+        filterNodesByGroups({
+          groups: groups,
+          attributes: attributes,
+          nodes: nodes,
+        }),
       toUiNodePartial,
       getNodeLabel: getNodeLabel,
+      styles: (context: never) => {
+        return theme[context]
+      },
     },
   }),
 )

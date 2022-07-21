@@ -7,8 +7,10 @@ import {
   redirectOnSoftError,
   removeTrailingSlash,
   RouteCreator,
-  RouteRegistrator,
-} from "../pkg"
+  RouteRegistrator
+} from '../pkg'
+import * as handlebars from "handlebars";
+import {CardBase} from "../../../themes-vite";
 
 export const createLoginRoute: RouteCreator =
   (createHelpers) => async (req, res, next) => {
@@ -90,6 +92,7 @@ export const createLoginRoute: RouteCreator =
           isAuthenticated: flow.refresh || flow.requested_aal === "aal2",
           signUpUrl: initRegistrationUrl,
           logoutUrl: logoutUrl,
+          card: CardBase({children: "{{#if isAuthenticated}}Authenticated{{else}}Not authenticated{{/if}}", title: "Login"})
         })
       })
       .catch(redirectOnSoftError(res, next, initFlowUrl))

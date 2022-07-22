@@ -1,12 +1,10 @@
-import {filterNodesByGroups, getNodeLabel} from '@ory/integrations/ui'
-import express, {Request, Response} from 'express'
-import hbs from 'express-handlebars'
-
-import * as fs from 'fs'
-import * as https from 'https'
-
-import {middleware as middlewareLogger} from './pkg/logger'
-import {toUiNodePartial} from './pkg/ui'
+import { filterNodesByGroups, getNodeLabel } from "@ory/integrations/ui"
+import express, { Request, Response } from "express"
+import hbs from "express-handlebars"
+import * as fs from "fs"
+import * as https from "https"
+import { middleware as middlewareLogger } from "./pkg/logger"
+import { toUiNodePartial } from "./pkg/ui"
 import {
   register404Route,
   register500Route,
@@ -21,17 +19,15 @@ import {
   registerWelcomeRoute,
 } from "./routes"
 
-import {CardBase} from "@ory/themes"
-
 const app = express()
 
 app.use(middlewareLogger)
 app.set("view engine", "hbs")
 
 app.engine(
-  'hbs',
+  "hbs",
   hbs({
-    extname: 'hbs',
+    extname: "hbs",
     layoutsDir: `${__dirname}/../views/layouts/`,
     partialsDir: `${__dirname}/../views/partials/`,
     defaultLayout: "main",
@@ -45,18 +41,9 @@ app.engine(
           nodes: nodes,
         }),
       toUiNodePartial,
-<<<<<<< HEAD
       getNodeLabel: getNodeLabel,
-      styles: (context: never) => {
-        return theme[context]
-      },
     },
   }),
-=======
-      getNodeLabel: getNodeLabel
-    }
-  })
->>>>>>> 66dd1c8 (feat: include styled html)
 )
 
 registerStaticRoutes(app)
@@ -87,8 +74,8 @@ if (process.env.TLS_CERT_PATH?.length && process.env.TLS_KEY_PATH?.length) {
     cert: fs.readFileSync(process.env.TLS_CERT_PATH),
     key: fs.readFileSync(process.env.TLS_KEY_PATH),
   }
-  
-  https.createServer(options, app).listen(port, listener('https'))
+
+  https.createServer(options, app).listen(port, listener("https"))
 } else {
   app.listen(port, listener("http"))
 }

@@ -5,12 +5,10 @@ import {
   isQuerySet,
   logger,
   redirectOnSoftError,
-  removeTrailingSlash,
   RouteCreator,
   RouteRegistrator
 } from '../pkg'
-import * as handlebars from "handlebars";
-import {CardBase} from "../../../themes-vite";
+import {CardBase} from "@ory/themes";
 
 export const createLoginRoute: RouteCreator =
   (createHelpers) => async (req, res, next) => {
@@ -92,7 +90,7 @@ export const createLoginRoute: RouteCreator =
           isAuthenticated: flow.refresh || flow.requested_aal === "aal2",
           signUpUrl: initRegistrationUrl,
           logoutUrl: logoutUrl,
-          card: CardBase({children: "{{#if isAuthenticated}}Authenticated{{else}}Not authenticated{{/if}}", title: "Login"})
+          card: CardBase({title: "Login"})
         })
       })
       .catch(redirectOnSoftError(res, next, initFlowUrl))

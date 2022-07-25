@@ -1,0 +1,23 @@
+<fieldset
+  class="text-input-fieldset"
+  data-testid="node/input/{{attributes.name}}">
+  <label>
+    <span class="typography-h3">{{getNodeLabel .}}{{#if attributes.required}}
+      <span class="required-indicator">*</span>{{/if}}
+    </span>
+    <select
+      name="{{attributes.name}}"
+      {{#if attributes.disabled}}disabled{{/if}}
+    >
+      <option value=""></option>
+      {{#each attributes.options}}
+        <option value="{{this.value}}" {{#if attributes.value == this.value}}selected{{/if}}>{{this.label}}</option>
+      {{/each}}
+    </select>
+  </label>
+  {{#if messages}}
+    <div class="typography-caption">
+      {{> messages }}
+    </div>
+  {{/if}}
+</fieldset>

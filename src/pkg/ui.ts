@@ -23,6 +23,8 @@ export const toUiNodePartial = (node: UiNode) => {
         return 'ui_node_input_button'
       case 'checkbox':
         return 'ui_node_input_checkbox'
+      case 'select':
+        return 'ui_node_input_select'
       default:
         return 'ui_node_input_default'
     }

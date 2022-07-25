@@ -8,7 +8,7 @@ import {
   RouteCreator,
   RouteRegistrator
 } from '../pkg'
-import {CardBase} from "@ory/themes";
+import {CardServer} from "@ory/themes";
 
 export const createLoginRoute: RouteCreator =
   (createHelpers) => async (req, res, next) => {
@@ -90,7 +90,7 @@ export const createLoginRoute: RouteCreator =
           isAuthenticated: flow.refresh || flow.requested_aal === "aal2",
           signUpUrl: initRegistrationUrl,
           logoutUrl: logoutUrl,
-          card: CardBase({title: "Login"})
+          card: CardServer({title: "Login With Ory"})
         })
       })
       .catch(redirectOnSoftError(res, next, initFlowUrl))

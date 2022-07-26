@@ -1,10 +1,10 @@
 import { defaultLightTheme } from "@ory/themes"
-import { registerStatic } from "@ory/themes/helpers/express"
+import { registerOryThemesStatic } from "@ory/themes/helpers/express"
 import express from "express"
 import { RouteRegistrator } from "../pkg"
 
 export const registerStaticRoutes: RouteRegistrator = (app) => {
-  registerStatic(app, {
+  registerOryThemesStatic(app, {
     ...defaultLightTheme,
   })
   app.use("/", express.static("public"))

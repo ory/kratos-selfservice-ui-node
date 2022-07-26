@@ -1,4 +1,5 @@
 import { SelfServiceLoginFlow } from "@ory/client"
+import { Card, ComponentWrapper, Message } from "@ory/themes"
 import {
   defaultConfig,
   getUrlForFlow,
@@ -6,9 +7,8 @@ import {
   logger,
   redirectOnSoftError,
   RouteCreator,
-  RouteRegistrator
-} from '../pkg'
-import {CardServer} from "@ory/themes";
+  RouteRegistrator,
+} from "../pkg"
 
 export const createLoginRoute: RouteCreator =
   (createHelpers) => async (req, res, next) => {
@@ -90,7 +90,12 @@ export const createLoginRoute: RouteCreator =
           isAuthenticated: flow.refresh || flow.requested_aal === "aal2",
           signUpUrl: initRegistrationUrl,
           logoutUrl: logoutUrl,
-          card: CardServer({title: "Login With Ory"})
+          card: ComponentWrapper(
+            Card({
+              title: "Login With Ory",
+              children: Message({ message: "Woah there", severity: "info" }),
+            }),
+          ),
         })
       })
       .catch(redirectOnSoftError(res, next, initFlowUrl))

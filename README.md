@@ -20,7 +20,6 @@ This application can be configured using two environment variables:
 - `TLS_CERT_PATH` (optional): Path to certificate file. Should be set up together with `TLS_KEY_PATH` to enable HTTPS.
 - `TLS_KEY_PATH` (optional): Path to key file Should be set up together with `TLS_CERT_PATH` to enable HTTPS.
 - `KRATOS_BROWSER_URL` (optional) The browser accessible URL where ORY Kratos's public API is located, only needed if it differs from `KRATOS_PUBLIC_URL`
-- `BASE_PATH` (optional) The base path (e.g. `/auth`) this location is served at.
 
 This is the easiest mode as it requires no additional set up. This app runs on port `:4455`
 and ORY Kratos `KRATOS_PUBLIC_URL` URL.

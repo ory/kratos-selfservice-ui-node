@@ -1,5 +1,9 @@
 import { SelfServiceLoginFlow } from "@ory/client"
-import { Card, ComponentWrapper, Message } from "@ory/themes"
+import {
+  ComponentWrapper,
+  SelfServiceAuthCard,
+  SelfServiceFlow,
+} from "@ory/themes"
 import {
   defaultConfig,
   getUrlForFlow,
@@ -91,9 +95,13 @@ export const createLoginRoute: RouteCreator =
           signUpUrl: initRegistrationUrl,
           logoutUrl: logoutUrl,
           card: ComponentWrapper(
-            Card({
+            SelfServiceAuthCard({
               title: "Login With Ory",
-              children: Message({ message: "Woah there", severity: "info" }),
+              flow: flow as SelfServiceFlow,
+              additionalProps: {
+                forgotPasswordLink: logoutUrl,
+                signupLink: initRegistrationUrl,
+              },
             }),
           ),
         })

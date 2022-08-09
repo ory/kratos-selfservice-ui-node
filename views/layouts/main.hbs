@@ -1,27 +1,44 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <link rel="icon"
-        type="image/png"
-        href="favico.png">
-  <meta charset="utf-8">
-  <title>{{projectName}}</title>
-  <link rel="stylesheet" href="normalize.css">
-  <link rel="stylesheet" href="style.css">
-  <link rel="stylesheet" href="theme.css">
-  <link rel="stylesheet" href="main.css">
-  <link rel="stylesheet" href="inter-font.css">
-  <link rel="stylesheet" href="brands-icons.min.css">
-  <link rel="stylesheet" href="flexboxgrid.min.css">
-</head>
-<body>
-<main data-testid="app-express">
-  <div class="app-container">
-    {{{body}}}
-  </div>
-</main>
-<footer>
-  {{> fork_me}}
-</footer>
-</body>
+<html lang='en'>
+  <head>
+    <link rel='icon' type='image/png' href='favico.png' />
+    <meta charset='utf-8' />
+    <title>{{projectName}}</title>
+    <link rel='stylesheet' href='normalize.css' />
+    <link rel='stylesheet' href='style.css' />
+    <link rel='stylesheet' href='theme.css' />
+    <link rel='stylesheet' href='main.css' />
+    <link rel='stylesheet' href='fontawesome.min.css' />
+    <link rel='stylesheet' href='fa-solid.min.css' />
+    <link rel='stylesheet' href='inter-font.css' />
+    <link rel='stylesheet' href='flexboxgrid.min.css' />
+  </head>
+  <body>
+    <main data-testid='app-express'>
+      <div class='app-container'>
+        {{{body}}}
+      </div>
+    </main>
+    <footer>
+      {{{divider}}}
+      <div class='footer-container'>
+        <div>
+          <i class='fa-solid fa-arrow-left'></i>
+          <a href='https://www.ory.sh/'>
+            {{{typography 'Return to overview' 'small' 'foregroundMuted'}}}</a>
+        </div>
+        <a
+          href='https://github.com/ory/kratos-selfservice-ui-node'
+          class='fork-me-link'
+        >
+          Fork this app on
+          <img
+            class='fork-me-fork'
+            alt='Fork me on GitHub'
+            src='repo-forked.png'
+          />
+          GitHub to customize it!
+        </a>
+      </div>
+    </footer>
+  </body>
 </html>

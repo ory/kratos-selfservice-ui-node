@@ -1,10 +1,13 @@
-import { filterNodesByGroups, getNodeLabel } from "@ory/integrations/ui"
-import express, { Request, Response } from "express"
-import hbs from "express-handlebars"
-import * as fs from "fs"
-import * as https from "https"
-import { middleware as middlewareLogger } from "./pkg/logger"
-import { toUiNodePartial } from "./pkg/ui"
+import { UiNode } from '@ory/client'
+import { filterNodesByGroups, getNodeLabel } from '@ory/integrations/ui'
+import { Typography, Divider, ComponentWrapper, ButtonLink } from '@ory/themes'
+import express, { Request, Response } from 'express'
+import hbs from 'express-handlebars'
+import * as fs from 'fs'
+import * as https from 'https'
+
+import { middleware as middlewareLogger } from './pkg/logger'
+import { toUiNodePartial } from './pkg/ui'
 import {
   register404Route,
   register500Route,
@@ -16,8 +19,8 @@ import {
   registerSettingsRoute,
   registerStaticRoutes,
   registerVerificationRoute,
-  registerWelcomeRoute,
-} from "./routes"
+  registerWelcomeRoute
+} from './routes'
 
 const app = express()
 
@@ -38,12 +41,26 @@ app.engine(
         filterNodesByGroups({
           groups: groups,
           attributes: attributes,
-          nodes: nodes,
+          nodes: nodes
         }),
       toUiNodePartial,
       getNodeLabel: getNodeLabel,
-    },
-  }),
+      divider: ComponentWrapper(Divider({ fullWidth: true })),
+      buttonLink: (text: string) =>
+        ComponentWrapper(
+          ButtonLink({ href: 'https://www.ory.sh/', children: text })
+        ),
+      typography: (text: string, size: any, color: any) =>
+        ComponentWrapper(
+          Typography({
+            children: text,
+            type: 'regular',
+            size: size,
+            themeColor: color
+          })
+        )
+    }
+  })
 )
 
 registerStaticRoutes(app)
@@ -75,7 +92,7 @@ if (process.env.TLS_CERT_PATH?.length && process.env.TLS_KEY_PATH?.length) {
     key: fs.readFileSync(process.env.TLS_KEY_PATH),
   }
 
-  https.createServer(options, app).listen(port, listener("https"))
+  https.createServer(options, app).listen(port, listener('https'))
 } else {
   app.listen(port, listener("http"))
 }

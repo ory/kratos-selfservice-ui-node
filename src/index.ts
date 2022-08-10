@@ -45,7 +45,9 @@ app.engine(
         }),
       toUiNodePartial,
       getNodeLabel: getNodeLabel,
-      divider: ComponentWrapper(Divider({ fullWidth: true })),
+      divider: ComponentWrapper(
+        Divider({ className: 'footer-divider', fullWidth: true })
+      ),
       buttonLink: (text: string) =>
         ComponentWrapper(
           ButtonLink({ href: 'https://www.ory.sh/', children: text })

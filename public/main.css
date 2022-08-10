@@ -4,17 +4,9 @@ body {
   margin: auto;
   min-height: 100vh;
   min-width: 100vw;
-  background: var(--palettes-light-background-surface);
+  background: var(--ory-theme-background-canvas);
   display: flex;
   flex-direction: column;
-}
-
-a,
-:visited,
-:link,
-:hover {
-  text-decoration: none;
-  cursor: pointer;
 }
 
 main {
@@ -44,6 +36,7 @@ footer {
 }
 
 .footer-container {
+  padding: 1rem 1.5rem;
   font-style: normal;
   font-weight: 400;
   font-size: 1rem;
@@ -51,7 +44,36 @@ footer {
   display: flex;
   justify-content: space-between;
   text-decoration: none;
-  color: var(--palettes-light-foreground-muted);
+  color: var(--ory-theme-foreground-muted);
+  background-color: var(--ory-theme-background-surface);
+}
+
+a.unset-link {
+  text-decoration: none;
+  color: unset;
+}
+
+.footer-divider {
+  height: 0;
+  border-top: 1px !important;
+}
+
+.footer-item-menu {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.footer-fork-me {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 0.625rem;
+  color: var(--ory-theme-foreground-muted);
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.75rem;
 }
 
 .divider {

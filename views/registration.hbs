@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <div class="auth app-container" id="signup">
   <div class="card">
     <h2 class="typography-h2 card-title">Create an account</h2>
@@ -15,3 +16,23 @@
     </div>
   </div>
 </div>
+||||||| parent of 69b22d6 (feat: registration, recovery, verification and login cards)
+<div class="auth app-container" id="signup">
+  <div class="card">
+    <h2 class="typography-h2 card-title">Create an account</h2>
+
+    {{> messages messages=messages className="global"}}
+
+    {{> ui ui=ui}}
+  </div>
+  <div class="card">
+    <div class="card-action">
+      <a class="typography-link typography-h2" data-testid="cta-link" href="{{signInUrl}}">Sign in</a>
+    </div>
+  </div>
+</div>
+=======
+<div id='signup'>
+  {{{card}}}
+</div>
+>>>>>>> 69b22d6 (feat: registration, recovery, verification and login cards)

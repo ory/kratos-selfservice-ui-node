@@ -91,13 +91,11 @@ export const createLoginRoute: RouteCreator =
 
         res.render("login", {
           ...flow,
-          isAuthenticated: flow.refresh || flow.requested_aal === "aal2",
-          signUpUrl: initRegistrationUrl,
-          logoutUrl: logoutUrl,
           card: ComponentWrapper(
             SelfServiceAuthCard({
               title: "Login With Ory",
               flow: flow as SelfServiceFlow,
+              flowType: "login",
               additionalProps: {
                 forgotPasswordLink: logoutUrl,
                 signupLink: initRegistrationUrl,

@@ -1,4 +1,10 @@
 import {
+  ComponentWrapper,
+  SelfServiceAuthCard,
+  SelfServiceFlow
+} from '@ory/themes'
+
+import {
   defaultConfig,
   getUrlForFlow,
   isQuerySet,
@@ -60,9 +66,17 @@ export const createRegistrationRoute: RouteCreator =
       .getSelfServiceRegistrationFlow(flow, req.header("Cookie"))
       .then(({ data: flow }) => {
         // Render the data using a view (e.g. Jade Template):
-        res.render("registration", {
-          ...flow,
-          signInUrl: initLoginUrl,
+        res.render('registration', {
+          card: ComponentWrapper(
+            SelfServiceAuthCard({
+              title: 'Register an account',
+              flow: flow as SelfServiceFlow,
+              flowType: 'registration',
+              additionalProps: {
+                loginUrl: initLoginUrl
+              }
+            })
+          )
         })
       })
       .catch(redirectOnSoftError(res, next, initFlowUrl))

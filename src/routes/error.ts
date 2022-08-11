@@ -1,13 +1,12 @@
-import { AxiosError } from "axios"
+import { ComponentWrapper, SelfServiceErrorCard } from '@ory/themes'
+import { AxiosError } from 'axios'
+
 import {
   defaultConfig,
   isQuerySet,
-  removeTrailingSlash,
-  requireAuth,
   RouteCreator,
   RouteRegistrator,
 } from "../pkg"
-import { createSettingsRoute } from "./settings"
 
 // A simple express handler that shows the error screen.
 export const createErrorRoute: RouteCreator =
@@ -26,9 +25,16 @@ export const createErrorRoute: RouteCreator =
 
     sdk
       .getSelfServiceError(id)
-      .then(({ data: body }) => {
-        res.status(500).render("error", {
-          message: JSON.stringify(body.error, null, 2),
+      .then(({ data }) => {
+        console.log(data)
+        res.status(500).render('error', {
+          card: ComponentWrapper(
+            SelfServiceErrorCard({
+              error: data,
+              title: 'An error occurred',
+              backURL: '/login'
+            })
+          )
         })
       })
       .catch((err: AxiosError) => {

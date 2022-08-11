@@ -54,7 +54,7 @@ export const createRecoveryRoute: RouteCreator =
               flow: flow as SelfServiceFlow,
               flowType: 'recovery',
               additionalProps: {
-                loginUrl: initLoginUrl
+                loginURL: initLoginUrl
               }
             })
           )

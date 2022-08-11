@@ -57,8 +57,8 @@ app.engine(
           Typography({
             children: text,
             type: 'regular',
-            size: size,
-            themeColor: color
+            size,
+            color
           })
         )
     }

@@ -57,7 +57,7 @@ export const createVerificationRoute: RouteCreator =
                 flow: flow as SelfServiceFlow,
                 flowType: 'verification',
                 additionalProps: {
-                  signupUrl: initRegistrationUrl
+                  signupURL: initRegistrationUrl
                 }
               })
             )

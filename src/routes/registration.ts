@@ -73,7 +73,7 @@ export const createRegistrationRoute: RouteCreator =
               flow: flow as SelfServiceFlow,
               flowType: 'registration',
               additionalProps: {
-                loginUrl: initLoginUrl
+                loginURL: initLoginUrl
               }
             })
           )

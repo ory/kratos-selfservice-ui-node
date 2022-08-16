@@ -1,8 +1,9 @@
+import { UiNodeInputAttributes, UiNodeScriptAttributes } from "@ory/client"
 import {
-  ComponentWrapper,
-  SelfServiceAuthCard,
-  SelfServiceFlow
-} from '@ory/themes'
+  filterNodesByGroups,
+  isUiNodeInputAttributes,
+} from "@ory/integrations/ui"
+import { Button, SelfServiceAuthCard, SelfServiceFlow } from "@ory/themes"
 
 import {
   defaultConfig,
@@ -66,17 +67,27 @@ export const createRegistrationRoute: RouteCreator =
       .getSelfServiceRegistrationFlow(flow, req.header("Cookie"))
       .then(({ data: flow }) => {
         // Render the data using a view (e.g. Jade Template):
-        res.render('registration', {
-          card: ComponentWrapper(
-            SelfServiceAuthCard({
-              title: 'Register an account',
-              flow: flow as SelfServiceFlow,
-              flowType: 'registration',
-              additionalProps: {
-                loginURL: initLoginUrl
-              }
+        res.render("registration", {
+          webAuthnHandler: filterNodesByGroups({
+            nodes: flow.ui.nodes,
+            groups: ["webauthn"],
+            attributes: ["input"],
+            withoutDefaultAttributes: true,
+            withoutDefaultGroup: true,
+          })
+            .filter(({ attributes }) => isUiNodeInputAttributes(attributes))
+            .map(({ attributes }) => {
+              return (attributes as UiNodeInputAttributes).onclick
             })
-          )
+            .filter((c) => c !== undefined),
+          card: SelfServiceAuthCard({
+            title: "Register an account",
+            flow: flow as SelfServiceFlow,
+            flowType: "registration",
+            additionalProps: {
+              loginURL: initLoginUrl,
+            },
+          }),
         })
       })
       .catch(redirectOnSoftError(res, next, initFlowUrl))

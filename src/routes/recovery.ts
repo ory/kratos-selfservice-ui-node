@@ -1,8 +1,4 @@
-import {
-  ComponentWrapper,
-  SelfServiceAuthCard,
-  SelfServiceFlow
-} from '@ory/themes'
+import { SelfServiceAuthCard, SelfServiceFlow } from "@ory/themes"
 
 import {
   defaultConfig,
@@ -30,8 +26,8 @@ export const createRecoveryRoute: RouteCreator =
 
     const initLoginUrl = getUrlForFlow(
       kratosBrowserUrl,
-      'login',
-      new URLSearchParams({ return_to: return_to.toString() })
+      "login",
+      new URLSearchParams({ return_to: return_to.toString() }),
     )
 
     // The flow is used to identify the settings and registration flow and
@@ -47,17 +43,15 @@ export const createRecoveryRoute: RouteCreator =
     return sdk
       .getSelfServiceRecoveryFlow(flow, req.header("cookie"))
       .then(({ data: flow }) => {
-        res.render('recovery', {
-          card: ComponentWrapper(
-            SelfServiceAuthCard({
-              title: 'Recover your account',
-              flow: flow as SelfServiceFlow,
-              flowType: 'recovery',
-              additionalProps: {
-                loginURL: initLoginUrl
-              }
-            })
-          )
+        res.render("recovery", {
+          card: SelfServiceAuthCard({
+            title: "Recover your account",
+            flow: flow as SelfServiceFlow,
+            flowType: "recovery",
+            additionalProps: {
+              loginURL: initLoginUrl,
+            },
+          }),
         })
       })
       .catch(redirectOnSoftError(res, next, initFlowUrl))

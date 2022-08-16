@@ -98,3 +98,5 @@ jspm_packages/
 
 lib
 .idea
+
+pnpm-lock.yaml

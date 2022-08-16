@@ -1,9 +1,5 @@
 import { SelfServiceLoginFlow } from "@ory/client"
-import {
-  ComponentWrapper,
-  SelfServiceAuthCard,
-  SelfServiceFlow,
-} from "@ory/themes"
+import { SelfServiceAuthCard, SelfServiceFlow } from "@ory/themes"
 import {
   defaultConfig,
   getUrlForFlow,
@@ -91,17 +87,16 @@ export const createLoginRoute: RouteCreator =
 
         res.render("login", {
           ...flow,
-          card: ComponentWrapper(
-            SelfServiceAuthCard({
-              title: "Login With Ory",
-              flow: flow as SelfServiceFlow,
-              flowType: "login",
-              additionalProps: {
-                forgotPasswordLink: logoutUrl,
-                signupLink: initRegistrationUrl,
-              },
-            }),
-          ),
+          card: SelfServiceAuthCard({
+            title: "Login to your account",
+            flow: flow as SelfServiceFlow,
+            flowType: "login",
+            additionalProps: {
+              forgotPasswordURL: "/recovery",
+              signupURL: initRegistrationUrl,
+              logoutURL: logoutUrl,
+            },
+          }),
         })
       })
       .catch(redirectOnSoftError(res, next, initFlowUrl))

@@ -1,5 +1,5 @@
-import { ComponentWrapper, SelfServiceErrorCard } from '@ory/themes'
-import { AxiosError } from 'axios'
+import { SelfServiceErrorCard } from "@ory/themes"
+import { AxiosError } from "axios"
 
 import {
   defaultConfig,
@@ -27,14 +27,12 @@ export const createErrorRoute: RouteCreator =
       .getSelfServiceError(id)
       .then(({ data }) => {
         console.log(data)
-        res.status(500).render('error', {
-          card: ComponentWrapper(
-            SelfServiceErrorCard({
-              error: data,
-              title: 'An error occurred',
-              backURL: '/login'
-            })
-          )
+        res.status(500).render("error", {
+          card: SelfServiceErrorCard({
+            error: data,
+            title: "An error occurred",
+            backURL: "/login",
+          }),
         })
       })
       .catch((err: AxiosError) => {

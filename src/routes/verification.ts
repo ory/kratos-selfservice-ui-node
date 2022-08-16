@@ -1,8 +1,4 @@
-import {
-  ComponentWrapper,
-  SelfServiceAuthCard,
-  SelfServiceFlow
-} from '@ory/themes'
+import { SelfServiceAuthCard, SelfServiceFlow } from "@ory/themes"
 
 import {
   defaultConfig,
@@ -29,10 +25,10 @@ export const createVerificationRoute: RouteCreator =
 
     const initRegistrationUrl = getUrlForFlow(
       kratosBrowserUrl,
-      'registration',
+      "registration",
       new URLSearchParams({
-        return_to: return_to.toString()
-      })
+        return_to: return_to.toString(),
+      }),
     )
 
     // The flow is used to identify the settings and registration flow and
@@ -50,17 +46,15 @@ export const createVerificationRoute: RouteCreator =
         .getSelfServiceVerificationFlow(flow, req.header("cookie"))
         .then(({ data: flow }) => {
           // Render the data using a view (e.g. Jade Template):
-          res.render('verification', {
-            card: ComponentWrapper(
-              SelfServiceAuthCard({
-                title: 'Verify your account',
-                flow: flow as SelfServiceFlow,
-                flowType: 'verification',
-                additionalProps: {
-                  signupURL: initRegistrationUrl
-                }
-              })
-            )
+          res.render("verification", {
+            card: SelfServiceAuthCard({
+              title: "Verify your account",
+              flow: flow as SelfServiceFlow,
+              flowType: "verification",
+              additionalProps: {
+                signupURL: initRegistrationUrl,
+              },
+            }),
           })
         }
         // Handle errors using ExpressJS' next functionality:

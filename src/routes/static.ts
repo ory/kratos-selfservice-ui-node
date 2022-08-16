@@ -1,12 +1,18 @@
+import { RegisterOryThemesExpress } from "@ory/themes"
 import { defaultLightTheme } from "@ory/themes"
-import { registerOryThemesStatic } from "@ory/themes/helpers/express"
 import express from "express"
 import { RouteRegistrator } from "../pkg"
+import sdk from "../pkg/sdk"
 
 export const registerStaticRoutes: RouteRegistrator = (app) => {
-  registerOryThemesStatic(app, {
+  RegisterOryThemesExpress(app, {
     ...defaultLightTheme,
   })
   app.use("/", express.static("public"))
-  app.use("/", express.static("node_modules/normalize.css"))
+  app.use("/.well-known/ory/webauthn.js", (req, res) => {
+    res.contentType("text/javascript")
+    sdk.getWebAuthnJavaScript().then(({ data }) => {
+      res.send(data)
+    })
+  })
 }

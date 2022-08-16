@@ -36,6 +36,5 @@ export const toUiNodePartial = (node: UiNode) => {
   } else if (isUiNodeTextAttributes(node.attributes)) {
     return "ui_node_text"
   }
-
   return "ui_node_input_default"
 }

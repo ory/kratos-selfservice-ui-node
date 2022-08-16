@@ -17,7 +17,10 @@ build-sdk:
 			-c ./contrib/sdk/typescript.yml
 		(cd ./contrib/sdk/generated; npm i; npm run build)
 		rm -rf node_modules/@ory/kratos-client/*
-		cp -r ./contrib/sdk/generated/* node_modules/@ory/kratos-client
+		cp -r ./contrib/sdk/generated/* node_modules/@ory/kratos-client	
+		rm -rf node_modules/@ory/client/*
+		cp -r ./contrib/sdk/generated/* node_modules/@ory/client
+
 
 .PHONY: publish-sdk
 publish-sdk: build-sdk

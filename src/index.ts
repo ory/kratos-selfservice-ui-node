@@ -45,7 +45,8 @@ app.engine(
         }),
       toUiNodePartial,
       getNodeLabel: getNodeLabel,
-      divider: Divider({ className: "footer-divider", fullWidth: true }),
+      divider: (fullWidth: boolean, className?: string) =>
+        Divider({ className, fullWidth }),
       buttonLink: (text: string) =>
         ButtonLink({ href: "https://www.ory.sh/", children: text }),
       typography: (text: string, size: any, color: any) =>
@@ -70,7 +71,7 @@ registerWelcomeRoute(app)
 registerErrorRoute(app)
 
 app.get("/", (req: Request, res: Response) => {
-  res.redirect("welcome", 303)
+  res.redirect(303, "welcome")
 })
 
 register404Route(app)

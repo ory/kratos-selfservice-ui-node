@@ -1,14 +1,22 @@
-<div class="container-fluid">
-  <div class="app-container welcome">
-    <div class="card">
-      <h2 class="typography-h2 card-title">Welcome to Ory!</h2>
-      <p class="typography-paragraph">
-        Welcome to the Ory Managed UI. This UI implements a run-of-the-mill user interface for all
-        self-service flows (login, registration, recovery, verification, settings). The purpose of this
-        UI is to help you get started quickly. In the long run, you probably want to implement your own
-        custom user interface.
-      </p>
-      <div class="row">
+<div id="welcome" class="app-container">
+  {{{nav}}}
+  <div class="welcome-container">
+    <div>
+      {{{typography
+        "Welcome to Ory's Hosted UI"
+        "headline37"
+        "foregroundDefault"
+      }}}
+      {{{typography
+        "This UI implements a run-of-the-mill user interface for all self-service flows (login, registration, recovery, verification, settings). The purpose of this UI is to help you get started quickly. In the long run, you probably want to implement your own custom user interface by forking this project on GitHub. Sign up or sign in to your application to receive and view Session Information or to view Account Settings."
+        "small"
+        "foregroundMuted"
+      }}}
+    </div>
+    {{{divider false}}}
+  </div>
+
+  {{!-- <div class="row">
         <div class="col-md-4 col-xs-12">
           <div class="box">
             <h2 class="typography-h3">Documentation</h2>
@@ -34,18 +42,6 @@
           </div>
         </div>
       </div>
-    </div>
+    </div> --}}
 
-    <div class="card">
-      <h2 class="typography-h2">Other User Interface Screens</h2>
-      <div class="row">
-        {{> ui_screen_button testId="login" link="login" label="Sign In" disabled=hasSession}}
-        {{> ui_screen_button testId="sign-up" link="registration" label="Sign Up" disabled=hasSession}}
-        {{> ui_screen_button testId="recover-account" link="recovery" label="Recover Account" disabled=hasSession}}
-        {{> ui_screen_button testId="verify-account" link="verification" label="Verify Account"}}
-        {{> ui_screen_button testId="account-settings" link="settings" label="Account Settings" disabled=(not hasSession)}}
-        {{> ui_screen_button testId="logout" href=logoutUrl label="Logout" disabled=(not hasSession) }}
-      </div>
-    </div>
-  </div>
 </div>

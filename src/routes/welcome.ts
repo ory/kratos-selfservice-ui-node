@@ -1,5 +1,5 @@
 import { Request, Response } from "express"
-import { Nav, Typography } from "@ory/themes"
+import { Card, Nav, Typography } from "@ory/themes"
 
 import {
   defaultConfig,
@@ -90,8 +90,46 @@ Please sign in to receive one.`,
               },
             ],
           },
+          {
+            floatBottom: true,
+            links: [
+              {
+                name: "Fork this on GitHub",
+                url: "https://github.com/ory/kratos-selfservice-ui-node",
+                iconLeft: "code-fork",
+                iconRight: "up-right-from-square",
+              },
+            ],
+          },
         ],
       }),
+      concepts: [
+        Card({
+          title: "Getting Started",
+          children:
+            "Jump start your project and complete the quickstart tutorial to get a broader overview of Ory Cloud.",
+        }),
+        Card({
+          title: "User flows",
+          children:
+            "Implement flows that users perform themselves as opposed to administrative intervention.",
+        }),
+        Card({
+          title: "Identities 101",
+          children:
+            "Every identity can have its own model - get to know the ins and outs of Identity Schemas.",
+        }),
+        Card({
+          title: "Sessions",
+          children:
+            "Define Text here Jump start your project and complete the quickstart tutorial to get a broader",
+        }),
+        Card({
+          title: "Custom UI",
+          children:
+            "Implementing these pages in your language and framework of choice is straightforward using our SDKs.",
+        }),
+      ].join("\n"),
       logoutUrl,
     })
   }

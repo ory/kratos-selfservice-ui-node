@@ -2,7 +2,7 @@
 
 body {
   margin: auto;
-  min-height: 100%;
+  min-height: 100vh;
   min-width: 100%;
   background: var(--ory-theme-background-canvas);
   display: flex;
@@ -11,7 +11,26 @@ body {
 
 main {
   flex: 1;
-  padding-top: 4rem;
+  width: 100%;
+}
+
+@media screen and (min-width: 1440px) {
+  main {
+    max-width: 1440px;
+  }
+}
+
+@media screen and (min-width: 768px) {
+  main {
+    max-width: 768px;
+    padding-top: 4rem;
+  }
+}
+
+@media screen and (min-width: 640px) {
+  main {
+    max-width: 640px;
+  }
 }
 
 footer {
@@ -22,6 +41,12 @@ footer {
 .app-container {
   display: flex;
   flex-direction: row;
+}
+
+@media screen and (max-width: 768px) {
+  .app-container {
+    flex-direction: column;
+  }
 }
 
 .auth-container {
@@ -35,10 +60,17 @@ footer {
   display: flex;
   flex-direction: column;
   gap: 2rem;
+  padding: 2rem;
 }
 
 .welcome-nav {
   min-width: 18.75rem;
+}
+
+.welcome-concepts {
+  display: flex;
+  flex-direction: row;
+  gap: 1rem;
 }
 
 .footer-container {

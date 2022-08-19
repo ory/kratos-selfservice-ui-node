@@ -1,13 +1,13 @@
-/* get all the variables from the theme styles */
-@import url("style.css");
-
 /* set the html and body to fill the viewport */
-html,
+/* html,
 body {
   height: 100%;
-}
+} */
 
 body {
+  margin: auto;
+  min-height: 100vh;
+  min-width: 100%;
   background: var(--ory-theme-background-canvas);
   display: flex;
   flex-direction: column;
@@ -16,8 +16,7 @@ body {
 /* main contains all of our page elements - excluding the footer */
 main {
   /* fill the page */
-  height: 100%;
-  width: 100%;
+  flex: 1;
 }
 
 .divider {

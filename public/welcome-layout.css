@@ -38,15 +38,15 @@
   min-width: 100%;
 }
 
-/* the content element should restrict the content width for each breakpoint */
-@media screen and (min-width: 1440px) {
+/* wide-screen vieport */
+@media screen and (min-width: 90em) {
   .welcome-content {
-    max-width: 1440px;
+    max-width: 90em;
   }
 }
 
 /* laptop viewport */
-@media screen and (min-width: 768px) {
+@media screen and (min-width: 48em) {
   /* .welcome-content {
     max-width: 768px;
   } */
@@ -65,7 +65,7 @@
 }
 
 /* when we are on mobile/tablet we want the content to be under the nav */
-@media screen and (max-width: 768px) {
+@media screen and (min-width: 0) and (max-width: 48em) {
   .app-container {
     flex-direction: column;
   }

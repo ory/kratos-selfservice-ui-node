@@ -1,5 +1,4 @@
-import { Request, Response } from "express"
-import { Card, Nav, Typography } from "@ory/themes"
+import { Card, Nav } from "@ory/themes"
 
 import {
   defaultConfig,

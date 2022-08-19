@@ -23,3 +23,9 @@
   height: 0;
   border-top: 1px !important;
 }
+
+@media screen and (max-width: 24.375em) {
+  .footer-container > div:last-child {
+    display: none;
+  }
+}

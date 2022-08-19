@@ -1,4 +1,8 @@
-import { SelfServiceLoginFlow } from "@ory/client"
+import { UiNodeInputAttributes } from "@ory/client"
+import {
+  filterNodesByGroups,
+  isUiNodeInputAttributes,
+} from "@ory/integrations/ui"
 import { SelfServiceAuthCard, SelfServiceFlow } from "@ory/themes"
 import {
   defaultConfig,
@@ -87,6 +91,18 @@ export const createLoginRoute: RouteCreator =
 
         res.render("login", {
           ...flow,
+          webAuthnHandler: filterNodesByGroups({
+            nodes: flow.ui.nodes,
+            groups: ["webauthn"],
+            attributes: ["input"],
+            withoutDefaultAttributes: true,
+            withoutDefaultGroup: true,
+          })
+            .filter(({ attributes }) => isUiNodeInputAttributes(attributes))
+            .map(({ attributes }) => {
+              return (attributes as UiNodeInputAttributes).onclick
+            })
+            .filter((c) => c !== undefined),
           card: SelfServiceAuthCard({
             title: "Login to your account",
             flow: flow as SelfServiceFlow,

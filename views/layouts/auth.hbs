@@ -3,19 +3,21 @@
     <link rel='icon' type='image/png' href='favico.png' />
     <meta charset='utf-8' />
     <title>{{projectName}}</title>
-    <link rel='stylesheet' href='normalize.css' />
+    {{! Theme styles }}
     <link rel='stylesheet' href='style.css' />
     <link rel='stylesheet' href='theme.css' />
+    {{! Managed UI styles }}
     <link rel='stylesheet' href='main.css' />
-    <link rel='stylesheet' href='fontawesome.min.css' />
-    <link rel='stylesheet' href='fa-solid.min.css' />
+    <link rel='stylesheet' href='auth-layout.css' />
     <link rel='stylesheet' href='inter-font.css' />
-    <link rel='stylesheet' href='flexboxgrid.min.css' />
+    {{! WebAuthn Support }}
     <script src=".well-known/ory/webauthn.js" type="text/javascript"></script>
   </head>
   <body>
     <main data-testid='app-express'>
+      <div class="auth-container">
         {{{body}}}
+      </div>
     </main>
     <footer>
       {{> fork_me}}

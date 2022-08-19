@@ -24,6 +24,7 @@ export const createWelcomeRoute: RouteCreator =
       ).data.logout_url || ""
 
     res.render("welcome", {
+      layout: "welcome",
       session: session
         ? JSON.stringify(session, null, 2)
         : `No valid Ory Session was found.
@@ -39,6 +40,11 @@ Please sign in to receive one.`,
                 name: "Overview",
                 url: "/welcome",
                 iconLeft: "house",
+              },
+              {
+                name: "Session Information",
+                url: "/session",
+                iconLeft: "users-viewfinder",
               },
             ],
           },
@@ -63,7 +69,7 @@ Please sign in to receive one.`,
               {
                 name: "Account Recovery",
                 url: "/recovery",
-                iconLeft: "user-check",
+                iconLeft: "user-xmark",
                 iconRight: "up-right-from-square",
                 disabled: Boolean(session),
               },

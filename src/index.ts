@@ -1,6 +1,6 @@
 import { UiNode } from "@ory/client"
 import { filterNodesByGroups, getNodeLabel } from "@ory/integrations/ui"
-import { Typography, Divider, ButtonLink } from "@ory/themes"
+import { Typography, Divider, ButtonLink, MenuLink } from "@ory/themes"
 import express, { Request, Response } from "express"
 import hbs from "express-handlebars"
 import * as fs from "fs"
@@ -33,7 +33,7 @@ app.engine(
     extname: "hbs",
     layoutsDir: `${__dirname}/../views/layouts/`,
     partialsDir: `${__dirname}/../views/partials/`,
-    defaultLayout: "main",
+    defaultLayout: "auth",
     helpers: {
       ...require("handlebars-helpers")(),
       jsonPretty: (context: any) => JSON.stringify(context, null, 2),
@@ -56,6 +56,19 @@ app.engine(
           size,
           color,
         }),
+      menuLink: (
+        text: string,
+        url: string,
+        iconLeft?: string,
+        iconRight?: string,
+      ) => {
+        return MenuLink({
+          href: url,
+          iconLeft: iconLeft,
+          iconRight: iconRight,
+          children: text,
+        })
+      },
     },
   }),
 )

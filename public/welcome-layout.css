@@ -1,0 +1,78 @@
+/* only manage the content next to the nav */
+.welcome-container {
+  display: flex;
+  /* on mobile we have a padding top of 2rem */
+  padding: 2rem 2rem;
+  /* on mobile we dont want the content hidden under the nav */
+  margin-top: 5.125rem;
+  height: auto;
+  /* width: 100%; */
+}
+
+.welcome-content {
+  display: flex;
+  width: 100%;
+  flex: 1;
+  gap: 2rem;
+}
+
+/* only manage the nav */
+.welcome-nav {
+  min-width: 18.75rem;
+  position: fixed;
+  height: auto;
+}
+
+.welcome-concepts {
+  display: flex;
+  flex-direction: row;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+/* manage nav and content */
+.app-container {
+  display: flex;
+  flex-direction: row;
+  max-height: 100vh;
+  min-width: 100%;
+}
+
+/* the content element should restrict the content width for each breakpoint */
+@media screen and (min-width: 1440px) {
+  .welcome-content {
+    max-width: 1440px;
+  }
+}
+
+/* laptop viewport */
+@media screen and (min-width: 768px) {
+  /* .welcome-content {
+    max-width: 768px;
+  } */
+  /* only on desktop we don't want the content to be under the nav */
+  .welcome-container {
+    /* remove mobile top margin */
+    margin-top: 0;
+    margin-left: 18.75rem;
+    padding-top: 4rem;
+  }
+  /* only on desktop we have nav the full height of the viewport */
+  .welcome-nav {
+    padding-top: 4rem;
+    min-height: 100vh;
+  }
+}
+
+/* when we are on mobile/tablet we want the content to be under the nav */
+@media screen and (max-width: 768px) {
+  .app-container {
+    flex-direction: column;
+  }
+  .welcome-container {
+    margin-left: 0;
+  }
+  /* .welcome-content {
+    max-width: 640px;
+  } */
+}

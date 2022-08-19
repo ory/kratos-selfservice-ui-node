@@ -1,39 +1,16 @@
-<div id="login" class="auth-container">
+<div id="login">
   {{{card}}}
-<<<<<<< HEAD
-  <div class="card">
-    {{#if refresh}}
-      <h2 class="typography-h2 card-title container-center">Confirm Action</h2>
-    {{else if (eq requested_aal "aal2")}}
-      <h2 class="typography-h2 card-title">Two-Factor Authentication</h2>
-    {{else if hydra_login_request}}
+  {{#if hydra_login_request}}
       <h2 class="typography-h2 card-title">Sign in</h2>
       <p>To authenticate {{#if hydra_login_request.client.client_name}}{{hydra_login_request.client.client_name}}{{else}}{{hydra_login_request.client.client_id}}{{/if}}</p>
-    {{else}}
+  {{else}}
       <h2 class="typography-h2 card-title container-center">Sign In</h2>
-    {{/if}}
-
-    <div class="container-center">
-      <div class="divider"></div>
-    </div>
-
-    <div class="card-oidc">
-      {{> ui ui=ui groups="oidc" attributes="submit"}}
-    </div>
-
-    {{> messages messages=messages className="global"}}
-
-    {{> ui ui=ui groups="password" attributes="password,text" }}
-
-    <a href="recovery" class="" data-testid="forgot-password-link">Forgot Password?</a>
-
-    {{> ui ui=ui groups="password" attributes="submit" }}
-
-  </div>
-
+  {{/if}}
+  <script type="text/javascript">
+    eval(document.getElementsByName("webauthn_register_trigger").forEach((v) =>
+    { v.addEventListener("click", () => {
+    {{{webAuthnHandler}}}
+    }) }))
+  </script>
 </div>
-||||||| parent of 69b22d6 (feat: registration, recovery, verification and login cards)
-</div>
-=======
-</div>
->>>>>>> 69b22d6 (feat: registration, recovery, verification and login cards)
+

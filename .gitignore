@@ -100,3 +100,5 @@ lib
 .idea
 
 pnpm-lock.yaml
+
+.vscode

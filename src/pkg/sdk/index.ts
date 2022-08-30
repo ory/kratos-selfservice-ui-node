@@ -2,7 +2,7 @@ import { Configuration, V0alpha2Api } from '@ory/client'
 import {
   V0alpha2Api as OpenSourceV0alpha2Api,
   V0alpha2ApiInterface
-} from '@ory/kratos-client'
+} from '@ory/client'
 
 const apiBaseUrlInternal =
   process.env.KRATOS_PUBLIC_URL ||

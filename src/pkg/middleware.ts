@@ -1,4 +1,4 @@
-import { Session } from '@ory/kratos-client'
+import { Session } from '@ory/client'
 import { AxiosError } from 'axios'
 import { NextFunction, Request, Response } from 'express'
 

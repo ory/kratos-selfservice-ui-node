@@ -5,7 +5,7 @@ import {
   isUiNodeScriptAttributes,
   isUiNodeTextAttributes
 } from '@ory/integrations/ui'
-import { UiNode } from '@ory/kratos-client'
+import { UiNode } from '@ory/client'
 
 // This helper function translates the html input type to the corresponding partial name.
 export const toUiNodePartial = (node: UiNode) => {

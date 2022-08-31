@@ -1,4 +1,4 @@
-import { V0alpha2ApiInterface } from '@ory/kratos-client'
+import { V0alpha2ApiInterface } from '@ory/client'
 import { Application, NextFunction, Request, Response } from 'express'
 
 export interface RouteOptions {

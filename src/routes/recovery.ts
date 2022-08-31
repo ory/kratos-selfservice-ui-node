@@ -1,4 +1,4 @@
-import { SelfServiceAuthCard, SelfServiceFlow } from "@ory/themes"
+import { UserAuthCard, SelfServiceFlow } from "@ory/elements-markup"
 
 import {
   defaultConfig,
@@ -44,7 +44,7 @@ export const createRecoveryRoute: RouteCreator =
       .getSelfServiceRecoveryFlow(flow, req.header("cookie"))
       .then(({ data: flow }) => {
         res.render("recovery", {
-          card: SelfServiceAuthCard({
+          card: UserAuthCard({
             title: "Recover your account",
             flow: flow as SelfServiceFlow,
             flowType: "recovery",

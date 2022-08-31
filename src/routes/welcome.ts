@@ -1,4 +1,4 @@
-import { Card, Nav } from "@ory/themes"
+import { Card, Nav } from "@ory/elements-markup"
 
 import {
   defaultConfig,

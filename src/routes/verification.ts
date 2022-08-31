@@ -1,4 +1,4 @@
-import { SelfServiceAuthCard, SelfServiceFlow } from "@ory/themes"
+import { UserAuthCard, SelfServiceFlow } from "@ory/elements-markup"
 
 import {
   defaultConfig,
@@ -47,7 +47,7 @@ export const createVerificationRoute: RouteCreator =
         .then(({ data: flow }) => {
           // Render the data using a view (e.g. Jade Template):
           res.render("verification", {
-            card: SelfServiceAuthCard({
+            card: UserAuthCard({
               title: "Verify your account",
               flow: flow as SelfServiceFlow,
               flowType: "verification",

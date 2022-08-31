@@ -1,3 +1,6 @@
+import { Card, UserErrorCard, UserSettingsCard } from "@ory/elements-markup"
+import { UserSettingsFlowType } from "@ory/elements-markup/dist/react-components"
+
 import {
   defaultConfig,
   getUrlForFlow,
@@ -36,7 +39,13 @@ export const createSettingsRoute: RouteCreator =
       .getSelfServiceSettingsFlow(flow, undefined, req.header("cookie"))
       .then(({ data: flow }) => {
         // Render the data using a view (e.g. Jade Template):
-        res.render("settings", flow)
+        res.render("settings", {
+          settingsCard: (flowType: string) =>
+            UserSettingsCard({
+              flow,
+              flowType: flowType as UserSettingsFlowType,
+            }),
+        })
       })
       .catch(redirectOnSoftError(res, next, initFlowUrl))
   }

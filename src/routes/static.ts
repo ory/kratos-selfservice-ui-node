@@ -1,11 +1,11 @@
-import { RegisterOryThemesExpress } from "@ory/themes"
-import { defaultLightTheme } from "@ory/themes"
+import { RegisterOryElementsExpress } from "@ory/elements-markup"
+import { defaultLightTheme } from "@ory/elements-markup"
 import express from "express"
 import { RouteRegistrator } from "../pkg"
 import sdk from "../pkg/sdk"
 
 export const registerStaticRoutes: RouteRegistrator = (app) => {
-  RegisterOryThemesExpress(app, {
+  RegisterOryElementsExpress(app, {
     ...defaultLightTheme,
   })
   app.use("/", express.static("public"))
@@ -15,4 +15,5 @@ export const registerStaticRoutes: RouteRegistrator = (app) => {
       res.send(data)
     })
   })
+  app.use("/", express.static("node_modules/@ory/elements-markup/dist/"))
 }

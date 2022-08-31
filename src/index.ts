@@ -1,6 +1,6 @@
 import { UiNode } from "@ory/client"
+import { Typography, Divider, ButtonLink, MenuLink } from "@ory/elements-markup"
 import { filterNodesByGroups, getNodeLabel } from "@ory/integrations/ui"
-import { Typography, Divider, ButtonLink, MenuLink } from "@ory/themes"
 import express, { Request, Response } from "express"
 import hbs from "express-handlebars"
 import * as fs from "fs"

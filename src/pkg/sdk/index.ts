@@ -10,7 +10,7 @@ export const apiBaseUrl = process.env.KRATOS_BROWSER_URL || apiBaseUrlInternal
 // Sets up the SDK
 let sdk = new V0alpha2Api(
   new Configuration({
-    basePath: apiBaseUrlInternal,
+    basePath: apiBaseUrlInternal
     // accessToken: "Your Ory Cloud API Key / Personal Access Token"
   })
 )

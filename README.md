@@ -1,6 +1,6 @@
 # Ory Kratos NodeJS / ExpressJS User Interface Reference Implementation
 
-[![CircleCI](https://circleci.com/gh/ory/kratos-selfservice-ui-node.svg?style=badge)](https://circleci.com/gh/ory/kratos-selfservice-ui-node)
+[![tests](https://github.com/ory/kratos-selfservice-ui-node/actions/workflows/test.yml/badge.svg)](https://github.com/ory/kratos-selfservice-ui-node/actions/workflows/test.yml)
 
 This repository contains a reference implementation for Ory Kratos' in NodeJS / ExpressJS / Handlebars /
 NextJS. It implements all Ory Kratos flows (login, registration, account

@@ -1,5 +1,5 @@
 import { Card, UserErrorCard, UserSettingsCard } from "@ory/elements-markup"
-import { UserSettingsFlowType } from "@ory/elements-markup/dist/react-components"
+import { ErrorMessages, UserSettingsFlowType } from "@ory/elements-markup/dist/react-components"
 
 import {
   defaultConfig,
@@ -40,6 +40,9 @@ export const createSettingsRoute: RouteCreator =
       .then(({ data: flow }) => {
         // Render the data using a view (e.g. Jade Template):
         res.render("settings", {
+          errorMessages: ErrorMessages({
+            nodes: flow.ui.nodes,
+          }),
           settingsCard: (flowType: string) =>
             UserSettingsCard({
               flow,

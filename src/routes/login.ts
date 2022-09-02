@@ -103,7 +103,9 @@ export const createLoginRoute: RouteCreator =
             })
             .filter((c) => c !== undefined),
           card: UserAuthCard({
-            title: "Login to your account",
+            title: !(flow.refresh || flow.requested_aal === "aal2")
+              ? "Login to your account"
+              : "Two-Factor Authentication",
             flow: flow as SelfServiceFlow,
             flowType: "login",
             additionalProps: {

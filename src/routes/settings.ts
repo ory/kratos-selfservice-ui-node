@@ -1,5 +1,8 @@
-import { Card, UserErrorCard, UserSettingsCard } from "@ory/elements-markup"
-import { ErrorMessages, UserSettingsFlowType } from "@ory/elements-markup/dist/react-components"
+import {
+  UserSettingsCard,
+  ErrorMessages,
+  UserSettingsFlowType,
+} from "@ory/elements-markup"
 
 import {
   defaultConfig,

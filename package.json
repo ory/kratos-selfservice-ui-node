@@ -23,9 +23,8 @@
   },
   "homepage": "https://github.com/ory/kratos-selfservice-ui-node#readme",
   "dependencies": {
-    "@ory/client": "0.0.1-alpha.21",
+    "@ory/client": "0.2.0-alpha.24",
     "@ory/integrations": "0.1.2",
-    "@ory/kratos-client": "0.8.0-alpha.2",
     "@ory/themes": "0.0.101",
     "axios": "^0.24.0",
     "cookie-parser": "^1.4.5",

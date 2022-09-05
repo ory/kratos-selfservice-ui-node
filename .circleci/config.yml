@@ -47,8 +47,12 @@ jobs:
             source $BASH_ENV
       - setup_remote_docker
       - run: docker build -t oryd/kratos-selfservice-ui-node:latest .
-      - run: docker tag oryd/kratos-selfservice-ui-node:latest oryd/kratos-selfservice-ui-node:$DOCKER_SHORT_TAG
-      - run: docker login --username "$DOCKER_USERNAME" --password "$DOCKER_PASSWORD"
+      - run:
+          docker tag oryd/kratos-selfservice-ui-node:latest
+          oryd/kratos-selfservice-ui-node:$DOCKER_SHORT_TAG
+      - run:
+          docker login --username "$DOCKER_USERNAME" --password
+          "$DOCKER_PASSWORD"
       - run: docker push oryd/kratos-selfservice-ui-node:latest
       - run: docker push oryd/kratos-selfservice-ui-node:$DOCKER_SHORT_TAG
 

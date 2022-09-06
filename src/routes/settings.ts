@@ -45,6 +45,7 @@ export const createSettingsRoute: RouteCreator =
         res.render("settings", {
           errorMessages: ErrorMessages({
             nodes: flow.ui.nodes,
+            uiMessages: flow.ui.messages,
           }),
           settingsCard: (flowType: string) =>
             UserSettingsCard({

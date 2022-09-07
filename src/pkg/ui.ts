@@ -1,4 +1,5 @@
-import { UiNodeInputAttributes, UiNode } from "@ory/client"
+import { UiNodeInputAttributes, UiNode, Session } from "@ory/client"
+import { Nav } from "@ory/elements-markup"
 import {
   isUiNodeAnchorAttributes,
   isUiNodeImageAttributes,
@@ -37,4 +38,98 @@ export const toUiNodePartial = (node: UiNode) => {
     return "ui_node_text"
   }
   return "ui_node_input_default"
+}
+
+/**
+ * Renders the navigation bar with state
+ * @param session
+ * @param logoutUrl
+ * @returns
+ */
+export const navigationMenu = (session?: Session, logoutUrl?: string) => {
+  return Nav({
+    className: "welcome-nav",
+    navTitle: "Project Name",
+    navSections: [
+      {
+        links: [
+          {
+            name: "Overview",
+            url: "/welcome",
+            iconLeft: "house",
+          },
+          {
+            name: "Session Information",
+            url: "/sessions",
+            iconLeft: "users-viewfinder",
+          },
+        ],
+      },
+      {
+        title: "Default User Interfaces",
+        titleIcon: "circle-question",
+        links: [
+          {
+            name: "Sign In",
+            url: "/login",
+            iconLeft: "arrow-right-to-bracket",
+            iconRight: "up-right-from-square",
+            disabled: Boolean(session),
+            testId: "login",
+          },
+          {
+            name: "Sign Up",
+            url: "/registration",
+            iconLeft: "arrow-right-to-bracket",
+            iconRight: "up-right-from-square",
+            disabled: Boolean(session),
+            testId: "registration",
+          },
+          {
+            name: "Account Recovery",
+            url: "/recovery",
+            iconLeft: "user-xmark",
+            iconRight: "up-right-from-square",
+            disabled: Boolean(session),
+            testId: "recovery",
+          },
+          {
+            name: "Account Verification",
+            url: "/verification",
+            iconLeft: "user-check",
+            iconRight: "up-right-from-square",
+            disabled: !Boolean(session),
+            testId: "verification",
+          },
+          {
+            name: "Account Settings",
+            url: "/settings",
+            iconLeft: "gear",
+            iconRight: "up-right-from-square",
+            disabled: !Boolean(session),
+            testId: "settings",
+          },
+          {
+            name: "Logout",
+            url: logoutUrl || "",
+            iconLeft: "arrow-right-to-bracket",
+            iconRight: "up-right-from-square",
+            disabled: !Boolean(session),
+            testId: "logout",
+          },
+        ],
+      },
+      {
+        floatBottom: true,
+        links: [
+          {
+            name: "Fork this on GitHub",
+            url: "https://github.com/ory/kratos-selfservice-ui-node",
+            iconLeft: "code-fork",
+            iconRight: "up-right-from-square",
+          },
+        ],
+      },
+    ],
+  })
 }

@@ -7,7 +7,7 @@ import * as fs from "fs"
 import * as https from "https"
 
 import { middleware as middlewareLogger } from "./pkg/logger"
-import { toUiNodePartial } from "./pkg/ui"
+import { navigationMenu, toUiNodePartial } from "./pkg/ui"
 import {
   register404Route,
   register500Route,
@@ -21,6 +21,7 @@ import {
   registerVerificationRoute,
   registerWelcomeRoute,
 } from "./routes"
+import { registerSessionsRoute } from "./routes/sessions"
 
 const app = express()
 
@@ -89,10 +90,11 @@ registerRegistrationRoute(app)
 registerSettingsRoute(app)
 registerVerificationRoute(app)
 registerWelcomeRoute(app)
+registerSessionsRoute(app)
 registerErrorRoute(app)
 
 app.get("/", (req: Request, res: Response) => {
-  res.redirect(303, "welcome")
+  res.redirect(303, "sessions")
 })
 
 register404Route(app)

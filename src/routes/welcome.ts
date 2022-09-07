@@ -1,15 +1,15 @@
-import { Request, Response } from 'express'
+import { Request, Response } from "express"
 
 import {
   defaultConfig,
   RouteCreator,
   RouteRegistrator,
-  setSession
-} from '../pkg'
+  setSession,
+} from "../pkg"
 
 export const createWelcomeRoute: RouteCreator =
   (createHelpers) => async (req, res) => {
-    res.locals.projectName = 'Welcome to Ory'
+    res.locals.projectName = "Welcome to Ory"
 
     const { sdk } = createHelpers(req)
     const session = req.session
@@ -18,24 +18,24 @@ export const createWelcomeRoute: RouteCreator =
     const logoutUrl =
       (
         await sdk
-          .createSelfServiceLogoutFlowUrlForBrowsers(req.header('cookie'))
-          .catch(() => ({ data: { logout_url: '' } }))
-      ).data.logout_url || ''
+          .createSelfServiceLogoutFlowUrlForBrowsers(req.header("cookie"))
+          .catch(() => ({ data: { logout_url: "" } }))
+      ).data.logout_url || ""
 
-    res.render('welcome', {
+    res.render("welcome", {
       session: session
         ? JSON.stringify(session, null, 2)
         : `No valid Ory Session was found.
 Please sign in to receive one.`,
       hasSession: Boolean(session),
-      logoutUrl
+      logoutUrl,
     })
   }
 
 export const registerWelcomeRoute: RouteRegistrator = (
   app,
   createHelpers = defaultConfig,
-  route = '/welcome'
+  route = "/welcome",
 ) => {
   app.get(route, setSession(createHelpers), createWelcomeRoute(createHelpers))
 }

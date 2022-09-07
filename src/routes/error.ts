@@ -1,4 +1,4 @@
-import { AxiosError } from 'axios'
+import { AxiosError } from "axios"
 
 import {
   defaultConfig,
@@ -6,15 +6,15 @@ import {
   removeTrailingSlash,
   requireAuth,
   RouteCreator,
-  RouteRegistrator
-} from '../pkg'
+  RouteRegistrator,
+} from "../pkg"
 
-import { createSettingsRoute } from './settings'
+import { createSettingsRoute } from "./settings"
 
 // A simple express handler that shows the error screen.
 export const createErrorRoute: RouteCreator =
   (createHelpers) => (req, res, next) => {
-    res.locals.projectName = 'An error occurred'
+    res.locals.projectName = "An error occurred"
     const { id } = req.query
 
     // Get the SDK
@@ -22,15 +22,15 @@ export const createErrorRoute: RouteCreator =
 
     if (!isQuerySet(id)) {
       // No error was send, redirecting back to home.
-      res.redirect('welcome')
+      res.redirect("welcome")
       return
     }
 
     sdk
       .getSelfServiceError(id)
       .then(({ data: body }) => {
-        res.status(500).render('error', {
-          message: JSON.stringify(body.error, null, 2)
+        res.status(500).render("error", {
+          message: JSON.stringify(body.error, null, 2),
         })
       })
       .catch((err: AxiosError) => {
@@ -41,7 +41,7 @@ export const createErrorRoute: RouteCreator =
 
         if (err.response.status === 404) {
           // The error could not be found, redirect back to home.
-          res.redirect('welcome')
+          res.redirect("welcome")
           return
         }
 
@@ -51,7 +51,7 @@ export const createErrorRoute: RouteCreator =
 
 export const registerErrorRoute: RouteRegistrator = (
   app,
-  createHelpers = defaultConfig
+  createHelpers = defaultConfig,
 ) => {
-  app.get('/error', createErrorRoute(createHelpers))
+  app.get("/error", createErrorRoute(createHelpers))
 }

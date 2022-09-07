@@ -68,6 +68,7 @@ export const createRegistrationRoute: RouteCreator =
       .then(({ data: flow }) => {
         // Render the data using a view (e.g. Jade Template):
         res.render("registration", {
+          nodes: flow.ui.nodes,
           webAuthnHandler: filterNodesByGroups({
             nodes: flow.ui.nodes,
             groups: ["webauthn"],

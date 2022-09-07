@@ -37,11 +37,19 @@ app.engine(
     helpers: {
       ...require("handlebars-helpers")(),
       jsonPretty: (context: any) => JSON.stringify(context, null, 2),
-      onlyNodes: (nodes: Array<UiNode>, groups: string, attributes: string) =>
+      onlyNodes: (
+        nodes: Array<UiNode>,
+        groups: string,
+        attributes: string,
+        withoutDefaultGroup?: boolean,
+        withoutDefaultAttributes?: boolean,
+      ) =>
         filterNodesByGroups({
           groups: groups,
           attributes: attributes,
           nodes: nodes,
+          withoutDefaultAttributes,
+          withoutDefaultGroup,
         }),
       toUiNodePartial,
       getNodeLabel: getNodeLabel,

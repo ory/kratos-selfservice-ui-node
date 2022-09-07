@@ -90,6 +90,7 @@ export const createLoginRoute: RouteCreator =
         )
 
         res.render("login", {
+          nodes: flow.ui.nodes,
           webAuthnHandler: filterNodesByGroups({
             nodes: flow.ui.nodes,
             groups: ["webauthn"],

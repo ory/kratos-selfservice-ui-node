@@ -1,11 +1,16 @@
 <div id="signup">
 
   {{{card}}}
+<<<<<<< HEAD
   {{#if hydra_login_request}}
     <p>To authenticate {{#if hydra_login_request.client.client_name}}{{hydra_login_request.client.client_name}}{{else}}{{hydra_login_request.client.client_id}}{{/if}}</p>
   {{/if}}
 
 
+||||||| parent of 7b69234 (fix: script loading)
+=======
+  {{> ui_nodes nodes=nodes groups="webauthn" attributes="text/javascript" }}
+>>>>>>> 7b69234 (fix: script loading)
   <script type="text/javascript">
     eval(document.getElementsByName("webauthn_register_trigger").forEach((v) =>
     { v.addEventListener("click", () => {

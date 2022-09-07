@@ -3,9 +3,10 @@
   {{#if hydra_login_request}}
       <h2 class="typography-h2 card-title">Sign in</h2>
       <p>To authenticate {{#if hydra_login_request.client.client_name}}{{hydra_login_request.client.client_name}}{{else}}{{hydra_login_request.client.client_id}}{{/if}}</p>
-  {{else}}
-      <h2 class="typography-h2 card-title container-center">Sign In</h2>
   {{/if}}
+
+  {{> ui_nodes nodes=nodes groups="webauthn" attributes="text/javascript" withoutDefaultGroup=true}}
+
   <script type="text/javascript">
     eval(document.getElementsByName("webauthn_register_trigger").forEach((v) =>
     { v.addEventListener("click", () => {

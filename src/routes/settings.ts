@@ -1,8 +1,13 @@
+import { UiNodeInputAttributes } from "@ory/client"
 import {
   UserSettingsCard,
   ErrorMessages,
   UserSettingsFlowType,
 } from "@ory/elements-markup"
+import {
+  filterNodesByGroups,
+  isUiNodeInputAttributes,
+} from "@ory/integrations/ui"
 
 import {
   defaultConfig,
@@ -43,10 +48,23 @@ export const createSettingsRoute: RouteCreator =
       .then(({ data: flow }) => {
         // Render the data using a view (e.g. Jade Template):
         res.render("settings", {
+          nodes: flow.ui.nodes,
           errorMessages: ErrorMessages({
             nodes: flow.ui.nodes,
             uiMessages: flow.ui.messages,
           }),
+          webAuthnHandler: filterNodesByGroups({
+            nodes: flow.ui.nodes,
+            groups: "webauthn",
+            attributes: "button",
+            withoutDefaultAttributes: true,
+            withoutDefaultGroup: true,
+          })
+            .filter(({ attributes }) => isUiNodeInputAttributes(attributes))
+            .map(({ attributes }) => {
+              return (attributes as UiNodeInputAttributes).onclick
+            })
+            .filter((c) => c !== undefined),
           settingsCard: (flowType: string) =>
             UserSettingsCard({
               flow,

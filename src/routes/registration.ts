@@ -72,7 +72,7 @@ export const createRegistrationRoute: RouteCreator =
           webAuthnHandler: filterNodesByGroups({
             nodes: flow.ui.nodes,
             groups: ["webauthn"],
-            attributes: ["input"],
+            attributes: ["button"],
             withoutDefaultAttributes: true,
             withoutDefaultGroup: true,
           })

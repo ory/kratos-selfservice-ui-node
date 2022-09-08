@@ -26,7 +26,7 @@ export const createErrorRoute: RouteCreator =
     sdk
       .getSelfServiceError(id)
       .then(({ data }) => {
-        res.status(500).render("error", {
+        res.status(200).render("error", {
           card: UserErrorCard({
             error: data,
             title: "An error occurred",

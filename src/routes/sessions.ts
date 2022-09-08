@@ -36,7 +36,6 @@ export const registerSessionsRoute: RouteRegistrator = (
 ) => {
   app.get(
     route,
-    setSession(createHelpers),
     requireAuth(createHelpers),
     createSessionsRoute(createHelpers),
   )

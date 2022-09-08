@@ -89,8 +89,8 @@ registerRecoveryRoute(app)
 registerRegistrationRoute(app)
 registerSettingsRoute(app)
 registerVerificationRoute(app)
-registerWelcomeRoute(app)
 registerSessionsRoute(app)
+registerWelcomeRoute(app)
 registerErrorRoute(app)
 
 app.get("/", (req: Request, res: Response) => {

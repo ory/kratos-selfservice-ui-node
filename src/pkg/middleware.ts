@@ -58,11 +58,11 @@ export const requireAuth =
       .then(addSessionToRequest(req))
       .then(() => next())
       .catch((err: AxiosError) => {
-        // 403 on toSession means that we need to request 2FA
         if (!maybeInitiate2FA(res, apiBaseUrl)(err)) {
-          // If no session is found, redirect to login.
           res.redirect(getUrlForFlow(apiBaseUrl, "login"))
+          return
         }
+        next()
       })
   }
 

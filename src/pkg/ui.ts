@@ -47,6 +47,7 @@ export const toUiNodePartial = (node: UiNode) => {
  * @returns
  */
 export const navigationMenu = (session?: Session, logoutUrl?: string) => {
+  console.dir({ logoutUrl })
   return Nav({
     className: "welcome-nav",
     navTitle: "Project Name",

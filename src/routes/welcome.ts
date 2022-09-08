@@ -25,7 +25,6 @@ export const createWelcomeRoute: RouteCreator =
 
     res.render("welcome", {
       layout: "welcome",
-      hasSession: Boolean(session),
       nav: navigationMenu(session, logoutUrl),
       concepts: [
         Card({

@@ -56,7 +56,7 @@ export const createVerificationRoute: RouteCreator =
               },
             }),
           })
-        }
+        })
         // Handle errors using ExpressJS' next functionality:
         .catch(redirectOnSoftError(res, next, initFlowUrl))
     )

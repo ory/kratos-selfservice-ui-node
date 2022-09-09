@@ -127,7 +127,7 @@ export const registerLoginRoute: RouteRegistrator = (
 ) => {
   app.get(
     "/login",
-    requireNoAuth(createHelpers),
+    //requireNoAuth(createHelpers),
     createLoginRoute(createHelpers),
   )
 }

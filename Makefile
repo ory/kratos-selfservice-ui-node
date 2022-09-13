@@ -1,5 +1,9 @@
 rand := $(shell openssl rand -hex 6)
 
+.PHONY: docker-dev-build
+docker-dev-build:
+		docker build -f ./Dockerfile-dev -t oryd/kratos-selfservice-ui-node:latest .
+
 .PHONY: docker
 docker:
 	docker build -t oryd/kratos-selfservice-ui-node:latest .

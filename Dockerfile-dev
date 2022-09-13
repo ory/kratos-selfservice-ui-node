@@ -1,4 +1,4 @@
-FROM node:178.0-alpine
+FROM node:17.0-alpine
 
 RUN mkdir -p /usr/src/app &&\
 	chown -R nobody:nogroup /usr/src/app

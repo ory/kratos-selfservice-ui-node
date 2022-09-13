@@ -4,6 +4,9 @@
       <h2 class="typography-h2 card-title">Confirm Action</h2>
     {{else if (eq requested_aal "aal2")}}
       <h2 class="typography-h2 card-title">Two-Factor Authentication</h2>
+    {{else if hydra_login_request}}
+      <h2 class="typography-h2 card-title">Sign in</h2>
+      <p>To authenticate {{#if hydra_login_request.client.client_name}}{{hydra_login_request.client.client_name}}{{else}}{{hydra_login_request.client.client_id}}{{/if}}</p>
     {{else}}
       <h2 class="typography-h2 card-title">Sign In</h2>
     {{/if}}

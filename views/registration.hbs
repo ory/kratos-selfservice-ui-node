@@ -1,6 +1,9 @@
 <div class="auth app-container" id="signup">
   <div class="card">
     <h2 class="typography-h2 card-title">Create an account</h2>
+    {{#if hydra_login_request}}
+      <p>To authenticate {{#if hydra_login_request.client.client_name}}{{hydra_login_request.client.client_name}}{{else}}{{hydra_login_request.client.client_id}}{{/if}}</p>
+    {{/if}}
 
     {{> messages messages=messages className="global"}}
 

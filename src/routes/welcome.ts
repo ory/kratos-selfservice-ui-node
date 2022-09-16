@@ -1,11 +1,10 @@
-import { Request, Response } from "express"
-
 import {
   defaultConfig,
   RouteCreator,
   RouteRegistrator,
   setSession,
 } from "../pkg"
+import { Request, Response } from "express"
 
 export const createWelcomeRoute: RouteCreator =
   (createHelpers) => async (req, res) => {

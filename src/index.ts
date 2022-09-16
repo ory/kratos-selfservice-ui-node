@@ -1,9 +1,3 @@
-import { filterNodesByGroups, getNodeLabel } from "@ory/integrations/ui"
-import express, { Request, Response } from "express"
-import handlebars from "express-handlebars"
-import * as fs from "fs"
-import * as https from "https"
-
 import { middleware as middlewareLogger } from "./pkg/logger"
 import { toUiNodePartial } from "./pkg/ui"
 import {
@@ -19,6 +13,11 @@ import {
   registerVerificationRoute,
   registerWelcomeRoute,
 } from "./routes"
+import { filterNodesByGroups, getNodeLabel } from "@ory/integrations/ui"
+import express, { Request, Response } from "express"
+import handlebars from "express-handlebars"
+import * as fs from "fs"
+import * as https from "https"
 
 const app = express()
 

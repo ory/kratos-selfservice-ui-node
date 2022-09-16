@@ -18,8 +18,6 @@
     "serve": "node lib/index.js",
     "start": "nodemon",
     "test": "exit 0",
-    "format": "prettier --write .",
-    "format:check": "prettier --check .",
     "prepublishOnly": "npm run build"
   },
   "dependencies": {

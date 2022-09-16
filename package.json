@@ -20,6 +20,7 @@
     "test": "exit 0",
     "prepublishOnly": "npm run build"
   },
+  "prettier": "ory-prettier-styles",
   "dependencies": {
     "@ory/client": "0.2.0-alpha.24",
     "@ory/integrations": "0.1.2",

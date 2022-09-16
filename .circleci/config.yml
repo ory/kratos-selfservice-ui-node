@@ -10,7 +10,6 @@ jobs:
           keys:
             - kratos-selfservice-ui-node-{{ checksum "package-lock.json" }}
       - run: npm ci
-      - run: npm run format:check
       - save_cache:
           paths:
             - node_modules

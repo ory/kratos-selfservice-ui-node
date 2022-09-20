@@ -1,6 +1,6 @@
-import { Session } from '@ory/client'
+import { Session } from "@ory/client"
 
-declare module 'express' {
+declare module "express" {
   export interface Request {
     session?: Session
   }

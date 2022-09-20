@@ -1,9 +1,9 @@
-import { Session } from '@ory/kratos-client'
-import { AxiosError } from 'axios'
-import { NextFunction, Request, Response } from 'express'
+import { Session } from "@ory/client"
+import { AxiosError } from "axios"
+import { NextFunction, Request, Response } from "express"
 
-import { getUrlForFlow } from './index'
-import { RouteOptionsCreator } from './route'
+import { getUrlForFlow } from "./index"
+import { RouteOptionsCreator } from "./route"
 
 /**
  * Checks the error returned by toSession() and initiates a 2FA flow if necessary
@@ -18,7 +18,11 @@ const maybeInitiate2FA =
     // 403 on toSession means that we need to request 2FA
     if (err.response && err.response.status === 403) {
       res.redirect(
-        getUrlForFlow(apiBaseUrl, 'login', new URLSearchParams({ aal: 'aal2' }))
+        getUrlForFlow(
+          apiBaseUrl,
+          "login",
+          new URLSearchParams({ aal: "aal2" }),
+        ),
       )
       return true
     }
@@ -51,14 +55,14 @@ export const requireAuth =
   (req: Request, res: Response, next: NextFunction) => {
     const { sdk, apiBaseUrl } = createHelpers(req)
     sdk
-      .toSession(undefined, req.header('cookie'))
+      .toSession(undefined, req.header("cookie"))
       .then(addSessionToRequest(req))
       .then(() => next())
       .catch((err: AxiosError) => {
         // 403 on toSession means that we need to request 2FA
         if (!maybeInitiate2FA(res, apiBaseUrl)(err)) {
           // If no session is found, redirect to login.
-          res.redirect(getUrlForFlow(apiBaseUrl, 'login'))
+          res.redirect(getUrlForFlow(apiBaseUrl, "login"))
         }
       })
   }
@@ -76,7 +80,7 @@ export const setSession =
   (req: Request, res: Response, next: NextFunction) => {
     const { sdk, apiBaseUrl } = createHelpers(req)
     sdk
-      .toSession(undefined, req.header('cookie'))
+      .toSession(undefined, req.header("cookie"))
       .then(addSessionToRequest(req))
       .catch(maybeInitiate2FA(res, apiBaseUrl))
       .then(() => next())
@@ -93,9 +97,9 @@ export const requireNoAuth =
   (req: Request, res: Response, next: NextFunction) => {
     const { sdk } = createHelpers(req)
     sdk
-      .toSession(undefined, req.header('cookie'))
+      .toSession(undefined, req.header("cookie"))
       .then(() => {
-        res.redirect('welcome')
+        res.redirect("welcome")
       })
       .catch(() => {
         next()

@@ -2,30 +2,29 @@
   "name": "@ory/kratos-selfservice-ui-node",
   "version": "0.0.9",
   "description": "A reference implementation of a selfservice UI for ORY Kratos in node.js",
+  "homepage": "https://github.com/ory/kratos-selfservice-ui-node#readme",
+  "bugs": {
+    "url": "https://github.com/ory/kratos-selfservice-ui-node/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ory/kratos-selfservice-ui-node.git"
+  },
+  "license": "Apache-2.0",
+  "author": "Aeneas Rekkas",
   "main": "src/index.ts",
   "scripts": {
     "build": "rm -rf lib/* && tsc",
     "serve": "node lib/index.js",
     "start": "nodemon",
     "test": "exit 0",
-    "format": "prettier --write '{src,views,types}/**/*.{ts,js,css}'",
-    "format:check": "prettier --check '{src,views,types}/**/*.{ts,js,css}'",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
     "prepublishOnly": "npm run build"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/ory/kratos-selfservice-ui-node.git"
-  },
-  "author": "Aeneas Rekkas",
-  "license": "Apache-2.0",
-  "bugs": {
-    "url": "https://github.com/ory/kratos-selfservice-ui-node/issues"
-  },
-  "homepage": "https://github.com/ory/kratos-selfservice-ui-node#readme",
   "dependencies": {
-    "@ory/client": "0.0.1-alpha.21",
+    "@ory/client": "0.2.0-alpha.24",
     "@ory/integrations": "0.1.2",
-    "@ory/kratos-client": "0.8.0-alpha.2",
     "@ory/themes": "0.0.101",
     "axios": "^0.24.0",
     "cookie-parser": "^1.4.5",
@@ -53,8 +52,9 @@
     "@types/react-dom": "^17.0.9",
     "nodemon": "^2.0.14",
     "npm-run-all": "^4.1.5",
-    "ory-prettier-styles": "^1.1.2",
-    "prettier": "^2.3.2",
+    "ory-prettier-styles": "1.3.0",
+    "prettier": "^2.7.1",
+    "prettier-plugin-packagejson": "^2.2.18",
     "ts-node": "^10.4.0",
     "typescript": "^4.4.4"
   }

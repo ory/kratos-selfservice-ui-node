@@ -28,6 +28,7 @@ export const createWelcomeRoute: RouteCreator =
       nav: navigationMenu(session, logoutUrl),
       concepts: [
         Card({
+          className: "welcome-card",
           heading: "Getting Started",
           children:
             "Jump start your project and complete the quickstart tutorial to get a broader overview of Ory Cloud.",

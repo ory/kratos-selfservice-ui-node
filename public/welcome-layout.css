@@ -1,6 +1,7 @@
 /* only manage the content next to the nav */
 .welcome-container {
   display: flex;
+  flex-direction: column;
   /* on mobile we have a padding top of 2rem */
   padding: 2rem 2rem;
   /* on mobile we dont want the content hidden under the nav */

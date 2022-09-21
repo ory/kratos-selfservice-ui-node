@@ -78,6 +78,13 @@ app.engine(
           children: text,
         })
       },
+      oryBranding: () =>
+        Typography({
+          children: `Protected by `,
+          type: "regular",
+          size: "tiny",
+          color: "foregroundSubtle",
+        }),
     },
   }),
 )

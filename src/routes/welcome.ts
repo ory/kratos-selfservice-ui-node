@@ -1,4 +1,4 @@
-import { Card } from "@ory/elements-markup"
+import { CardGradient } from "@ory/elements-markup"
 
 import {
   defaultConfig,
@@ -27,31 +27,35 @@ export const createWelcomeRoute: RouteCreator =
       layout: "welcome",
       nav: navigationMenu(session, logoutUrl),
       concepts: [
-        Card({
-          className: "welcome-card",
+        CardGradient({
           heading: "Getting Started",
-          children:
+          content:
             "Jump start your project and complete the quickstart tutorial to get a broader overview of Ory Cloud.",
+          action: "/",
         }),
-        Card({
+        CardGradient({
           heading: "User flows",
-          children:
+          content:
             "Implement flows that users perform themselves as opposed to administrative intervention.",
+          action: "/",
         }),
-        Card({
+        CardGradient({
           heading: "Identities 101",
-          children:
+          content:
             "Every identity can have its own model - get to know the ins and outs of Identity Schemas.",
+          action: "/",
         }),
-        Card({
+        CardGradient({
           heading: "Sessions",
-          children:
+          content:
             "Define Text here Jump start your project and complete the quickstart tutorial to get a broader",
+          action: "/",
         }),
-        Card({
+        CardGradient({
           heading: "Custom UI",
-          children:
+          content:
             "Implementing these pages in your language and framework of choice is straightforward using our SDKs.",
+          action: "/",
         }),
       ].join("\n"),
     })

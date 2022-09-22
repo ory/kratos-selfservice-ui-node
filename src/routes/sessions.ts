@@ -25,7 +25,7 @@ export const createSessionsRoute: RouteCreator =
     res.render("session", {
       layout: "welcome",
       sessionCard: CodeBox({ children: JSON.stringify(session, null, 2) }),
-      nav: navigationMenu(session, logoutUrl),
+      nav: navigationMenu(session, logoutUrl, "sessions"),
     })
   }
 
@@ -34,9 +34,5 @@ export const registerSessionsRoute: RouteRegistrator = (
   createHelpers = defaultConfig,
   route = "/sessions",
 ) => {
-  app.get(
-    route,
-    requireAuth(createHelpers),
-    createSessionsRoute(createHelpers),
-  )
+  app.get(route, requireAuth(createHelpers), createSessionsRoute(createHelpers))
 }

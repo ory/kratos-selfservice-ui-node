@@ -46,25 +46,37 @@ export const toUiNodePartial = (node: UiNode) => {
  * @param logoutUrl
  * @returns
  */
-export const navigationMenu = (session?: Session, logoutUrl?: string) => {
-  console.dir({ logoutUrl })
+export const navigationMenu = (
+  session?: Session,
+  logoutUrl?: string,
+  selectedLink?: "welcome" | "sessions",
+) => {
+  const links = [
+    {
+      name: "Overview",
+      url: "/welcome",
+      iconLeft: "house",
+      selected: false,
+    },
+    {
+      name: "Session Information",
+      url: "/sessions",
+      iconLeft: "users-viewfinder",
+      selected: false,
+    },
+  ].map((link) => {
+    if (selectedLink && link.url.includes(selectedLink)) {
+      link.selected = true
+    }
+    return link
+  })
+
   return Nav({
     className: "welcome-nav",
     navTitle: "Project Name",
     navSections: [
       {
-        links: [
-          {
-            name: "Overview",
-            url: "/welcome",
-            iconLeft: "house",
-          },
-          {
-            name: "Session Information",
-            url: "/sessions",
-            iconLeft: "users-viewfinder",
-          },
-        ],
+        links: links,
       },
       {
         title: "Default User Interfaces",

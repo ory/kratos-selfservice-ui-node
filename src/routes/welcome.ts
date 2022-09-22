@@ -25,7 +25,7 @@ export const createWelcomeRoute: RouteCreator =
 
     res.render("welcome", {
       layout: "welcome",
-      nav: navigationMenu(session, logoutUrl),
+      nav: navigationMenu(session, logoutUrl, "welcome"),
       concepts: [
         CardGradient({
           heading: "Getting Started",

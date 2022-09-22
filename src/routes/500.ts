@@ -1,5 +1,4 @@
 import { NextFunction, Request, Response } from "express"
-
 import { RouteRegistrator } from "../pkg"
 
 export const register500Route: RouteRegistrator = (app) => {

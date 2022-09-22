@@ -36,3 +36,10 @@ build-sdk-docker: build-sdk
 clean-sdk:
 		rm -rf node_modules/@ory/client/
 		npm i
+
+format: node_modules
+	npm exec -- prettier --write .
+
+node_modules: package-lock.json
+	npm ci
+	touch node_modules

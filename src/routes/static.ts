@@ -1,6 +1,5 @@
 import { expressHandler } from "@ory/themes/css/express"
 import express from "express"
-
 import { RouteRegistrator } from "../pkg"
 
 export const registerStaticRoutes: RouteRegistrator = (app) => {

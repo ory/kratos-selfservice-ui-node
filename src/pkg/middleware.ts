@@ -1,7 +1,6 @@
 import { Session } from "@ory/client"
 import { AxiosError } from "axios"
 import { NextFunction, Request, Response } from "express"
-
 import { getUrlForFlow } from "./index"
 import { RouteOptionsCreator } from "./route"
 

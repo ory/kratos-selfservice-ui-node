@@ -1,5 +1,4 @@
 import { Request, Response } from "express"
-
 import { defaultConfig, removeTrailingSlash, RouteRegistrator } from "../pkg"
 
 export const registerHealthRoute: RouteRegistrator = (app) => {

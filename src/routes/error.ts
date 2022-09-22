@@ -1,5 +1,4 @@
 import { AxiosError } from "axios"
-
 import {
   defaultConfig,
   isQuerySet,
@@ -8,7 +7,6 @@ import {
   RouteCreator,
   RouteRegistrator,
 } from "../pkg"
-
 import { createSettingsRoute } from "./settings"
 
 // A simple express handler that shows the error screen.

@@ -22,7 +22,7 @@ import {
 } from "../pkg"
 
 export const createSettingsRoute: RouteCreator =
-  (createHelpers) => (req, res, next) => {
+  (createHelpers) => async (req, res, next) => {
     res.locals.projectName = "Account settings"
 
     const { flow, return_to = "" } = req.query
@@ -43,6 +43,14 @@ export const createSettingsRoute: RouteCreator =
       res.redirect(303, initFlowUrl)
       return
     }
+
+    // Create a logout URL
+    const logoutUrl =
+      (
+        await sdk
+          .createSelfServiceLogoutFlowUrlForBrowsers(req.header("cookie"))
+          .catch(() => ({ data: { logout_url: "" } }))
+      ).data.logout_url || ""
 
     return sdk
       .getSelfServiceSettingsFlow(flow, undefined, req.header("cookie"))
@@ -69,10 +77,38 @@ export const createSettingsRoute: RouteCreator =
                     testId: "password",
                   },
                   {
+                    name: "Social Sign In",
+                    url: "#social-sign-in",
+                    iconLeft: "comments",
+                    testId: "social-sign-in",
+                  },
+                  {
                     name: "2FA Backup Codes",
                     url: "#backup-codes",
                     iconLeft: "shield",
                     testId: "backup-codes",
+                  },
+                  {
+                    name: "Hardware Tokens",
+                    url: "#webauthn",
+                    iconLeft: "key",
+                    testId: "webauthn",
+                  },
+                  {
+                    name: "Authenticator App",
+                    url: "#totp",
+                    iconLeft: "mobile",
+                    testId: "totp",
+                  },
+                ],
+              },
+              {
+                links: [
+                  {
+                    name: "Logout",
+                    url: logoutUrl,
+                    iconLeft: "arrow-right-to-bracket",
+                    testId: "logout",
                   },
                 ],
               },

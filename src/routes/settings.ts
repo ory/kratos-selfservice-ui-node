@@ -1,5 +1,6 @@
 import { UiNodeInputAttributes } from "@ory/client"
 import {
+  Nav,
   UserSettingsCard,
   ErrorMessages,
   UserSettingsFlowType,
@@ -48,6 +49,35 @@ export const createSettingsRoute: RouteCreator =
       .then(({ data: flow }) => {
         // Render the data using a view (e.g. Jade Template):
         res.render("settings", {
+          layout: "settings",
+          nav: Nav({
+            className: "main-nav",
+            navTitle: "Project Name",
+            navSections: [
+              {
+                links: [
+                  {
+                    name: "Profile",
+                    url: "#profile",
+                    iconLeft: "user",
+                    testId: "profile",
+                  },
+                  {
+                    name: "Password",
+                    url: "#password",
+                    iconLeft: "lock",
+                    testId: "password",
+                  },
+                  {
+                    name: "2FA Backup Codes",
+                    url: "#backup-codes",
+                    iconLeft: "shield",
+                    testId: "backup-codes",
+                  },
+                ],
+              },
+            ],
+          }),
           nodes: flow.ui.nodes,
           errorMessages: ErrorMessages({
             nodes: flow.ui.nodes,

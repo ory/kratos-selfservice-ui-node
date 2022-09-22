@@ -72,7 +72,7 @@ export const navigationMenu = (
   })
 
   return Nav({
-    className: "welcome-nav",
+    className: "main-nav",
     navTitle: "Project Name",
     navSections: [
       {

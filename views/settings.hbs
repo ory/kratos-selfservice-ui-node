@@ -1,20 +1,41 @@
-<div id="settings">
+<div class="spacing-32">
 
-  {{{typography "Profile Management and Security Settings" "headline37" "foregroundDefault"}}}
+  <div class="spacing-32">
+    {{{typography "Profile Management and Security Settings" "headline37" "foregroundDefault"}}}
+    {{{errorMessages}}}
+    {{{divider false "divider-left"}}}
+  </div>
 
-  {{{errorMessages}}}
+  <div class="spacing-32" id="profile">
+    {{{settingsCard "profile"}}}
+    {{{divider false "divider-left"}}}
+  </div>
 
-  {{{settingsCard "profile"}}}
+  <div class="spacing-32" id="password">
+    {{{settingsCard "password"}}}
+    {{{divider false "divider-left"}}}
+  </div>
 
-  {{{settingsCard "password"}}}
+  <div class="spacing-32" id="oidc">
+    {{{settingsCard "oidc"}}}
+    {{{divider false "divider-left"}}}
+  </div>
 
-  {{{settingsCard "oidc"}}}
+  <div class="spacing-32" id="backup-codes">
+    {{{settingsCard "lookupSecret"}}}
+    {{{divider false "divider-left"}}}
+  </div>
 
-  {{{settingsCard "lookupSecret"}}}
+  <div class="spacing-32" id="webauthn">
+    {{{settingsCard "webauthn"}}}
+    {{{divider false "divider-left"}}}
+  </div>
 
-  {{{settingsCard "webauthn"}}}
+  <div class="spacing-32" id="totp">
+    {{{settingsCard "totp"}}}
+    {{{divider false "divider-left"}}}
+  </div>
 
-  {{{settingsCard "totp"}}}
 
   {{> ui_nodes nodes=nodes groups="webauthn" attributes="text/javascript" withoutDefaultGroup=true}}
 

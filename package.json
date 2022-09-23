@@ -18,12 +18,15 @@
     "serve": "node lib/index.js",
     "start": "nodemon",
     "test": "exit 0",
-    "prepublishOnly": "npm run build"
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "prepublishOnly": "npm run build",
+    "postinstall": "mkdir -p elements; cd elements; git init; git remote add -f origin https://github.com/ory/elements.git; git pull --depth=1 origin main; git checkout v0.0.1-alpha.0; npm i; npm run initialize; npm run build:markup; cd ..; npm i ./elements/packages/markup"
   },
   "dependencies": {
-    "@ory/integrations": "^0.2.7",
     "@ory/client": "^0.2.0-alpha.25",
-    "@ory/elements-markup": "file:../elements/packages/markup",
+    "@ory/elements-markup": "file:elements/packages/markup",
+    "@ory/integrations": "^0.2.7",
     "axios": "^0.24.0",
     "cookie-parser": "^1.4.5",
     "express": "^4.17.1",
@@ -32,6 +35,7 @@
     "express-winston": "^4.1.0",
     "handlebars-helpers": "^0.10.0",
     "jwks-rsa": "^2.0.2",
+    "root": "github:ory/elements",
     "winston": "^3.3.3"
   },
   "devDependencies": {

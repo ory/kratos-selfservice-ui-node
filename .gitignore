@@ -102,3 +102,5 @@ lib
 pnpm-lock.yaml
 
 .vscode
+
+elements/

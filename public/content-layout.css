@@ -17,7 +17,7 @@ body {
 .content {
   display: flex;
   width: 100%;
-  flex: 1;
+  flex: 1 1 auto;
   gap: 2rem;
 }
 
@@ -31,10 +31,24 @@ body {
   padding-bottom: 5.5rem;
 }
 
+.wrap-content {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+body:before {
+  display: none;
+  visibility: hidden;
+}
+
 /* wide-screen vieport */
 @media screen and (min-width: 90em) {
   .content {
     max-width: 90em;
+  }
+  body:before {
+    content: "large";
   }
 }
 
@@ -52,6 +66,9 @@ body {
     padding-top: 4rem;
     min-height: 100vh;
   }
+  body:before {
+    content: "medium";
+  }
 }
 
 /* when we are on mobile/tablet we want the content to be under the nav */
@@ -61,5 +78,8 @@ body {
   }
   .container {
     margin-left: 0;
+  }
+  body:before {
+    content: "small";
   }
 }

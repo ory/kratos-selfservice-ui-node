@@ -5,7 +5,6 @@ import {
   requireAuth,
   RouteCreator,
   RouteRegistrator,
-  setSession,
 } from "../pkg"
 import { navigationMenu } from "../pkg/ui"
 
@@ -24,7 +23,27 @@ export const createSessionsRoute: RouteCreator =
 
     res.render("session", {
       layout: "welcome",
-      sessionCard: CodeBox({ children: JSON.stringify(session, null, 2) }),
+      traits: {
+        ...session?.identity.traits,
+        ...{ created_at: session?.identity.created_at || "" },
+        ...session?.authentication_methods?.reduce<any>(
+          (methods, method, i) => {
+            methods[
+              `authentication_method: ${
+                method.completed_at &&
+                new Date(method.completed_at).toUTCString()
+              }`
+            ] = method.method
+            return methods
+          },
+          {},
+        ),
+        authenticator_assurance_level: session?.authenticator_assurance_level,
+      },
+      sessionCodeBox: CodeBox({
+        className: "session-code-box",
+        children: JSON.stringify(session, null, 2),
+      }),
       nav: navigationMenu(session, logoutUrl, "sessions"),
     })
   }

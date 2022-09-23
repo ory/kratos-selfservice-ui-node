@@ -58,10 +58,10 @@ app.engine(
         Divider({ className, fullWidth }),
       buttonLink: (text: string) =>
         ButtonLink({ href: "https://www.ory.sh/", children: text }),
-      typography: (text: string, size: any, color: any) =>
+      typography: (text: string, size: any, color: any, type?: any) =>
         Typography({
           children: text,
-          type: "regular",
+          type: type || "regular",
           size,
           color,
         }),

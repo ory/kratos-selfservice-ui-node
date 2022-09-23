@@ -5,7 +5,6 @@ import express, { Request, Response } from "express"
 import hbs from "express-handlebars"
 import * as fs from "fs"
 import * as https from "https"
-
 import { middleware as middlewareLogger } from "./pkg/logger"
 import { navigationMenu, toUiNodePartial } from "./pkg/ui"
 import {

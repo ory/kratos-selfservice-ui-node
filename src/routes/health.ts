@@ -1,5 +1,4 @@
 import { Request, Response } from "express"
-
 import { RouteRegistrator } from "../pkg"
 
 export const registerHealthRoute: RouteRegistrator = (app) => {

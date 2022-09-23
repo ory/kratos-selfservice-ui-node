@@ -35,7 +35,6 @@
     "express-winston": "^4.1.0",
     "handlebars-helpers": "^0.10.0",
     "jwks-rsa": "^2.0.2",
-    "root": "github:ory/elements",
     "winston": "^3.3.3"
   },
   "devDependencies": {

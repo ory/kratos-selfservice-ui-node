@@ -1,5 +1,4 @@
 import { CodeBox } from "@ory/elements-markup"
-
 import {
   defaultConfig,
   requireAuth,

@@ -1,6 +1,5 @@
 import { UserErrorCard } from "@ory/elements-markup"
 import { AxiosError } from "axios"
-
 import {
   defaultConfig,
   isQuerySet,

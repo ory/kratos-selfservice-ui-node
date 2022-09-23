@@ -9,7 +9,6 @@ import {
   filterNodesByGroups,
   isUiNodeInputAttributes,
 } from "@ory/integrations/ui"
-
 import {
   defaultConfig,
   getUrlForFlow,

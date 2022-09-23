@@ -1,5 +1,4 @@
 import { CardGradient } from "@ory/elements-markup"
-
 import {
   defaultConfig,
   RouteCreator,

@@ -1,5 +1,4 @@
 import { UserAuthCard, SelfServiceFlow } from "@ory/elements-markup"
-
 import {
   defaultConfig,
   getUrlForFlow,

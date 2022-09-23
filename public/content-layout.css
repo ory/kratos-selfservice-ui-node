@@ -14,13 +14,6 @@ body {
   height: auto;
 }
 
-.content {
-  display: flex;
-  width: 100%;
-  flex: 1 1 auto;
-  gap: 2rem;
-}
-
 /* manage nav and content */
 .app-container {
   display: flex;
@@ -42,9 +35,42 @@ body:before {
   visibility: hidden;
 }
 
+.traits-box {
+  display: flex;
+  flex: 1 1 auto;
+  padding: 0.5rem;
+  max-width: calc(50% - 2rem);
+}
+
+.traits-box-divider {
+  border-top: 1px solid var(--ory-theme-border-def);
+}
+
+.session-code-box > pre {
+  white-space: pre-wrap; /* Since CSS 2.1 */
+  white-space: -moz-pre-wrap; /* Mozilla, since 1999 */
+  white-space: -pre-wrap; /* Opera 4-6 */
+  white-space: -o-pre-wrap; /* Opera 7 */
+  word-wrap: break-word; /* Internet Explorer 5.5+ */
+}
+
+.session-code-box {
+  display: flex;
+  flex: 1 1 auto;
+  max-width: calc(50% - 2rem);
+}
+
+.content {
+  width: auto;
+}
+
 /* wide-screen vieport */
 @media screen and (min-width: 90em) {
   .content {
+    display: flex;
+    width: 100%;
+    flex: 1 1 auto;
+    gap: 2rem;
     max-width: 90em;
   }
   body:before {
@@ -82,4 +108,25 @@ body:before {
   body:before {
     content: "small";
   }
+  .session-code-box,
+  .traits-box {
+    max-width: 100%;
+    width: 100%;
+  }
 }
+
+/* xs */
+/* @media screen and (min-width: 24.375em) {
+  .session-code-box,
+  .traits-box {
+    max-width: 20.375em;
+  }
+} */
+
+/* sm */
+/* @media screen and (min-width: 40em) {
+  .session-code-box,
+  .traits-box {
+    max-width: 36em;
+  }
+} */

@@ -95,29 +95,6 @@ footer {
   border-top: 1px !important;
 }
 
-.traits-box {
-  display: flex;
-  flex-grow: 1;
-  padding: 0.5rem;
-}
-
-.traits-box-divider {
-  border-top: 1px solid var(--ory-theme-border-def);
-}
-
-.session-code-box > pre {
-  white-space: pre-wrap; /* Since CSS 2.1 */
-  white-space: -moz-pre-wrap; /* Mozilla, since 1999 */
-  white-space: -pre-wrap; /* Opera 4-6 */
-  white-space: -o-pre-wrap; /* Opera 7 */
-  word-wrap: break-word; /* Internet Explorer 5.5+ */
-}
-
-.session-code-box {
-  display: flex;
-  flex: 1 1 auto;
-}
-
 @media screen and (max-width: 24.375em) {
   .footer-container > div:last-child {
     display: none;

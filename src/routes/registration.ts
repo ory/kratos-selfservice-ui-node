@@ -1,5 +1,5 @@
 import { UiNodeInputAttributes } from "@ory/client"
-import { UserAuthCard, SelfServiceFlow } from "@ory/elements-markup"
+import { UserAuthCard } from "@ory/elements-markup"
 import {
   filterNodesByGroups,
   isUiNodeInputAttributes,
@@ -79,10 +79,10 @@ export const createRegistrationRoute: RouteCreator =
             .map(({ attributes }) => {
               return (attributes as UiNodeInputAttributes).onclick
             })
-            .filter((c) => c !== undefined),
+            .filter((onClickAction) => !!onClickAction),
           card: UserAuthCard({
             title: "Register an account",
-            flow: flow as SelfServiceFlow,
+            flow: flow,
             flowType: "registration",
             additionalProps: {
               loginURL: initLoginUrl,

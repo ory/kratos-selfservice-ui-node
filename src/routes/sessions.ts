@@ -24,7 +24,7 @@ export const createSessionsRoute: RouteCreator =
       layout: "welcome",
       traits: {
         ...session?.identity.traits,
-        ...{ created_at: session?.identity.created_at || "" },
+        created_at: session?.identity.created_at || "",
         ...session?.authentication_methods?.reduce<any>(
           (methods, method, i) => {
             methods[

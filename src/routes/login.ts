@@ -10,7 +10,6 @@ import {
   isQuerySet,
   logger,
   redirectOnSoftError,
-  requireNoAuth,
   RouteCreator,
   RouteRegistrator,
 } from "../pkg"
@@ -125,9 +124,5 @@ export const registerLoginRoute: RouteRegistrator = (
   app,
   createHelpers = defaultConfig,
 ) => {
-  app.get(
-    "/login",
-    //requireNoAuth(createHelpers),
-    createLoginRoute(createHelpers),
-  )
+  app.get("/login", createLoginRoute(createHelpers))
 }

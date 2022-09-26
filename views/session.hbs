@@ -32,7 +32,7 @@
   };
 
   const setSessionCodeBoxCollapse = function () {
-    breakpoint = getBreakpoint();
+    const breakpoint = getBreakpoint();
     const codeBoxInput = document.getElementsByClassName("session-code-box")[0].getElementsByTagName("input")[0]
     if (breakpoint === "small") {
       codeBoxInput.checked = true;

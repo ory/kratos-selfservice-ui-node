@@ -62,7 +62,6 @@ export const requireAuth =
           res.redirect(getUrlForFlow(apiBaseUrl, "login"))
           return
         }
-        next()
       })
   }
 

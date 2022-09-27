@@ -84,6 +84,7 @@ export const createRegistrationRoute: RouteCreator =
             title: "Register an account",
             flow: flow,
             flowType: "registration",
+            cardImage: "ory-logo.svg",
             additionalProps: {
               loginURL: initLoginUrl,
             },

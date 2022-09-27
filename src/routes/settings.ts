@@ -4,6 +4,7 @@ import {
   UserSettingsCard,
   ErrorMessages,
   UserSettingsFlowType,
+  Divider,
 } from "@ory/elements-markup"
 import {
   filterNodesByGroups,
@@ -115,7 +116,10 @@ export const createSettingsRoute: RouteCreator =
           }),
           nodes: flow.ui.nodes,
           errorMessages: ErrorMessages({
-            nodes: flow.ui.nodes,
+            nodes: filterNodesByGroups({
+              nodes: flow.ui.nodes,
+              groups: "default",
+            }),
             uiMessages: flow.ui.messages,
           }),
           webAuthnHandler: filterNodesByGroups({
@@ -130,11 +134,21 @@ export const createSettingsRoute: RouteCreator =
               return (attributes as UiNodeInputAttributes).onclick
             })
             .filter((c) => c !== undefined),
-          settingsCard: (flowType: string) =>
-            UserSettingsCard({
+          settingsCard: (flowType: string) => {
+            const card = UserSettingsCard({
               flow,
               flowType: flowType as UserSettingsFlowType,
-            }),
+            })
+            if (card) {
+              return (
+                `<div class="spacing-32" id="${flowType}">` +
+                card +
+                Divider({ className: "divider-left", fullWidth: false }) +
+                `</div>`
+              )
+            }
+            return ""
+          },
         })
       })
       .catch(redirectOnSoftError(res, next, initFlowUrl))

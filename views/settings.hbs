@@ -6,36 +6,12 @@
     {{{divider false "divider-left"}}}
   </div>
 
-  <div class="spacing-32" id="profile">
     {{{settingsCard "profile"}}}
-    {{{divider false "divider-left"}}}
-  </div>
-
-  <div class="spacing-32" id="password">
     {{{settingsCard "password"}}}
-    {{{divider false "divider-left"}}}
-  </div>
-
-  <div class="spacing-32" id="oidc">
     {{{settingsCard "oidc"}}}
-    {{{divider false "divider-left"}}}
-  </div>
-
-  <div class="spacing-32" id="backup-codes">
-    {{{settingsCard "lookupSecret"}}}
-    {{{divider false "divider-left"}}}
-  </div>
-
-  <div class="spacing-32" id="webauthn">
+    {{{settingsCard "lookupSecret"}}}  
     {{{settingsCard "webauthn"}}}
-    {{{divider false "divider-left"}}}
-  </div>
-
-  <div class="spacing-32" id="totp">
     {{{settingsCard "totp"}}}
-    {{{divider false "divider-left"}}}
-  </div>
-
 
   {{> ui_nodes nodes=nodes groups="webauthn" attributes="text/javascript" withoutDefaultGroup=true}}
 

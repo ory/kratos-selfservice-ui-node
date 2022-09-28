@@ -1,4 +1,4 @@
-import { CardGradient } from "@ory/elements-markup"
+import { CardGradient, Typography } from "@ory/elements-markup"
 import {
   defaultConfig,
   RouteCreator,
@@ -25,36 +25,51 @@ export const createWelcomeRoute: RouteCreator =
     res.render("welcome", {
       layout: "welcome",
       nav: navigationMenu(session, logoutUrl, "welcome"),
+      projectInfoText: Typography({
+        children: `Your Ory Identity Experience is running at ${req.header(
+          "host",
+        )}.`,
+        type: "regular",
+        size: "small",
+        color: "foregroundMuted",
+      }),
       concepts: [
         CardGradient({
           heading: "Getting Started",
           content:
             "Jump start your project and complete the quickstart tutorial to get a broader overview of Ory Cloud.",
-          action: "/",
+          action:
+            "https://www.ory.sh/docs/getting-started/integrate-auth/expressjs",
+          target: "_blank",
         }),
         CardGradient({
           heading: "User flows",
           content:
             "Implement flows that users perform themselves as opposed to administrative intervention.",
-          action: "/",
+          action: "https://www.ory.sh/docs/kratos/self-service",
+          target: "_blank",
         }),
         CardGradient({
           heading: "Identities 101",
           content:
             "Every identity can have its own model - get to know the ins and outs of Identity Schemas.",
-          action: "/",
+          action:
+            "https://www.ory.sh/docs/kratos/manage-identities/identity-schema",
+          target: "_blank",
         }),
         CardGradient({
           heading: "Sessions",
           content:
-            "Define Text here Jump start your project and complete the quickstart tutorial to get a broader",
-          action: "/",
+            "Ory Cloud manages sessions for you - get to know how sessions work.",
+          action: "https://www.ory.sh/docs/kratos/session-management/overview",
+          target: "_blank",
         }),
         CardGradient({
           heading: "Custom UI",
           content:
             "Implementing these pages in your language and framework of choice is straightforward using our SDKs.",
-          action: "/",
+          action: "https://www.ory.sh/docs/guides/bring-your-user-interface",
+          target: "_blank",
         }),
       ].join("\n"),
     })

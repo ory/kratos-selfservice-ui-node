@@ -66,37 +66,37 @@ export const createSettingsRoute: RouteCreator =
                 links: [
                   {
                     name: "Profile",
-                    url: "#profile",
+                    href: "#profile",
                     iconLeft: "user",
                     testId: "profile",
                   },
                   {
                     name: "Password",
-                    url: "#password",
+                    href: "#password",
                     iconLeft: "lock",
                     testId: "password",
                   },
                   {
                     name: "Social Sign In",
-                    url: "#social-sign-in",
+                    href: "#social-sign-in",
                     iconLeft: "comments",
                     testId: "social-sign-in",
                   },
                   {
                     name: "2FA Backup Codes",
-                    url: "#backup-codes",
+                    href: "#backup-codes",
                     iconLeft: "shield",
                     testId: "backup-codes",
                   },
                   {
                     name: "Hardware Tokens",
-                    url: "#webauthn",
+                    href: "#webauthn",
                     iconLeft: "key",
                     testId: "webauthn",
                   },
                   {
                     name: "Authenticator App",
-                    url: "#totp",
+                    href: "#totp",
                     iconLeft: "mobile",
                     testId: "totp",
                   },
@@ -106,7 +106,7 @@ export const createSettingsRoute: RouteCreator =
                 links: [
                   {
                     name: "Logout",
-                    url: logoutUrl,
+                    href: logoutUrl,
                     iconLeft: "arrow-right-to-bracket",
                     testId: "logout",
                   },

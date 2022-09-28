@@ -54,18 +54,18 @@ export const navigationMenu = (
   const links = [
     {
       name: "Overview",
-      url: "/welcome",
+      href: "/welcome",
       iconLeft: "house",
       selected: false,
     },
     {
       name: "Session Information",
-      url: "/sessions",
+      href: "/sessions",
       iconLeft: "users-viewfinder",
       selected: false,
     },
   ].map((link) => {
-    if (selectedLink && link.url.includes(selectedLink)) {
+    if (selectedLink && link.href.includes(selectedLink)) {
       link.selected = true
     }
     return link
@@ -84,62 +84,56 @@ export const navigationMenu = (
         links: [
           {
             name: "Sign In",
-            url: "/login",
+            href: "/login",
             iconLeft: "arrow-right-to-bracket",
             iconRight: "up-right-from-square",
             disabled: Boolean(session),
             testId: "login",
+            target: "_blank",
           },
           {
             name: "Sign Up",
-            url: "/registration",
+            href: "/registration",
             iconLeft: "arrow-right-to-bracket",
             iconRight: "up-right-from-square",
             disabled: Boolean(session),
             testId: "registration",
+            target: "_blank",
           },
           {
             name: "Account Recovery",
-            url: "/recovery",
+            href: "/recovery",
             iconLeft: "user-xmark",
             iconRight: "up-right-from-square",
             disabled: Boolean(session),
             testId: "recovery",
+            target: "_blank",
           },
           {
             name: "Account Verification",
-            url: "/verification",
+            href: "/verification",
             iconLeft: "user-check",
             iconRight: "up-right-from-square",
             disabled: !Boolean(session),
             testId: "verification",
+            target: "_blank",
           },
           {
             name: "Account Settings",
-            url: "/settings",
+            href: "/settings",
             iconLeft: "gear",
             iconRight: "up-right-from-square",
             disabled: !Boolean(session),
             testId: "settings",
+            target: "_blank",
           },
           {
             name: "Logout",
-            url: logoutUrl || "",
+            href: logoutUrl || "",
             iconLeft: "arrow-right-to-bracket",
             iconRight: "up-right-from-square",
             disabled: !Boolean(session),
             testId: "logout",
-          },
-        ],
-      },
-      {
-        floatBottom: true,
-        links: [
-          {
-            name: "Fork this on GitHub",
-            url: "https://github.com/ory/kratos-selfservice-ui-node",
-            iconLeft: "code-fork",
-            iconRight: "up-right-from-square",
           },
         ],
       },

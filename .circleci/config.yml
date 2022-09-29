@@ -30,7 +30,7 @@ jobs:
           paths:
             - node_modules
           key: kratos-selfservice-ui-node-{{ checksum "package-lock.json" }}
-      - run: npm build
+      - run: npm run build
 
   release:
     docker:

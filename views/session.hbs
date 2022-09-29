@@ -16,6 +16,17 @@
         </div>
       {{/each}}
     </div>
+    <div class="spacing-8 traits-box">
+      {{#each authMethods}}
+        {{#each this }}
+          <div class="spacing-8">
+            {{{typography @key "caption" "foregroundDefault" "bold"}}}
+            {{{typography this "caption" "foregroundDefault"}}}
+            {{{divider true "traits-box-divider"}}}
+          </div>
+        {{/each}}
+      {{/each}}
+    </div>
   </div>
   
   {{{divider false "divider-left"}}}

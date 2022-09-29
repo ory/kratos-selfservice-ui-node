@@ -39,19 +39,18 @@ export const createSessionsRoute: RouteCreator =
       }),
       traits: {
         id: session?.identity.id,
-        ...session?.identity.traits,
-        "signup date": session?.identity.created_at || "",
-        // map the session's authentication level to a human readable string
-        ...session?.authentication_methods?.reduce<any>(
-          (methods, method, i) => {
-            methods[`authentication method used`] = `${method.method} (${
-              method.completed_at && new Date(method.completed_at).toUTCString()
-            })`
-            return methods
+        // sometimes the identity schema could contain recursive objects
+        // for this use case we will just stringify the object instead of recursively flatten the object
+        ...Object.entries(session?.identity.traits).reduce<any>(
+          (traits, [key, value]) => {
+            traits[key] =
+              typeof value === "object" ? JSON.stringify(value) : value
+            return traits
           },
           {},
         ),
-        "authentiction level":
+        "signup date": session?.identity.created_at || "",
+        "authentication level":
           session?.authenticator_assurance_level === "aal2"
             ? "two-factor used (aal2)"
             : "single-factor used (aal1)",
@@ -64,6 +63,19 @@ export const createSessionsRoute: RouteCreator =
           ).toUTCString(),
         }),
       },
+      // map the session's authentication level to a human readable string
+      // this produces a list of objects
+      authMethods: session?.authentication_methods?.reduce<any>(
+        (methods, method, i) => {
+          methods.push({
+            [`authentication method used`]: `${method.method} (${
+              method.completed_at && new Date(method.completed_at).toUTCString()
+            })`,
+          })
+          return methods
+        },
+        [],
+      ),
       sessionCodeBox: CodeBox({
         className: "session-code-box",
         children: JSON.stringify(session, null, 2),

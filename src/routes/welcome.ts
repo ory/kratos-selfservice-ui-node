@@ -11,7 +11,7 @@ export const createWelcomeRoute: RouteCreator =
   (createHelpers) => async (req, res) => {
     res.locals.projectName = "Welcome to Ory"
 
-    const { sdk } = createHelpers(req)
+    const { sdk, basePath } = createHelpers(req)
     const session = req.session
 
     // Create a logout URL
@@ -24,7 +24,7 @@ export const createWelcomeRoute: RouteCreator =
 
     res.render("welcome", {
       layout: "welcome",
-      nav: navigationMenu(session, logoutUrl, "welcome"),
+      nav: navigationMenu({session, logoutUrl, selectedLink: "welcome", basePath}),
       projectInfoText: Typography({
         children: `Your Ory Identity Experience is running at ${req.header(
           "host",

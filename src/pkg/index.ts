@@ -2,6 +2,10 @@ import { AxiosError } from "axios"
 import { NextFunction, Response } from "express"
 import { RouteOptionsCreator } from "./route"
 import sdk, { apiBaseUrl } from "./sdk"
+import { UiNode } from "@ory/client"
+import { Typography, Divider, ButtonLink, MenuLink } from "@ory/elements-markup"
+import { filterNodesByGroups, getNodeLabel } from "@ory/integrations/ui"
+import { toUiNodePartial } from "./ui"
 
 export * from "./middleware"
 export * from "./route"
@@ -22,6 +26,7 @@ export const defaultConfig: RouteOptionsCreator = () => {
     apiBaseUrl: apiBaseUrl,
     kratosBrowserUrl: apiBaseUrl,
     sdk,
+    basePath: "",
   }
 }
 
@@ -48,4 +53,56 @@ export const redirectOnSoftError =
     }
 
     next(err)
+  }
+
+  export const handlebarsHelpers = {
+    ...require("handlebars-helpers")(),
+    jsonPretty: (context: any) => JSON.stringify(context, null, 2),
+    onlyNodes: (
+      nodes: Array<UiNode>,
+      groups: string,
+      attributes: string,
+      withoutDefaultGroup?: boolean,
+      withoutDefaultAttributes?: boolean,
+    ) =>
+      filterNodesByGroups({
+        groups: groups,
+        attributes: attributes,
+        nodes: nodes,
+        withoutDefaultAttributes,
+        withoutDefaultGroup,
+      }),
+    toUiNodePartial,
+    getNodeLabel: getNodeLabel,
+    divider: (fullWidth: boolean, className?: string) =>
+      Divider({ className, fullWidth }),
+    buttonLink: (text: string) =>
+      ButtonLink({ href: "https://www.ory.sh/", children: text }),
+    typography: (text: string, size: any, color: any, type?: any) =>
+      Typography({
+        children: text,
+        type: type || "regular",
+        size,
+        color,
+      }),
+    menuLink: (
+      text: string,
+      url: string,
+      iconLeft?: string,
+      iconRight?: string,
+    ) => {
+      return MenuLink({
+        href: url,
+        iconLeft: iconLeft,
+        iconRight: iconRight,
+        children: text,
+      })
+    },
+    oryBranding: () =>
+      Typography({
+        children: `Protected by `,
+        type: "regular",
+        size: "tiny",
+        color: "foregroundSubtle",
+      }),
   }

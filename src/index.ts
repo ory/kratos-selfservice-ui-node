@@ -1,12 +1,9 @@
-import { UiNode } from "@ory/client"
-import { Typography, Divider, ButtonLink, MenuLink } from "@ory/elements-markup"
-import { filterNodesByGroups, getNodeLabel } from "@ory/integrations/ui"
 import express, { Request, Response } from "express"
 import hbs from "express-handlebars"
 import * as fs from "fs"
 import * as https from "https"
+import { handlebarsHelpers } from "./pkg"
 import { middleware as middlewareLogger } from "./pkg/logger"
-import { toUiNodePartial } from "./pkg/ui"
 import {
   register404Route,
   register500Route,
@@ -34,57 +31,7 @@ app.engine(
     layoutsDir: `${__dirname}/../views/layouts/`,
     partialsDir: `${__dirname}/../views/partials/`,
     defaultLayout: "auth",
-    helpers: {
-      ...require("handlebars-helpers")(),
-      jsonPretty: (context: any) => JSON.stringify(context, null, 2),
-      onlyNodes: (
-        nodes: Array<UiNode>,
-        groups: string,
-        attributes: string,
-        withoutDefaultGroup?: boolean,
-        withoutDefaultAttributes?: boolean,
-      ) =>
-        filterNodesByGroups({
-          groups: groups,
-          attributes: attributes,
-          nodes: nodes,
-          withoutDefaultAttributes,
-          withoutDefaultGroup,
-        }),
-      toUiNodePartial,
-      getNodeLabel: getNodeLabel,
-      divider: (fullWidth: boolean, className?: string) =>
-        Divider({ className, fullWidth }),
-      buttonLink: (text: string) =>
-        ButtonLink({ href: "https://www.ory.sh/", children: text }),
-      typography: (text: string, size: any, color: any, type?: any) =>
-        Typography({
-          children: text,
-          type: type || "regular",
-          size,
-          color,
-        }),
-      menuLink: (
-        text: string,
-        url: string,
-        iconLeft?: string,
-        iconRight?: string,
-      ) => {
-        return MenuLink({
-          href: url,
-          iconLeft: iconLeft,
-          iconRight: iconRight,
-          children: text,
-        })
-      },
-      oryBranding: () =>
-        Typography({
-          children: `Protected by `,
-          type: "regular",
-          size: "tiny",
-          color: "foregroundSubtle",
-        }),
-    },
+    helpers: handlebarsHelpers,
   }),
 )
 

@@ -40,6 +40,12 @@ export const toUiNodePartial = (node: UiNode) => {
   return "ui_node_input_default"
 }
 
+type NavigationMenuProps = {
+  session?: Session,
+  logoutUrl?: string,
+  selectedLink?: "welcome" | "sessions",
+  basePath?: string
+}
 /**
  * Renders the navigation bar with state
  * @param session
@@ -47,20 +53,23 @@ export const toUiNodePartial = (node: UiNode) => {
  * @returns
  */
 export const navigationMenu = (
-  session?: Session,
-  logoutUrl?: string,
-  selectedLink?: "welcome" | "sessions",
+  {
+    session,
+    logoutUrl,
+    selectedLink,
+    basePath
+  }: NavigationMenuProps
 ) => {
   const links = [
     {
       name: "Overview",
-      href: "/welcome",
+      href: basePath+"/welcome",
       iconLeft: "house",
       selected: false,
     },
     {
       name: "Session Information",
-      href: "/sessions",
+      href: basePath+"/sessions",
       iconLeft: "users-viewfinder",
       selected: false,
     },
@@ -84,7 +93,7 @@ export const navigationMenu = (
         links: [
           {
             name: "Sign In",
-            href: "/login",
+            href: basePath+"/login",
             iconLeft: "arrow-right-to-bracket",
             iconRight: "up-right-from-square",
             disabled: Boolean(session),
@@ -93,7 +102,7 @@ export const navigationMenu = (
           },
           {
             name: "Sign Up",
-            href: "/registration",
+            href: basePath+"/registration",
             iconLeft: "arrow-right-to-bracket",
             iconRight: "up-right-from-square",
             disabled: Boolean(session),
@@ -102,7 +111,7 @@ export const navigationMenu = (
           },
           {
             name: "Account Recovery",
-            href: "/recovery",
+            href: basePath+"/recovery",
             iconLeft: "user-xmark",
             iconRight: "up-right-from-square",
             disabled: Boolean(session),
@@ -111,7 +120,7 @@ export const navigationMenu = (
           },
           {
             name: "Account Verification",
-            href: "/verification",
+            href: basePath+"/verification",
             iconLeft: "user-check",
             iconRight: "up-right-from-square",
             disabled: !Boolean(session),
@@ -120,7 +129,7 @@ export const navigationMenu = (
           },
           {
             name: "Account Settings",
-            href: "/settings",
+            href: basePath+"/settings",
             iconLeft: "gear",
             iconRight: "up-right-from-square",
             disabled: !Boolean(session),

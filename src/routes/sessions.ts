@@ -9,7 +9,7 @@ import { navigationMenu } from "../pkg/ui"
 
 export const createSessionsRoute: RouteCreator =
   (createHelpers) => async (req, res) => {
-    const { sdk } = createHelpers(req)
+    const { sdk, basePath } = createHelpers(req)
     const session = req.session
 
     // Create a logout URL
@@ -80,7 +80,7 @@ export const createSessionsRoute: RouteCreator =
         className: "session-code-box",
         children: JSON.stringify(session, null, 2),
       }),
-      nav: navigationMenu(session, logoutUrl, "sessions"),
+      nav: navigationMenu({session, logoutUrl, selectedLink: "sessions", basePath}),
     })
   }
 

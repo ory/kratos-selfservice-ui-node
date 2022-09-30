@@ -41,9 +41,9 @@ export const toUiNodePartial = (node: UiNode) => {
 }
 
 type NavigationMenuProps = {
-  session?: Session,
-  logoutUrl?: string,
-  selectedLink?: "welcome" | "sessions",
+  session?: Session
+  logoutUrl?: string
+  selectedLink?: "welcome" | "sessions"
   basePath?: string
 }
 /**
@@ -52,24 +52,22 @@ type NavigationMenuProps = {
  * @param logoutUrl
  * @returns
  */
-export const navigationMenu = (
-  {
-    session,
-    logoutUrl,
-    selectedLink,
-    basePath
-  }: NavigationMenuProps
-) => {
+export const navigationMenu = ({
+  session,
+  logoutUrl,
+  selectedLink,
+  basePath,
+}: NavigationMenuProps) => {
   const links = [
     {
       name: "Overview",
-      href: basePath+"/welcome",
+      href: basePath + "/welcome",
       iconLeft: "house",
       selected: false,
     },
     {
       name: "Session Information",
-      href: basePath+"/sessions",
+      href: basePath + "/sessions",
       iconLeft: "users-viewfinder",
       selected: false,
     },
@@ -93,7 +91,7 @@ export const navigationMenu = (
         links: [
           {
             name: "Sign In",
-            href: basePath+"/login",
+            href: basePath + "/login",
             iconLeft: "arrow-right-to-bracket",
             iconRight: "up-right-from-square",
             disabled: Boolean(session),
@@ -102,7 +100,7 @@ export const navigationMenu = (
           },
           {
             name: "Sign Up",
-            href: basePath+"/registration",
+            href: basePath + "/registration",
             iconLeft: "arrow-right-to-bracket",
             iconRight: "up-right-from-square",
             disabled: Boolean(session),
@@ -111,7 +109,7 @@ export const navigationMenu = (
           },
           {
             name: "Account Recovery",
-            href: basePath+"/recovery",
+            href: basePath + "/recovery",
             iconLeft: "user-xmark",
             iconRight: "up-right-from-square",
             disabled: Boolean(session),
@@ -120,7 +118,7 @@ export const navigationMenu = (
           },
           {
             name: "Account Verification",
-            href: basePath+"/verification",
+            href: basePath + "/verification",
             iconLeft: "user-check",
             iconRight: "up-right-from-square",
             disabled: !Boolean(session),
@@ -129,7 +127,7 @@ export const navigationMenu = (
           },
           {
             name: "Account Settings",
-            href: basePath+"/settings",
+            href: basePath + "/settings",
             iconLeft: "gear",
             iconRight: "up-right-from-square",
             disabled: !Boolean(session),

@@ -80,7 +80,12 @@ export const createSessionsRoute: RouteCreator =
         className: "session-code-box",
         children: JSON.stringify(session, null, 2),
       }),
-      nav: navigationMenu({session, logoutUrl, selectedLink: "sessions", basePath}),
+      nav: navigationMenu({
+        session,
+        logoutUrl,
+        selectedLink: "sessions",
+        basePath,
+      }),
     })
   }
 

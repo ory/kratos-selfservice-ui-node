@@ -24,7 +24,12 @@ export const createWelcomeRoute: RouteCreator =
 
     res.render("welcome", {
       layout: "welcome",
-      nav: navigationMenu({session, logoutUrl, selectedLink: "welcome", basePath}),
+      nav: navigationMenu({
+        session,
+        logoutUrl,
+        selectedLink: "welcome",
+        basePath,
+      }),
       projectInfoText: Typography({
         children: `Your Ory Identity Experience is running at ${req.header(
           "host",

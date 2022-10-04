@@ -1,5 +1,6 @@
 import { CardGradient, Typography } from "@ory/elements-markup"
 import {
+  basePath,
   defaultConfig,
   RouteCreator,
   RouteRegistrator,
@@ -11,7 +12,8 @@ export const createWelcomeRoute: RouteCreator =
   (createHelpers) => async (req, res) => {
     res.locals.projectName = "Welcome to Ory"
 
-    const { sdk, basePath } = createHelpers(req)
+    const basePath = req.basePath
+    const { sdk } = createHelpers(req)
     const session = req.session
 
     // Create a logout URL
@@ -85,5 +87,10 @@ export const registerWelcomeRoute: RouteRegistrator = (
   createHelpers = defaultConfig,
   route = "/welcome",
 ) => {
-  app.get(route, setSession(createHelpers), createWelcomeRoute(createHelpers))
+  app.get(
+    route,
+    setSession(createHelpers),
+    basePath(createHelpers),
+    createWelcomeRoute(createHelpers),
+  )
 }

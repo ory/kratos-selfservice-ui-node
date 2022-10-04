@@ -1,5 +1,6 @@
 import { CodeBox, Typography } from "@ory/elements-markup"
 import {
+  basePath,
   defaultConfig,
   requireAuth,
   RouteCreator,
@@ -9,7 +10,8 @@ import { navigationMenu } from "../pkg/ui"
 
 export const createSessionsRoute: RouteCreator =
   (createHelpers) => async (req, res) => {
-    const { sdk, basePath } = createHelpers(req)
+    const basePath = req.basePath
+    const { sdk } = createHelpers(req)
     const session = req.session
 
     // Create a logout URL
@@ -94,5 +96,10 @@ export const registerSessionsRoute: RouteRegistrator = (
   createHelpers = defaultConfig,
   route = "/sessions",
 ) => {
-  app.get(route, requireAuth(createHelpers), createSessionsRoute(createHelpers))
+  app.get(
+    route,
+    requireAuth(createHelpers),
+    basePath(createHelpers),
+    createSessionsRoute(createHelpers),
+  )
 }

@@ -14,20 +14,36 @@ export const createRegistrationRoute: RouteCreator =
   (createHelpers) => (req, res, next) => {
     res.locals.projectName = "Create account"
 
-    const { flow, return_to = "" } = req.query
+    const { flow, return_to = "", login_challenge } = req.query
     const helpers = createHelpers(req)
     const { sdk, kratosBrowserUrl } = helpers
+
+    const initFlowQuery = new URLSearchParams({
+      return_to: return_to.toString(),
+    })
+    const initLoginQuery = new URLSearchParams({
+      return_to: return_to.toString(),
+    })
+
+    if (isQuerySet(login_challenge)) {
+      logger.debug("login_challenge found in URL query: ", { query: req.query })
+      initFlowQuery.append("login_challenge", login_challenge)
+      initLoginQuery.append("login_challenge", login_challenge)
+    } else {
+      logger.debug("no login_challenge found in URL query: ", {
+        query: req.query,
+      })
+    }
+
     const initFlowUrl = getUrlForFlow(
       kratosBrowserUrl,
       "registration",
-      new URLSearchParams({ return_to: return_to.toString() }),
+      initFlowQuery,
     )
     const initLoginUrl = getUrlForFlow(
       kratosBrowserUrl,
       "login",
-      new URLSearchParams({
-        return_to: return_to.toString(),
-      }),
+      initLoginQuery,
     )
 
     // The flow is used to identify the settings and registration flow and

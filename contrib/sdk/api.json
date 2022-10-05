@@ -93,6 +93,28 @@
         },
         "type": "object"
       },
+      "NullBool": {
+        "nullable": true,
+        "type": "boolean"
+      },
+      "NullInt": {
+        "nullable": true,
+        "type": "integer"
+      },
+      "NullString": {
+        "nullable": true,
+        "type": "string"
+      },
+      "NullTime": {
+        "format": "date-time",
+        "nullable": true,
+        "type": "string"
+      },
+      "NullUUID": {
+        "format": "uuid4",
+        "nullable": true,
+        "type": "string"
+      },
       "OAuth2Client": {
         "description": "OAuth2Client struct for OAuth2Client",
         "properties": {
@@ -296,6 +318,10 @@
         "type": "string"
       },
       "TemplateType": {
+        "type": "string"
+      },
+      "Time": {
+        "format": "date-time",
         "type": "string"
       },
       "UUID": {
@@ -950,6 +976,15 @@
         "title": "Is sent when a privileged session is required to perform the settings update.",
         "type": "object"
       },
+      "nullDuration": {
+        "nullable": true,
+        "pattern": "^[0-9]+(ns|us|ms|s|m|h)$",
+        "type": "string"
+      },
+      "nullInt64": {
+        "nullable": true,
+        "type": "integer"
+      },
       "nullJsonRawMessage": {
         "description": "NullJSONRawMessage represents a json.RawMessage that works well with JSON, SQL, and Swagger and is NULLable-"
       },
@@ -1175,9 +1210,6 @@
             "format": "date-time",
             "type": "string"
           },
-          "hydra_login_request": {
-            "$ref": "#/components/schemas/LoginRequest"
-          },
           "id": {
             "description": "ID represents the flow's unique ID. When performing the login flow, this\nrepresents the id in the login UI's query parameter: http://\u003cselfservice.flows.login.ui_url\u003e/?flow=\u003cflow_id\u003e",
             "format": "uuid",
@@ -1187,6 +1219,12 @@
             "description": "IssuedAt is the time (UTC) when the flow started.",
             "format": "date-time",
             "type": "string"
+          },
+          "oauth2_login_challenge": {
+            "$ref": "#/components/schemas/NullUUID"
+          },
+          "oauth2_login_request": {
+            "$ref": "#/components/schemas/LoginRequest"
           },
           "refresh": {
             "description": "Refresh stores whether this login flow should enforce re-authentication.",
@@ -1332,9 +1370,6 @@
             "format": "date-time",
             "type": "string"
           },
-          "hydra_login_request": {
-            "$ref": "#/components/schemas/LoginRequest"
-          },
           "id": {
             "description": "ID represents the flow's unique ID. When performing the registration flow, this\nrepresents the id in the registration ui's query parameter: http://\u003cselfservice.flows.registration.ui_url\u003e/?flow=\u003cid\u003e",
             "format": "uuid",
@@ -1344,6 +1379,12 @@
             "description": "IssuedAt is the time (UTC) when the flow occurred.",
             "format": "date-time",
             "type": "string"
+          },
+          "oauth2_login_challenge": {
+            "$ref": "#/components/schemas/NullUUID"
+          },
+          "oauth2_login_request": {
+            "$ref": "#/components/schemas/LoginRequest"
           },
           "request_url": {
             "description": "RequestURL is the initial URL that was requested from Ory Kratos. It can be used\nto forward information contained in the URL's path or query for example.",
@@ -2688,7 +2729,7 @@
             "description": "webAuthnJavaScript"
           }
         },
-        "summary": "# Get WebAuthn JavaScript",
+        "summary": "Get WebAuthn JavaScript",
         "tags": [
           "v0alpha2"
         ]
@@ -2771,7 +2812,7 @@
             "description": "jsonError"
           }
         },
-        "summary": "# List Messages",
+        "summary": "List Messages",
         "tags": [
           "v0alpha2"
         ]
@@ -2833,7 +2874,7 @@
             "oryAccessToken": []
           }
         ],
-        "summary": "# List Identities",
+        "summary": "List Identities",
         "tags": [
           "v0alpha2"
         ]
@@ -2898,7 +2939,7 @@
             "oryAccessToken": []
           }
         ],
-        "summary": "# Create an Identity",
+        "summary": "Create an Identity",
         "tags": [
           "v0alpha2"
         ]
@@ -2949,7 +2990,7 @@
             "oryAccessToken": []
           }
         ],
-        "summary": "# Delete an Identity",
+        "summary": "Delete an Identity",
         "tags": [
           "v0alpha2"
         ]
@@ -3016,7 +3057,7 @@
             "oryAccessToken": []
           }
         ],
-        "summary": "# Get an Identity",
+        "summary": "Get an Identity",
         "tags": [
           "v0alpha2"
         ]
@@ -3188,7 +3229,7 @@
             "oryAccessToken": []
           }
         ],
-        "summary": "# Update an Identity",
+        "summary": "Update an Identity",
         "tags": [
           "v0alpha2"
         ]
@@ -3428,7 +3469,7 @@
             "description": "jsonError"
           }
         },
-        "summary": "# Create a Recovery Link",
+        "summary": "Create a Recovery Link",
         "tags": [
           "v0alpha2"
         ]
@@ -3761,7 +3802,7 @@
             "description": "jsonError"
           }
         },
-        "summary": "# Get Self-Service Errors",
+        "summary": "Get Self-Service Errors",
         "tags": [
           "v0alpha2"
         ]
@@ -3869,7 +3910,7 @@
             "description": "jsonError"
           }
         },
-        "summary": "# Submit a Login Flow",
+        "summary": "Submit a Login Flow",
         "tags": [
           "v0alpha2"
         ]
@@ -3945,11 +3986,11 @@
     },
     "/self-service/login/browser": {
       "get": {
-        "description": "This endpoint initializes a browser-based user login flow. This endpoint will set the appropriate\ncookies and anti-CSRF measures required for browser-based flows.\n\nIf this endpoint is opened as a link in the browser, it will be redirected to\n`selfservice.flows.login.ui_url` with the flow ID set as the query parameter `?flow=`. If a valid user session\nexists already, the browser will be redirected to `urls.default_redirect_url` unless the query parameter\n`?refresh=true` was set.\n\nIf this endpoint is called via an AJAX request, the response contains the flow without a redirect. In the\ncase of an error, the `error.id` of the JSON response body can be one of:\n\n`session_already_available`: The user is already signed in.\n`session_aal1_required`: Multi-factor auth (e.g. 2fa) was requested but the user has no session yet.\n`security_csrf_violation`: Unable to fetch the flow because a CSRF violation occurred.\n`security_identity_mismatch`: The requested `?return_to` address is not allowed to be used. Adjust this in the configuration!\n\nThe optional query parameter login_challenge is set when using Kratos with\nHydra in an OAUTH flow. See the selfservice.hydra_admin_url configuration\noption.\n\nThis endpoint is NOT INTENDED for clients that do not have a browser (Chrome, Firefox, ...) as cookies are needed.\n\nMore information can be found at [Ory Kratos User Login](https://www.ory.sh/docs/kratos/self-service/flows/user-login) and [User Registration Documentation](https://www.ory.sh/docs/kratos/self-service/flows/user-registration).",
+        "description": "This endpoint initializes a browser-based user login flow. This endpoint will set the appropriate\ncookies and anti-CSRF measures required for browser-based flows.\n\nIf this endpoint is opened as a link in the browser, it will be redirected to\n`selfservice.flows.login.ui_url` with the flow ID set as the query parameter `?flow=`. If a valid user session\nexists already, the browser will be redirected to `urls.default_redirect_url` unless the query parameter\n`?refresh=true` was set.\n\nIf this endpoint is called via an AJAX request, the response contains the flow without a redirect. In the\ncase of an error, the `error.id` of the JSON response body can be one of:\n\n`session_already_available`: The user is already signed in.\n`session_aal1_required`: Multi-factor auth (e.g. 2fa) was requested but the user has no session yet.\n`security_csrf_violation`: Unable to fetch the flow because a CSRF violation occurred.\n`security_identity_mismatch`: The requested `?return_to` address is not allowed to be used. Adjust this in the configuration!\n\nThe optional query parameter login_challenge is set when using Kratos with\nHydra in an OAuth2 flow. See the selfservice.hydra_admin_url configuration\noption.\n\nThis endpoint is NOT INTENDED for clients that do not have a browser (Chrome, Firefox, ...) as cookies are needed.\n\nMore information can be found at [Ory Kratos User Login](https://www.ory.sh/docs/kratos/self-service/flows/user-login) and [User Registration Documentation](https://www.ory.sh/docs/kratos/self-service/flows/user-registration).",
         "operationId": "initializeSelfServiceLoginFlowForBrowsers",
         "parameters": [
           {
-            "description": "An optional Hydra login challenge. If present, Kratos will cooperate with\nOry Hydra to act as an OAUTH identity provider.\n\nThe value for this parameter comes from `login_challenge` URL Query parameter sent to your\napplication (e.g. `/login?login_challenge=abcde`).",
+            "description": "An optional Hydra login challenge. If present, Kratos will cooperate with\nOry Hydra to act as an OAuth2 identity provider.\n\nThe value for this parameter comes from `login_challenge` URL Query parameter sent to your\napplication (e.g. `/login?login_challenge=abcde`).",
             "in": "query",
             "name": "login_challenge",
             "schema": {
@@ -4024,7 +4065,7 @@
             "description": "jsonError"
           }
         },
-        "summary": "# Initialize Login Flow for Browsers",
+        "summary": "Initialize Login Flow for Browsers",
         "tags": [
           "v0alpha2"
         ]
@@ -4105,7 +4146,7 @@
             "description": "jsonError"
           }
         },
-        "summary": "# Get Login Flow",
+        "summary": "Get Login Flow",
         "tags": [
           "v0alpha2"
         ]
@@ -4151,7 +4192,7 @@
             "description": "jsonError"
           }
         },
-        "summary": "# Complete Self-Service Logout",
+        "summary": "Complete Self-Service Logout",
         "tags": [
           "v0alpha2"
         ]
@@ -4249,7 +4290,7 @@
             "description": "jsonError"
           }
         },
-        "summary": "# Create a Logout URL for Browsers",
+        "summary": "Create a Logout URL for Browsers",
         "tags": [
           "v0alpha2"
         ]
@@ -4347,7 +4388,7 @@
             "description": "jsonError"
           }
         },
-        "summary": "# Complete Recovery Flow",
+        "summary": "Complete Recovery Flow",
         "tags": [
           "v0alpha2"
         ]
@@ -4444,7 +4485,7 @@
             "description": "jsonError"
           }
         },
-        "summary": "# Initialize Recovery Flow for Browsers",
+        "summary": "Initialize Recovery Flow for Browsers",
         "tags": [
           "v0alpha2"
         ]
@@ -4515,7 +4556,7 @@
             "description": "jsonError"
           }
         },
-        "summary": "# Get Recovery Flow",
+        "summary": "Get Recovery Flow",
         "tags": [
           "v0alpha2"
         ]
@@ -4615,7 +4656,7 @@
             "description": "jsonError"
           }
         },
-        "summary": "# Submit a Registration Flow",
+        "summary": "Submit a Registration Flow",
         "tags": [
           "v0alpha2"
         ]
@@ -4669,6 +4710,14 @@
         "operationId": "initializeSelfServiceRegistrationFlowForBrowsers",
         "parameters": [
           {
+            "description": "An optional Hydra login challenge. If present, Kratos will cooperate with\nOry Hydra to act as an OAuth2 identity provider.\n\nThe value for this parameter comes from `login_challenge` URL Query parameter sent to your\napplication (e.g. `/registration?login_challenge=abcde`).",
+            "in": "query",
+            "name": "login_challenge",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
             "description": "The URL to return the browser to after the flow was completed.",
             "in": "query",
             "name": "return_to",
@@ -4702,7 +4751,7 @@
             "description": "jsonError"
           }
         },
-        "summary": "# Initialize Registration Flow for Browsers",
+        "summary": "Initialize Registration Flow for Browsers",
         "tags": [
           "v0alpha2"
         ]
@@ -4783,7 +4832,7 @@
             "description": "jsonError"
           }
         },
-        "summary": "# Get Registration Flow",
+        "summary": "Get Registration Flow",
         "tags": [
           "v0alpha2"
         ]
@@ -4916,7 +4965,7 @@
             "sessionToken": []
           }
         ],
-        "summary": "# Complete Settings Flow",
+        "summary": "Complete Settings Flow",
         "tags": [
           "v0alpha2"
         ]
@@ -5051,7 +5100,7 @@
             "description": "jsonError"
           }
         },
-        "summary": "# Initialize Settings Flow for Browsers",
+        "summary": "Initialize Settings Flow for Browsers",
         "tags": [
           "v0alpha2"
         ]
@@ -5150,7 +5199,7 @@
             "description": "jsonError"
           }
         },
-        "summary": "# Get Settings Flow",
+        "summary": "Get Settings Flow",
         "tags": [
           "v0alpha2"
         ]
@@ -5248,7 +5297,7 @@
             "description": "jsonError"
           }
         },
-        "summary": "# Complete Verification Flow",
+        "summary": "Complete Verification Flow",
         "tags": [
           "v0alpha2"
         ]
@@ -5335,7 +5384,7 @@
             "description": "jsonError"
           }
         },
-        "summary": "# Initialize Verification Flow for Browser Clients",
+        "summary": "Initialize Verification Flow for Browser Clients",
         "tags": [
           "v0alpha2"
         ]
@@ -5406,7 +5455,7 @@
             "description": "jsonError"
           }
         },
-        "summary": "# Get Verification Flow",
+        "summary": "Get Verification Flow",
         "tags": [
           "v0alpha2"
         ]
@@ -5659,7 +5708,7 @@
             "description": "jsonError"
           }
         },
-        "summary": "# Check Who the Current HTTP Session Belongs To",
+        "summary": "Check Who the Current HTTP Session Belongs To",
         "tags": [
           "v0alpha2"
         ]

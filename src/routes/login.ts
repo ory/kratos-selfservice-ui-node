@@ -24,14 +24,9 @@ export const createLoginRoute: RouteCreator =
       return_to: return_to.toString()
     })
 
-    const initRegistrationQuery = new URLSearchParams({
-        return_to: return_to.toString()
-    })
-
     if (isQuerySet(login_challenge)) {
       logger.debug('login_challenge found in URL query: ', { query: req.query })
       initFlowQuery.append("login_challenge", login_challenge)
-      initRegistrationQuery.append("login_challenge", login_challenge)
     }
 
     const initFlowUrl = getUrlForFlow(kratosBrowserUrl, 'login', initFlowQuery)
@@ -61,11 +56,11 @@ export const createLoginRoute: RouteCreator =
       .then(({ data: flow }: { data: SelfServiceLoginFlow & any }) => {
         // Render the data using a view (e.g. Jade Template):
 
-        if (isQuerySet(login_challenge)) {
-          logger.debug('login_challenge found in URL query: ', { query: req.query })
-          initRegistrationQuery.append("login_challenge", login_challenge)
-        } else if (flow.hydra_login_request?.challenge) {
-          initRegistrationQuery.append("login_challenge", flow.hydra_login_request.challenge)
+        const initRegistrationQuery = new URLSearchParams({
+            return_to: return_to.toString()
+        })
+        if (flow.oauth2_login_request?.challenge) {
+          initRegistrationQuery.set("login_challenge", flow.oauth2_login_request.challenge)
         }
 
         const initRegistrationUrl = getUrlForFlow(kratosBrowserUrl, 'registration', initRegistrationQuery)

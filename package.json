@@ -21,7 +21,7 @@
     "prepublishOnly": "npm run build"
   },
   "dependencies": {
-    "@ory/client": "^0.0.0-next.b9ae67509002",
+    "@ory/client": "0.2.0-alpha.24",
     "@ory/integrations": "0.1.2",
     "@ory/themes": "0.0.101",
     "axios": "^0.24.0",

@@ -62,13 +62,13 @@ export const navigationMenu = ({
   const links = [
     {
       name: "Overview",
-      href: joinAbsoluteUrlPath(basePath, "/welcome"),
+      href: joinAbsoluteUrlPath(basePath, "welcome"),
       iconLeft: "house",
       selected: false,
     },
     {
       name: "Session Information",
-      href: joinAbsoluteUrlPath(basePath, "/sessions"),
+      href: joinAbsoluteUrlPath(basePath, "sessions"),
       iconLeft: "users-viewfinder",
       selected: false,
     },
@@ -92,7 +92,7 @@ export const navigationMenu = ({
         links: [
           {
             name: "Sign In",
-            href: joinAbsoluteUrlPath(basePath, "/login"),
+            href: joinAbsoluteUrlPath(basePath, "login"),
             iconLeft: "arrow-right-to-bracket",
             iconRight: "up-right-from-square",
             disabled: Boolean(session),
@@ -101,7 +101,7 @@ export const navigationMenu = ({
           },
           {
             name: "Sign Up",
-            href: joinAbsoluteUrlPath(basePath, "/registration"),
+            href: joinAbsoluteUrlPath(basePath, "registration"),
             iconLeft: "arrow-right-to-bracket",
             iconRight: "up-right-from-square",
             disabled: Boolean(session),
@@ -110,7 +110,7 @@ export const navigationMenu = ({
           },
           {
             name: "Account Recovery",
-            href: joinAbsoluteUrlPath(basePath, "/recovery"),
+            href: joinAbsoluteUrlPath(basePath, "recovery"),
             iconLeft: "user-xmark",
             iconRight: "up-right-from-square",
             disabled: Boolean(session),
@@ -119,7 +119,7 @@ export const navigationMenu = ({
           },
           {
             name: "Account Verification",
-            href: joinAbsoluteUrlPath(basePath, "/verification"),
+            href: joinAbsoluteUrlPath(basePath, "verification"),
             iconLeft: "user-check",
             iconRight: "up-right-from-square",
             disabled: !Boolean(session),
@@ -128,7 +128,7 @@ export const navigationMenu = ({
           },
           {
             name: "Account Settings",
-            href: joinAbsoluteUrlPath(basePath, "/settings"),
+            href: joinAbsoluteUrlPath(basePath, "settings"),
             iconLeft: "gear",
             iconRight: "up-right-from-square",
             disabled: !Boolean(session),

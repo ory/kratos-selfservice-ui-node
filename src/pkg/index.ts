@@ -61,9 +61,7 @@ export const redirectOnSoftError =
  * @returns
  */
 export const joinAbsoluteUrlPath = (...args: string[]) => {
-  return (
-    "/" + args.map((pathPart) => pathPart.replace(/(^\/|\/$)/g, "")).join("/")
-  )
+  return args.map((pathPart) => pathPart.replace(/(^\/|\/$)/g, "")).join("/")
 }
 
 export const handlebarsHelpers = {

@@ -8,6 +8,7 @@ import {
   RouteCreator,
   RouteRegistrator,
 } from "../pkg"
+import { SelfServiceRegistrationFlow } from '@ory/client';
 
 // A simple express handler that shows the registration screen.
 export const createRegistrationRoute: RouteCreator =
@@ -52,7 +53,7 @@ export const createRegistrationRoute: RouteCreator =
 
     sdk
       .getSelfServiceRegistrationFlow(flow, req.header("Cookie"))
-      .then(({ data: flow }) => {
+      .then(({ data: flow }: SelfServiceRegistrationFlow & any) => {
         // Render the data using a view (e.g. Jade Template):
         const initLoginQuery = new URLSearchParams({
           return_to: return_to.toString(),

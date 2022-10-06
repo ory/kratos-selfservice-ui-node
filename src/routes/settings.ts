@@ -5,6 +5,12 @@ import {
   ErrorMessages,
   UserSettingsFlowType,
   Divider,
+  hasLookupSecret,
+  hasTotp,
+  NavSectionLinks,
+  hasWebauthn,
+  hasOIDC,
+  hasPassword,
 } from "@ory/elements-markup"
 import {
   filterNodesByGroups,
@@ -55,6 +61,45 @@ export const createSettingsRoute: RouteCreator =
     return sdk
       .getSelfServiceSettingsFlow(flow, undefined, req.header("cookie"))
       .then(({ data: flow }) => {
+        const conditionalLinks: NavSectionLinks[] = [
+          {
+            name: "Profile",
+            href: "#profile",
+            iconLeft: "user",
+            testId: "profile",
+          },
+          hasPassword(flow.ui.nodes) && {
+            name: "Password",
+            href: "#password",
+            iconLeft: "lock",
+            testId: "password",
+          },
+          hasOIDC(flow.ui.nodes) && {
+            name: "Social Sign In",
+            href: "#oidc",
+            iconLeft: "comments",
+            testId: "social-sign-in",
+          },
+          hasLookupSecret(flow.ui.nodes) && {
+            name: "2FA Backup Codes",
+            href: "#lookupSecret",
+            iconLeft: "shield",
+            testId: "backup-codes",
+          },
+          hasWebauthn(flow.ui.nodes) && {
+            name: "Hardware Tokens",
+            href: "#webauthn",
+            iconLeft: "key",
+            testId: "webauthn",
+          },
+          hasTotp(flow.ui.nodes) && {
+            name: "Authenticator App",
+            href: "#totp",
+            iconLeft: "mobile",
+            testId: "totp",
+          },
+        ].filter(Boolean) as NavSectionLinks[]
+
         // Render the data using a view (e.g. Jade Template):
         res.render("settings", {
           layout: "settings",
@@ -63,44 +108,7 @@ export const createSettingsRoute: RouteCreator =
             navTitle: "Project Name",
             navSections: [
               {
-                links: [
-                  {
-                    name: "Profile",
-                    href: "#profile",
-                    iconLeft: "user",
-                    testId: "profile",
-                  },
-                  {
-                    name: "Password",
-                    href: "#password",
-                    iconLeft: "lock",
-                    testId: "password",
-                  },
-                  {
-                    name: "Social Sign In",
-                    href: "#social-sign-in",
-                    iconLeft: "comments",
-                    testId: "social-sign-in",
-                  },
-                  {
-                    name: "2FA Backup Codes",
-                    href: "#backup-codes",
-                    iconLeft: "shield",
-                    testId: "backup-codes",
-                  },
-                  {
-                    name: "Hardware Tokens",
-                    href: "#webauthn",
-                    iconLeft: "key",
-                    testId: "webauthn",
-                  },
-                  {
-                    name: "Authenticator App",
-                    href: "#totp",
-                    iconLeft: "mobile",
-                    testId: "totp",
-                  },
-                ],
+                links: conditionalLinks,
               },
               {
                 links: [

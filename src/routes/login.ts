@@ -76,12 +76,13 @@ export const createLoginRoute: RouteCreator =
             query: req.query,
           })
           initRegistrationQuery.append("login_challenge", login_challenge)
-        } else if (flow.hydra_login_request?.challenge) {
-          initRegistrationQuery.append(
-            "login_challenge",
-            flow.hydra_login_request.challenge,
-          )
         }
+        //  else if (flow.hydra_login_request?.challenge) {
+        //   initRegistrationQuery.append(
+        //     "login_challenge",
+        //     flow.hydra_login_request.challenge,
+        //   )
+        // }
 
         const initRegistrationUrl = getUrlForFlow(
           kratosBrowserUrl,

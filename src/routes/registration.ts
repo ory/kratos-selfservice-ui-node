@@ -1,3 +1,4 @@
+import { SelfServiceRegistrationFlow } from "@ory/client"
 import {
   defaultConfig,
   getUrlForFlow,
@@ -8,7 +9,6 @@ import {
   RouteCreator,
   RouteRegistrator,
 } from "../pkg"
-import { SelfServiceRegistrationFlow } from '@ory/client';
 
 // A simple express handler that shows the registration screen.
 export const createRegistrationRoute: RouteCreator =

@@ -1,3 +1,4 @@
+import { SelfServiceLoginFlow } from "@ory/client"
 import {
   defaultConfig,
   getUrlForFlow,
@@ -63,7 +64,7 @@ export const createLoginRoute: RouteCreator =
 
     return sdk
       .getSelfServiceLoginFlow(flow, req.header("cookie"))
-      .then(({ data: flow }) => {
+      .then(({ data: flow }: { data: SelfServiceLoginFlow & any }) => {
         // Render the data using a view (e.g. Jade Template):
 
         if (isQuerySet(login_challenge)) {

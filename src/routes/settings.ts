@@ -105,7 +105,7 @@ export const createSettingsRoute: RouteCreator =
           layout: "settings",
           nav: Nav({
             className: "main-nav",
-            navTitle: "Project Name",
+            navTitle: res.locals.projectName,
             navSections: [
               {
                 links: conditionalLinks,

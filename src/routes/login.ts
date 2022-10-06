@@ -109,7 +109,7 @@ export const createLoginRoute: RouteCreator =
               : "Two-Factor Authentication",
             flow: flow as SelfServiceFlow,
             flowType: "login",
-            cardImage: "ory-logo.svg",
+            cardImage: "/ory-logo.svg",
             additionalProps: {
               forgotPasswordURL: "/recovery",
               signupURL: initRegistrationUrl,

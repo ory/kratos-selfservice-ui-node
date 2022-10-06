@@ -50,7 +50,7 @@ export const createVerificationRoute: RouteCreator =
               title: "Verify your account",
               flow: flow as SelfServiceFlow,
               flowType: "verification",
-              cardImage: "ory-logo.svg",
+              cardImage: "/ory-logo.svg",
               additionalProps: {
                 signupURL: initRegistrationUrl,
               },

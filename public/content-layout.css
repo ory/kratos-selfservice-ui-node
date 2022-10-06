@@ -58,6 +58,7 @@ body:before {
   display: flex;
   flex: 1 1 auto;
   max-width: calc(50% - 2rem);
+  margin-bottom: auto;
 }
 
 .content {

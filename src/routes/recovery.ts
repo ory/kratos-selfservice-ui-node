@@ -47,7 +47,7 @@ export const createRecoveryRoute: RouteCreator =
             title: "Recover your account",
             flow: flow as SelfServiceFlow,
             flowType: "recovery",
-            cardImage: "ory-logo.svg",
+            cardImage: "/ory-logo.svg",
             additionalProps: {
               loginURL: initLoginUrl,
             },

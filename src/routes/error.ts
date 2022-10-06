@@ -3,6 +3,7 @@ import { AxiosError } from "axios"
 import {
   defaultConfig,
   isQuerySet,
+  joinAbsoluteUrlPath,
   RouteCreator,
   RouteRegistrator,
 } from "../pkg"
@@ -28,8 +29,9 @@ export const createErrorRoute: RouteCreator =
         res.status(200).render("error", {
           card: UserErrorCard({
             error: data,
+            cardImage: "/ory-logo.svg",
             title: "An error occurred",
-            backURL: "/login",
+            backURL: joinAbsoluteUrlPath(req.basePath || "", "/login"),
           }),
         })
       })

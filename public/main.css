@@ -7,6 +7,17 @@ body {
   flex-direction: column;
 }
 
+/* the browser adds margins to these elements by default */
+ul,
+ol,
+p,
+h1,
+h2,
+h3 {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
 /* main contains all of our page elements - excluding the footer */
 main {
   /* fill the page */

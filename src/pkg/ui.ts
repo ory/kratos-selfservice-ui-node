@@ -42,6 +42,7 @@ export const toUiNodePartial = (node: UiNode) => {
 }
 
 type NavigationMenuProps = {
+  navTitle: string
   session?: Session
   logoutUrl?: string
   selectedLink?: "welcome" | "sessions"
@@ -54,6 +55,7 @@ type NavigationMenuProps = {
  * @returns
  */
 export const navigationMenu = ({
+  navTitle,
   session,
   logoutUrl,
   selectedLink,
@@ -81,7 +83,7 @@ export const navigationMenu = ({
 
   return Nav({
     className: "main-nav",
-    navTitle: "Project Name",
+    navTitle: navTitle,
     navSections: [
       {
         links: links,

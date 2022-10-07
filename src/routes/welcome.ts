@@ -27,6 +27,7 @@ export const createWelcomeRoute: RouteCreator =
     res.render("welcome", {
       layout: "welcome",
       nav: navigationMenu({
+        navTitle: res.locals.projectName,
         session,
         logoutUrl,
         selectedLink: "welcome",

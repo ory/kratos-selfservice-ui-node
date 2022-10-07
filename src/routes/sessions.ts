@@ -10,6 +10,7 @@ import { navigationMenu } from "../pkg/ui"
 
 export const createSessionsRoute: RouteCreator =
   (createHelpers) => async (req, res) => {
+    res.locals.projectName = "Session Information"
     const basePath = req.basePath
     const { sdk } = createHelpers(req)
     const session = req.session
@@ -83,6 +84,7 @@ export const createSessionsRoute: RouteCreator =
         children: JSON.stringify(session, null, 2),
       }),
       nav: navigationMenu({
+        navTitle: res.locals.projectName,
         session,
         logoutUrl,
         selectedLink: "sessions",

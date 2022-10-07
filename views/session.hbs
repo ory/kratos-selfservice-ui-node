@@ -10,23 +10,21 @@
     <div class="spacing-8 traits-box">
       {{#each traits}}
         <div class="spacing-8">
-          {{{typography @key "caption" "foregroundDefault" "bold"}}}
-          {{{typography this "caption" "foregroundDefault"}}}
+          {{{typography @key "monoCaption" "foregroundDefault" "bold"}}}
+          {{{typography this "monoCaption" "foregroundDefault"}}}
           {{{divider true "traits-box-divider"}}}
         </div>
       {{/each}}
-    </div>
-    <div class="spacing-8 traits-box">
       {{#each authMethods}}
         {{#each this }}
           <div class="spacing-8">
-            {{{typography @key "caption" "foregroundDefault" "bold"}}}
-            {{{typography this "caption" "foregroundDefault"}}}
+            {{{typography @key "monoCaption" "foregroundDefault" "bold"}}}
+            {{{typography this "monoCaption" "foregroundDefault"}}}
             {{{divider true "traits-box-divider"}}}
           </div>
         {{/each}}
       {{/each}}
-    </div>
+     </div>
   </div>
   
   {{{divider false "divider-left"}}}

@@ -11,6 +11,7 @@ import {
   hasWebauthn,
   hasOIDC,
   hasPassword,
+  Typography,
 } from "@ory/elements-markup"
 import {
   filterNodesByGroups,
@@ -50,6 +51,8 @@ export const createSettingsRoute: RouteCreator =
       return
     }
 
+    const session = req.session
+
     // Create a logout URL
     const logoutUrl =
       (
@@ -57,6 +60,14 @@ export const createSettingsRoute: RouteCreator =
           .createSelfServiceLogoutFlowUrlForBrowsers(req.header("cookie"))
           .catch(() => ({ data: { logout_url: "" } }))
       ).data.logout_url || ""
+
+    const identityCredentialTrait =
+      session?.identity.traits.email || session?.identity.traits.username || ""
+
+    const sessionText =
+      identityCredentialTrait !== ""
+        ? `You are currently logged in as ${identityCredentialTrait} `
+        : ""
 
     return sdk
       .getSelfServiceSettingsFlow(flow, undefined, req.header("cookie"))
@@ -130,6 +141,22 @@ export const createSettingsRoute: RouteCreator =
             }),
             uiMessages: flow.ui.messages,
           }),
+          sessionDescription: [
+            sessionText !== "" &&
+              Typography({
+                children: sessionText,
+                color: "foregroundMuted",
+                size: "small",
+              }),
+            Typography({
+              children:
+                "Here you can manage settings related to your account. Keep in mind that certain actions require a you to re-authenticate.",
+              color: "foregroundMuted",
+              size: "small",
+            }),
+          ]
+            .filter(Boolean)
+            .join(""),
           webAuthnHandler: filterNodesByGroups({
             nodes: flow.ui.nodes,
             groups: "webauthn",

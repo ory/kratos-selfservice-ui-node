@@ -1,24 +1,13 @@
 <html lang='en'>
   <head>
-    <meta content="width=device-width, initial-scale=1" name="viewport" />
-    <link rel='icon' type='image/png' href='/favico.png' />
-    <meta charset='utf-8' />
-    <title>{{projectName}}</title>
-    {{! Themes }}
-    <link type="text/css" rel="stylesheet" href="/style.css" />
-    <link type="text/css" rel="stylesheet" href="/theme.css" />
-    {{! Managed UI styles }}
-    <link type="text/css" rel='stylesheet' href='/main.css' />
-    <link type="text/css" rel='stylesheet' href='/auth-layout.css' />
+    {{> standard_headers}}
+    <link type="text/css" rel='stylesheet' href="{{#if basePath }}/{{basePath}}{{/if}}/auth-layout.css" />
   </head>
   <body>
     <main data-testid="app-express">
       <div class="auth-container spacing-16">
         {{{body}}}
-        <div class="ory-branding">
-          {{{oryBranding}}} <img width="32px" height="16px" src="/ory-small.svg" />
-        </div>
-        
+        {{> ory_branding}}
       </div>
       
     </main>

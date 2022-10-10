@@ -1,6 +1,7 @@
 import { UserErrorCard } from "@ory/elements-markup"
 import { AxiosError } from "axios"
 import {
+  basePath,
   defaultConfig,
   isQuerySet,
   joinAbsoluteUrlPath,
@@ -13,6 +14,8 @@ export const createErrorRoute: RouteCreator =
   (createHelpers) => (req, res, next) => {
     res.locals.projectName = "An error occurred"
     const { id } = req.query
+
+    const basePath = req.app.locals.basePath
 
     // Get the SDK
     const { sdk } = createHelpers(req)
@@ -29,9 +32,9 @@ export const createErrorRoute: RouteCreator =
         res.status(200).render("error", {
           card: UserErrorCard({
             error: data,
-            cardImage: "/ory-logo.svg",
+            cardImage: (basePath ? `/${basePath}` : "") + "/ory-logo.svg",
             title: "An error occurred",
-            backURL: joinAbsoluteUrlPath(req.basePath || "", "/login"),
+            backURL: joinAbsoluteUrlPath(basePath || "", "/login"),
           }),
         })
       })
@@ -55,5 +58,5 @@ export const registerErrorRoute: RouteRegistrator = (
   app,
   createHelpers = defaultConfig,
 ) => {
-  app.get("/error", createErrorRoute(createHelpers))
+  app.get("/error", basePath(createHelpers), createErrorRoute(createHelpers))
 }

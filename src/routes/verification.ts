@@ -1,5 +1,6 @@
 import { UserAuthCard, SelfServiceFlow } from "@ory/elements-markup"
 import {
+  basePath,
   defaultConfig,
   getUrlForFlow,
   isQuerySet,
@@ -14,6 +15,7 @@ export const createVerificationRoute: RouteCreator =
     res.locals.projectName = "Verify account"
 
     const { flow, return_to = "" } = req.query
+    const basePath = req.app.locals.basePath
     const helpers = createHelpers(req)
     const { sdk, kratosBrowserUrl } = helpers
     const initFlowUrl = getUrlForFlow(
@@ -50,7 +52,7 @@ export const createVerificationRoute: RouteCreator =
               title: "Verify your account",
               flow: flow as SelfServiceFlow,
               flowType: "verification",
-              cardImage: "/ory-logo.svg",
+              cardImage: (basePath ? `/${basePath}` : "") + "/ory-logo.svg",
               additionalProps: {
                 signupURL: initRegistrationUrl,
               },
@@ -66,5 +68,9 @@ export const registerVerificationRoute: RouteRegistrator = (
   app,
   createHelpers = defaultConfig,
 ) => {
-  app.get("/verification", createVerificationRoute(createHelpers))
+  app.get(
+    "/verification",
+    basePath(createHelpers),
+    createVerificationRoute(createHelpers),
+  )
 }

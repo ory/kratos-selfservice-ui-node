@@ -11,7 +11,7 @@ import { navigationMenu } from "../pkg/ui"
 export const createSessionsRoute: RouteCreator =
   (createHelpers) => async (req, res) => {
     res.locals.projectName = "Session Information"
-    const basePath = req.basePath
+    const basePath = req.app.locals.basePath
     const { sdk } = createHelpers(req)
     const session = req.session
 

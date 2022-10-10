@@ -12,7 +12,7 @@ export const createWelcomeRoute: RouteCreator =
   (createHelpers) => async (req, res) => {
     res.locals.projectName = "Welcome to Ory"
 
-    const basePath = req.basePath
+    const basePath = req.app.locals.basePath
     const { sdk } = createHelpers(req)
     const session = req.session
 

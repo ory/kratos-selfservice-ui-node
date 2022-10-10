@@ -1,5 +1,6 @@
 import { UserAuthCard, SelfServiceFlow } from "@ory/elements-markup"
 import {
+  basePath,
   defaultConfig,
   getUrlForFlow,
   isQuerySet,
@@ -15,6 +16,7 @@ export const createRecoveryRoute: RouteCreator =
     res.locals.projectName = "Recover account"
 
     const { flow, return_to = "" } = req.query
+    const basePath = req.app.locals.basePath
     const helpers = createHelpers(req)
     const { sdk, kratosBrowserUrl } = helpers
     const initFlowUrl = getUrlForFlow(
@@ -47,7 +49,7 @@ export const createRecoveryRoute: RouteCreator =
             title: "Recover your account",
             flow: flow as SelfServiceFlow,
             flowType: "recovery",
-            cardImage: "/ory-logo.svg",
+            cardImage: (basePath ? `/${basePath}` : "") + "/ory-logo.svg",
             additionalProps: {
               loginURL: initLoginUrl,
             },
@@ -64,6 +66,7 @@ export const registerRecoveryRoute: RouteRegistrator = (
   app.get(
     "/recovery",
     requireNoAuth(createHelpers),
+    basePath(createHelpers),
     createRecoveryRoute(createHelpers),
   )
 }

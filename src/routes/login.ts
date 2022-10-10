@@ -5,6 +5,7 @@ import {
   isUiNodeInputAttributes,
 } from "@ory/integrations/ui"
 import {
+  basePath,
   defaultConfig,
   getUrlForFlow,
   isQuerySet,
@@ -26,6 +27,7 @@ export const createLoginRoute: RouteCreator =
       login_challenge,
     } = req.query
     const helpers = createHelpers(req)
+    const basePath = req.app.locals.basePath
     const { sdk, kratosBrowserUrl } = helpers
 
     const initFlowQuery = new URLSearchParams({
@@ -109,7 +111,7 @@ export const createLoginRoute: RouteCreator =
               : "Two-Factor Authentication",
             flow: flow as SelfServiceFlow,
             flowType: "login",
-            cardImage: "/ory-logo.svg",
+            cardImage: (basePath ? `/${basePath}` : "") + "/ory-logo.svg",
             additionalProps: {
               forgotPasswordURL: "/recovery",
               signupURL: initRegistrationUrl,
@@ -125,5 +127,5 @@ export const registerLoginRoute: RouteRegistrator = (
   app,
   createHelpers = defaultConfig,
 ) => {
-  app.get("/login", createLoginRoute(createHelpers))
+  app.get("/login", basePath(createHelpers), createLoginRoute(createHelpers))
 }

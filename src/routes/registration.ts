@@ -1,4 +1,4 @@
-import { UiNodeInputAttributes } from "@ory/client"
+import { SelfServiceRegistrationFlow, UiNodeInputAttributes } from "@ory/client"
 import { UserAuthCard } from "@ory/elements-markup"
 import {
   filterNodesByGroups,
@@ -66,7 +66,7 @@ export const createRegistrationRoute: RouteCreator =
 
     sdk
       .getSelfServiceRegistrationFlow(flow, req.header("Cookie"))
-      .then(({ data: flow }) => {
+      .then(({ data: flow }: { data: SelfServiceRegistrationFlow & any }) => {
         // Render the data using a view (e.g. Jade Template):
         res.render("registration", {
           nodes: flow.ui.nodes,
@@ -85,6 +85,12 @@ export const createRegistrationRoute: RouteCreator =
           card: UserAuthCard({
             title: "Register an account",
             flow: flow,
+            ...(flow.hydra_login_request && {
+              subtitle: `To authenticate ${
+                flow.hydra_login_request.client_client_name ||
+                flow.hydra_login_request.client_client_id
+              }`,
+            }),
             flowType: "registration",
             cardImage: "ory-logo.svg",
             additionalProps: {

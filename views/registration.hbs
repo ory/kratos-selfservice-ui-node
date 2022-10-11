@@ -2,10 +2,6 @@
 
   {{{card}}}
 
-  {{#if hydra_login_request}}
-    <p>To authenticate {{#if hydra_login_request.client.client_name}}{{hydra_login_request.client.client_name}}{{else}}{{hydra_login_request.client.client_id}}{{/if}}</p>
-  {{/if}}
-
   {{> ui_nodes nodes=nodes groups="webauthn" attributes="text/javascript" withoutDefaultGroup=true}}
 
     <script type="text/javascript">

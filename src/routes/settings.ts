@@ -2,7 +2,6 @@ import { UiNodeInputAttributes } from "@ory/client"
 import {
   Nav,
   UserSettingsCard,
-  ErrorMessages,
   UserSettingsFlowType,
   Divider,
   NavSectionLinks,
@@ -12,6 +11,7 @@ import {
   hasOidc,
   hasTotp,
   hasWebauthn,
+  NodeMessages,
 } from "@ory/elements-markup"
 import {
   filterNodesByGroups,
@@ -134,12 +134,9 @@ export const createSettingsRoute: RouteCreator =
             ],
           }),
           nodes: flow.ui.nodes,
-          errorMessages: ErrorMessages({
-            nodes: filterNodesByGroups({
-              nodes: flow.ui.nodes,
-              groups: "default",
-            }),
+          errorMessages: NodeMessages({
             uiMessages: flow.ui.messages,
+            textPosition: "start",
           }),
           sessionDescription: [
             sessionText !== "" &&

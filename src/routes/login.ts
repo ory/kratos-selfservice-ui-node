@@ -109,6 +109,12 @@ export const createLoginRoute: RouteCreator =
             title: !(flow.refresh || flow.requested_aal === "aal2")
               ? "Sign In"
               : "Two-Factor Authentication",
+            ...(flow.hydra_login_request && {
+              subtitle: `To authenticate ${
+                flow.hydra_login_request.client_client_name ||
+                flow.hydra_login_request.client_client_id
+              }`,
+            }),
             flow: flow as SelfServiceFlow,
             flowType: "login",
             cardImage: "ory-logo.svg",

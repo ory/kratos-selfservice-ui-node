@@ -4,7 +4,6 @@ import {
   basePath,
   defaultConfig,
   isQuerySet,
-  joinAbsoluteUrlPath,
   RouteCreator,
   RouteRegistrator,
 } from "../pkg"
@@ -14,8 +13,6 @@ export const createErrorRoute: RouteCreator =
   (createHelpers) => (req, res, next) => {
     res.locals.projectName = "An error occurred"
     const { id } = req.query
-
-    const basePath = req.app.locals.basePath
 
     // Get the SDK
     const { sdk } = createHelpers(req)
@@ -32,9 +29,9 @@ export const createErrorRoute: RouteCreator =
         res.status(200).render("error", {
           card: UserErrorCard({
             error: data,
-            cardImage: (basePath ? `/${basePath}` : "") + "/ory-logo.svg",
+            cardImage: "ory-logo.svg",
             title: "An error occurred",
-            backURL: joinAbsoluteUrlPath(basePath || "", "/login"),
+            backUrl: req.header('Referer') || "welcome",
           }),
         })
       })

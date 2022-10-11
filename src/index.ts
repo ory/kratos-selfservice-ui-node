@@ -47,7 +47,7 @@ registerWelcomeRoute(app)
 registerErrorRoute(app)
 
 app.get("/", (req: Request, res: Response) => {
-  res.redirect(303, "sessions")
+  res.redirect(303, "welcome")
 })
 
 register404Route(app)

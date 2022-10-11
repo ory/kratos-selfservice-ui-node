@@ -9,6 +9,7 @@ import {
   defaultConfig,
   getUrlForFlow,
   isQuerySet,
+  joinAbsoluteUrlPath,
   logger,
   redirectOnSoftError,
   RouteCreator,
@@ -27,7 +28,6 @@ export const createLoginRoute: RouteCreator =
       login_challenge,
     } = req.query
     const helpers = createHelpers(req)
-    const basePath = req.app.locals.basePath
     const { sdk, kratosBrowserUrl } = helpers
 
     const initFlowQuery = new URLSearchParams({
@@ -111,9 +111,9 @@ export const createLoginRoute: RouteCreator =
               : "Two-Factor Authentication",
             flow: flow as SelfServiceFlow,
             flowType: "login",
-            cardImage: (basePath ? `/${basePath}` : "") + "/ory-logo.svg",
+            cardImage: "ory-logo.svg",
             additionalProps: {
-              forgotPasswordURL: "/recovery",
+              forgotPasswordURL: "recovery",
               signupURL: initRegistrationUrl,
               logoutURL: logoutUrl,
             },

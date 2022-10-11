@@ -9,6 +9,7 @@ import {
   defaultConfig,
   getUrlForFlow,
   isQuerySet,
+  joinAbsoluteUrlPath,
   logger,
   redirectOnSoftError,
   requireNoAuth,
@@ -22,7 +23,6 @@ export const createRegistrationRoute: RouteCreator =
     res.locals.projectName = "Create account"
 
     const { flow, return_to = "", login_challenge } = req.query
-    const basePath = req.app.locals.basePath
     const helpers = createHelpers(req)
     const { sdk, kratosBrowserUrl } = helpers
 
@@ -86,7 +86,7 @@ export const createRegistrationRoute: RouteCreator =
             title: "Register an account",
             flow: flow,
             flowType: "registration",
-            cardImage: (basePath ? `/${basePath}` : "") + "/ory-logo.svg",
+            cardImage: "ory-logo.svg",
             additionalProps: {
               loginURL: initLoginUrl,
             },

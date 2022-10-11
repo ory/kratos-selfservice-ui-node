@@ -4,14 +4,12 @@ import { RouteRegistrator } from "../pkg"
 
 export const register500Route: RouteRegistrator = (app) => {
   app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
-    const basePath = req.app.locals.basePath
-
     console.error(err.stack)
     res.status(500).render("error", {
       card: UserErrorCard({
         title: "Internal Server Error",
-        cardImage: (basePath ? `/${basePath}` : "") + "/ory-logo.svg",
-        backURL: basePath || "/",
+        cardImage: "ory-logo.svg",
+        backUrl: req.header('Referer') || "welcome",
         error: {
           id: "404",
           error: {

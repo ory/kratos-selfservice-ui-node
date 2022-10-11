@@ -5,13 +5,13 @@ import {
   ErrorMessages,
   UserSettingsFlowType,
   Divider,
-  hasLookupSecret,
-  hasTotp,
   NavSectionLinks,
-  hasWebauthn,
-  hasOIDC,
   hasPassword,
   Typography,
+  hasLookupSecret,
+  hasOidc,
+  hasTotp,
+  hasWebauthn,
 } from "@ory/elements-markup"
 import {
   filterNodesByGroups,
@@ -85,7 +85,7 @@ export const createSettingsRoute: RouteCreator =
             iconLeft: "lock",
             testId: "password",
           },
-          hasOIDC(flow.ui.nodes) && {
+          hasOidc(flow.ui.nodes) && {
             name: "Social Sign In",
             href: "#oidc",
             iconLeft: "comments",

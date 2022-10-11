@@ -115,7 +115,9 @@ export const basePath =
     const forwardedPath = req.header("X-Original-Uri") || ""
     const currentPaths = forwardedPath.split("/").filter(Boolean) // split the path into an array and remove empty strings, can happen with path ending on /
     if (currentPaths.length > 0) {
-      res.app.locals.basePath = currentPaths[0] || "" // get the first element - assuming the base path is only one level deep
+      res.app.locals.baseUrl = currentPaths[0] || "" // get the first element - assuming the base path is only one level deep
+    } else {
+      res.app.locals.baseUrl = ""
     }
     next()
   }

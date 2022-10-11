@@ -4,6 +4,7 @@ import {
   defaultConfig,
   getUrlForFlow,
   isQuerySet,
+  joinAbsoluteUrlPath,
   logger,
   redirectOnSoftError,
   RouteCreator,
@@ -15,7 +16,6 @@ export const createVerificationRoute: RouteCreator =
     res.locals.projectName = "Verify account"
 
     const { flow, return_to = "" } = req.query
-    const basePath = req.app.locals.basePath
     const helpers = createHelpers(req)
     const { sdk, kratosBrowserUrl } = helpers
     const initFlowUrl = getUrlForFlow(
@@ -52,7 +52,7 @@ export const createVerificationRoute: RouteCreator =
               title: "Verify your account",
               flow: flow as SelfServiceFlow,
               flowType: "verification",
-              cardImage: (basePath ? `/${basePath}` : "") + "/ory-logo.svg",
+              cardImage: "ory-logo.svg",
               additionalProps: {
                 signupURL: initRegistrationUrl,
               },

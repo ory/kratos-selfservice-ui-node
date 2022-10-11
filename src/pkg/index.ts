@@ -3,7 +3,6 @@ import { Typography, Divider, ButtonLink, MenuLink } from "@ory/elements-markup"
 import { filterNodesByGroups, getNodeLabel } from "@ory/integrations/ui"
 import { AxiosError } from "axios"
 import { NextFunction, Response } from "express"
-import ExpressHandlebars from "express-handlebars/lib/express-handlebars"
 import { RouteOptionsCreator } from "./route"
 import sdk, { apiBaseUrl } from "./sdk"
 import { toUiNodePartial } from "./ui"
@@ -27,7 +26,6 @@ export const defaultConfig: RouteOptionsCreator = () => {
     apiBaseUrl: apiBaseUrl,
     kratosBrowserUrl: apiBaseUrl,
     sdk,
-    basePath: "",
   }
 }
 
@@ -62,7 +60,10 @@ export const redirectOnSoftError =
  * @returns
  */
 export const joinAbsoluteUrlPath = (...args: string[]) => {
-  return args.map((pathPart) => pathPart.replace(/(^\/|\/$)/g, "")).join("/")
+  return args
+    .filter(Boolean)
+    .map((pathPart) => pathPart.replace(/(^\/|\/$)/g, ""))
+    .join("/")
 }
 
 export const handlebarsHelpers = {

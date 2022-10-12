@@ -31,7 +31,7 @@ export const createErrorRoute: RouteCreator =
             error: data,
             cardImage: "ory-logo.svg",
             title: "An error occurred",
-            backUrl: req.header('Referer') || "welcome",
+            backUrl: req.header("Referer") || "welcome",
           }),
         })
       })

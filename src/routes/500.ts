@@ -9,7 +9,7 @@ export const register500Route: RouteRegistrator = (app) => {
       card: UserErrorCard({
         title: "Internal Server Error",
         cardImage: "ory-logo.svg",
-        backUrl: req.header('Referer') || "welcome",
+        backUrl: req.header("Referer") || "welcome",
         error: {
           id: "404",
           error: {

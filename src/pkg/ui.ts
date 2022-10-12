@@ -1,4 +1,3 @@
-import { joinAbsoluteUrlPath } from "."
 import { UiNodeInputAttributes, UiNode, Session } from "@ory/client"
 import { Nav } from "@ory/elements-markup"
 import {
@@ -46,7 +45,6 @@ type NavigationMenuProps = {
   session?: Session
   logoutUrl?: string
   selectedLink?: "welcome" | "sessions"
-  basePath?: string
 }
 /**
  * Renders the navigation bar with state
@@ -59,18 +57,17 @@ export const navigationMenu = ({
   session,
   logoutUrl,
   selectedLink,
-  basePath = "",
 }: NavigationMenuProps) => {
   const links = [
     {
       name: "Overview",
-      href: joinAbsoluteUrlPath(basePath, "welcome"),
+      href: "welcome",
       iconLeft: "house",
       selected: false,
     },
     {
       name: "Session Information",
-      href: joinAbsoluteUrlPath(basePath, "sessions"),
+      href: "sessions",
       iconLeft: "users-viewfinder",
       selected: false,
     },
@@ -94,7 +91,7 @@ export const navigationMenu = ({
         links: [
           {
             name: "Sign In",
-            href: joinAbsoluteUrlPath(basePath, "login"),
+            href: "login",
             iconLeft: "arrow-right-to-bracket",
             iconRight: "up-right-from-square",
             disabled: Boolean(session),
@@ -103,7 +100,7 @@ export const navigationMenu = ({
           },
           {
             name: "Sign Up",
-            href: joinAbsoluteUrlPath(basePath, "registration"),
+            href: "registration",
             iconLeft: "arrow-right-to-bracket",
             iconRight: "up-right-from-square",
             disabled: Boolean(session),
@@ -112,7 +109,7 @@ export const navigationMenu = ({
           },
           {
             name: "Account Recovery",
-            href: joinAbsoluteUrlPath(basePath, "recovery"),
+            href: "recovery",
             iconLeft: "user-xmark",
             iconRight: "up-right-from-square",
             disabled: Boolean(session),
@@ -121,7 +118,7 @@ export const navigationMenu = ({
           },
           {
             name: "Account Verification",
-            href: joinAbsoluteUrlPath(basePath, "verification"),
+            href: "verification",
             iconLeft: "user-check",
             iconRight: "up-right-from-square",
             disabled: !Boolean(session),
@@ -130,7 +127,7 @@ export const navigationMenu = ({
           },
           {
             name: "Account Settings",
-            href: joinAbsoluteUrlPath(basePath, "settings"),
+            href: "settings",
             iconLeft: "gear",
             iconRight: "up-right-from-square",
             disabled: !Boolean(session),

@@ -1,10 +1,8 @@
 import { UserAuthCard, SelfServiceFlow } from "@ory/elements-markup"
 import {
-  basePath,
   defaultConfig,
   getUrlForFlow,
   isQuerySet,
-  joinAbsoluteUrlPath,
   logger,
   redirectOnSoftError,
   requireNoAuth,
@@ -66,7 +64,6 @@ export const registerRecoveryRoute: RouteRegistrator = (
   app.get(
     "/recovery",
     requireNoAuth(createHelpers),
-    basePath(createHelpers),
     createRecoveryRoute(createHelpers),
   )
 }

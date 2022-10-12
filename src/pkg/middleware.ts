@@ -103,21 +103,3 @@ export const requireNoAuth =
         next()
       })
   }
-
-/**
- * This middleware checks if there is a path that should be used as a base path for all links.
- * @param createHelpers
- * @returns
- */
-export const basePath =
-  (createHelpers: RouteOptionsCreator) =>
-  (req: Request, res: Response, next: NextFunction) => {
-    const forwardedPath = req.header("X-Original-Uri") || ""
-    const currentPaths = forwardedPath.split("/").filter(Boolean) // split the path into an array and remove empty strings, can happen with path ending on /
-    if (currentPaths.length > 0) {
-      res.app.locals.baseUrl = currentPaths[0] || "" // get the first element - assuming the base path is only one level deep
-    } else {
-      res.app.locals.baseUrl = ""
-    }
-    next()
-  }

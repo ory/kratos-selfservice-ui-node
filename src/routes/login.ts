@@ -5,11 +5,9 @@ import {
   isUiNodeInputAttributes,
 } from "@ory/integrations/ui"
 import {
-  basePath,
   defaultConfig,
   getUrlForFlow,
   isQuerySet,
-  joinAbsoluteUrlPath,
   logger,
   redirectOnSoftError,
   RouteCreator,
@@ -133,5 +131,5 @@ export const registerLoginRoute: RouteRegistrator = (
   app,
   createHelpers = defaultConfig,
 ) => {
-  app.get("/login", basePath(createHelpers), createLoginRoute(createHelpers))
+  app.get("/login", createLoginRoute(createHelpers))
 }

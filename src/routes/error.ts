@@ -1,7 +1,6 @@
 import { UserErrorCard } from "@ory/elements-markup"
 import { AxiosError } from "axios"
 import {
-  basePath,
   defaultConfig,
   isQuerySet,
   RouteCreator,
@@ -55,5 +54,5 @@ export const registerErrorRoute: RouteRegistrator = (
   app,
   createHelpers = defaultConfig,
 ) => {
-  app.get("/error", basePath(createHelpers), createErrorRoute(createHelpers))
+  app.get("/error", createErrorRoute(createHelpers))
 }

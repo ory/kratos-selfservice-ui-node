@@ -1,10 +1,8 @@
 import { UserAuthCard, SelfServiceFlow } from "@ory/elements-markup"
 import {
-  basePath,
   defaultConfig,
   getUrlForFlow,
   isQuerySet,
-  joinAbsoluteUrlPath,
   logger,
   redirectOnSoftError,
   RouteCreator,
@@ -68,9 +66,5 @@ export const registerVerificationRoute: RouteRegistrator = (
   app,
   createHelpers = defaultConfig,
 ) => {
-  app.get(
-    "/verification",
-    basePath(createHelpers),
-    createVerificationRoute(createHelpers),
-  )
+  app.get("/verification", createVerificationRoute(createHelpers))
 }

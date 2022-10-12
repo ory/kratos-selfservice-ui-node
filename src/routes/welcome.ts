@@ -1,6 +1,5 @@
 import { CardGradient, Typography } from "@ory/elements-markup"
 import {
-  basePath,
   defaultConfig,
   RouteCreator,
   RouteRegistrator,
@@ -30,7 +29,6 @@ export const createWelcomeRoute: RouteCreator =
         session,
         logoutUrl,
         selectedLink: "welcome",
-        basePath: "",
       }),
       projectInfoText: Typography({
         children: `Your Ory Identity Experience is running at ${req.header(
@@ -87,10 +85,5 @@ export const registerWelcomeRoute: RouteRegistrator = (
   createHelpers = defaultConfig,
   route = "/welcome",
 ) => {
-  app.get(
-    route,
-    setSession(createHelpers),
-    basePath(createHelpers),
-    createWelcomeRoute(createHelpers),
-  )
+  app.get(route, setSession(createHelpers), createWelcomeRoute(createHelpers))
 }

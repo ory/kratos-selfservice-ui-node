@@ -54,18 +54,6 @@ export const redirectOnSoftError =
     next(err)
   }
 
-/**
- * Join the given array of strings with the forward slash "/" separator into a url path.
- * @param args array of strings to be joined
- * @returns
- */
-export const joinAbsoluteUrlPath = (...args: string[]) => {
-  return args
-    .filter(Boolean)
-    .map((pathPart) => pathPart.replace(/(^\/|\/$)/g, ""))
-    .join("/")
-}
-
 export const handlebarsHelpers = {
   ...require("handlebars-helpers")(),
   jsonPretty: (context: any) => JSON.stringify(context, null, 2),

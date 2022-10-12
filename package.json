@@ -20,7 +20,7 @@
     "test": "exit 0",
     "format:check": "prettier --check .",
     "prepublishOnly": "npm run build",
-    "postinstall": "mkdir -p elements; cd elements; git init; git remote add -f origin https://github.com/ory/elements.git; git pull --depth=1 origin main; git checkout v0.0.1-alpha.2; npm i; npm run initialize; npm run build:markup; cd ..; npm i ./elements/packages/markup"
+    "postinstall": "mkdir -p elements; cd elements; git init; git remote add -f origin https://github.com/ory/elements.git; git pull --depth=1 origin main; git checkout c3237a50e333c99961314860d9dfebc102f5d3f9; npm i; npm run initialize; npm run build:markup; cd ..; npm i ./elements/packages/markup"
   },
   "dependencies": {
     "@ory/client": "^0.2.0-alpha.48",

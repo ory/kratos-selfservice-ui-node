@@ -1,10 +1,9 @@
-import { filterNodesByGroups, getNodeLabel } from "@ory/integrations/ui"
 import express, { Request, Response } from "express"
-import handlebars from "express-handlebars"
+import hbs from "express-handlebars"
 import * as fs from "fs"
 import * as https from "https"
+import { handlebarsHelpers } from "./pkg"
 import { middleware as middlewareLogger } from "./pkg/logger"
-import { toUiNodePartial } from "./pkg/ui"
 import {
   register404Route,
   register500Route,
@@ -18,6 +17,7 @@ import {
   registerVerificationRoute,
   registerWelcomeRoute,
 } from "./routes"
+import { registerSessionsRoute } from "./routes/sessions"
 
 const app = express()
 
@@ -26,18 +26,12 @@ app.set("view engine", "hbs")
 
 app.engine(
   "hbs",
-  handlebars({
+  hbs({
     extname: "hbs",
     layoutsDir: `${__dirname}/../views/layouts/`,
     partialsDir: `${__dirname}/../views/partials/`,
-    defaultLayout: "main",
-    helpers: {
-      ...require("handlebars-helpers")(),
-      jsonPretty: (context: any) => JSON.stringify(context, null, 2),
-      onlyNodes: filterNodesByGroups,
-      toUiNodePartial,
-      getNodeLabel: getNodeLabel,
-    },
+    defaultLayout: "auth",
+    helpers: handlebarsHelpers,
   }),
 )
 
@@ -48,11 +42,12 @@ registerRecoveryRoute(app)
 registerRegistrationRoute(app)
 registerSettingsRoute(app)
 registerVerificationRoute(app)
+registerSessionsRoute(app)
 registerWelcomeRoute(app)
 registerErrorRoute(app)
 
 app.get("/", (req: Request, res: Response) => {
-  res.redirect("welcome", 303)
+  res.redirect(303, "welcome")
 })
 
 register404Route(app)

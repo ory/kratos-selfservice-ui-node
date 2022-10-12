@@ -2,7 +2,7 @@ version: 2.1
 jobs:
   test:
     docker:
-      - image: circleci/node:14.7
+      - image: circleci/node:16.13.1
     working_directory: ~/app
     steps:
       - checkout
@@ -18,7 +18,7 @@ jobs:
 
   build:
     docker:
-      - image: circleci/node:14.7
+      - image: circleci/node:16.13.1
     working_directory: ~/app
     steps:
       - checkout
@@ -30,11 +30,11 @@ jobs:
           paths:
             - node_modules
           key: kratos-selfservice-ui-node-{{ checksum "package-lock.json" }}
-      - run: npm build
+      - run: npm run build
 
   release:
     docker:
-      - image: circleci/node:14.7
+      - image: circleci/node:16.13.1
     working_directory: ~/app
     steps:
       - checkout

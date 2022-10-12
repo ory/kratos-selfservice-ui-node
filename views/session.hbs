@@ -1,0 +1,58 @@
+<div class="spacing-32">
+
+  <div class="spacing-32">
+    {{{typography "Session Information" "headline37" "foregroundDefault"}}}
+    {{{sessionInfoText}}}
+  </div>
+
+  <div class="spacing-32-horizontal wrap-content">
+     {{{sessionCodeBox}}}
+    <div class="spacing-8 traits-box">
+      {{#each traits}}
+        <div class="spacing-8">
+          {{{typography @key "monoCaption" "foregroundDefault" "bold"}}}
+          {{{typography this "monoCaption" "foregroundDefault"}}}
+          {{{divider true "traits-box-divider"}}}
+        </div>
+      {{/each}}
+      {{#each authMethods}}
+        {{#each this }}
+          <div class="spacing-8">
+            {{{typography @key "monoCaption" "foregroundDefault" "bold"}}}
+            {{{typography this "monoCaption" "foregroundDefault"}}}
+            {{{divider true "traits-box-divider"}}}
+          </div>
+        {{/each}}
+      {{/each}}
+     </div>
+  </div>
+  
+  {{{divider false "divider-left"}}}
+
+<script type="application/javascript">
+  // Get the current breakpoint
+  const getBreakpoint = function () {
+    return window.getComputedStyle(document.body, ':before').content.replace(/\"/g, '');
+  };
+
+  const setSessionCodeBoxCollapse = function () {
+    const breakpoint = getBreakpoint();
+    const codeBoxInput = document.getElementsByClassName("session-code-box")[0].getElementsByTagName("input")[0]
+    if (breakpoint === "small") {
+      codeBoxInput.checked = true;
+    } else {
+      codeBoxInput.checked = false;
+    }
+  }
+
+  window.addEventListener('load', function () {
+    setSessionCodeBoxCollapse();
+  }, false);
+
+  // Recalculate breakpoint on resize
+  window.addEventListener('resize', function () {
+    setSessionCodeBoxCollapse();
+  }, false);
+  
+</script>
+</div>

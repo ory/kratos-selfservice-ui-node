@@ -1,17 +1,14 @@
-<div class="auth app-container" id="signup">
-  <div class="card">
-    <h2 class="typography-h2 card-title">Create an account</h2>
-    {{#if hydra_login_request}}
-      <p>To authenticate {{#if hydra_login_request.client.client_name}}{{hydra_login_request.client.client_name}}{{else}}{{hydra_login_request.client.client_id}}{{/if}}</p>
-    {{/if}}
+<div id="signup">
 
-    {{> messages messages=messages className="global"}}
+  {{{card}}}
 
-    {{> ui ui=ui}}
-  </div>
-  <div class="card">
-    <div class="card-action">
-      <a class="typography-link typography-h2" data-testid="cta-link" href="{{signInUrl}}">Sign in</a>
-    </div>
-  </div>
+  {{> ui_nodes nodes=nodes groups="webauthn" attributes="text/javascript" withoutDefaultGroup=true}}
+
+    <script type="text/javascript">
+      document.getElementsByName("webauthn_register_trigger").forEach((v) =>
+      { v.addEventListener("click", () => {
+      {{{webAuthnHandler}}}
+      }) })
+    </script>
 </div>
+

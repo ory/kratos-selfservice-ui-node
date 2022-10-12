@@ -1,13 +1,11 @@
+import { UserErrorCard } from "@ory/elements-markup"
 import { AxiosError } from "axios"
 import {
   defaultConfig,
   isQuerySet,
-  removeTrailingSlash,
-  requireAuth,
   RouteCreator,
   RouteRegistrator,
 } from "../pkg"
-import { createSettingsRoute } from "./settings"
 
 // A simple express handler that shows the error screen.
 export const createErrorRoute: RouteCreator =
@@ -26,9 +24,14 @@ export const createErrorRoute: RouteCreator =
 
     sdk
       .getSelfServiceError(id)
-      .then(({ data: body }) => {
-        res.status(500).render("error", {
-          message: JSON.stringify(body.error, null, 2),
+      .then(({ data }) => {
+        res.status(200).render("error", {
+          card: UserErrorCard({
+            error: data,
+            cardImage: "ory-logo.svg",
+            title: "An error occurred",
+            backUrl: req.header("Referer") || "welcome",
+          }),
         })
       })
       .catch((err: AxiosError) => {

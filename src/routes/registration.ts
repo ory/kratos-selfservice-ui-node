@@ -1,3 +1,9 @@
+import { SelfServiceRegistrationFlow, UiNodeInputAttributes } from "@ory/client"
+import { UserAuthCard } from "@ory/elements-markup"
+import {
+  filterNodesByGroups,
+  isUiNodeInputAttributes,
+} from "@ory/integrations/ui"
 import {
   defaultConfig,
   getUrlForFlow,
@@ -58,11 +64,37 @@ export const createRegistrationRoute: RouteCreator =
 
     sdk
       .getSelfServiceRegistrationFlow(flow, req.header("Cookie"))
-      .then(({ data: flow }) => {
+      .then(({ data: flow }: { data: SelfServiceRegistrationFlow & any }) => {
         // Render the data using a view (e.g. Jade Template):
         res.render("registration", {
-          ...flow,
-          signInUrl: initLoginUrl,
+          nodes: flow.ui.nodes,
+          webAuthnHandler: filterNodesByGroups({
+            nodes: flow.ui.nodes,
+            groups: ["webauthn"],
+            attributes: ["button"],
+            withoutDefaultAttributes: true,
+            withoutDefaultGroup: true,
+          })
+            .filter(({ attributes }) => isUiNodeInputAttributes(attributes))
+            .map(({ attributes }) => {
+              return (attributes as UiNodeInputAttributes).onclick
+            })
+            .filter((onClickAction) => !!onClickAction),
+          card: UserAuthCard({
+            title: "Register an account",
+            flow: flow,
+            ...(flow.hydra_login_request && {
+              subtitle: `To authenticate ${
+                flow.hydra_login_request.client_client_name ||
+                flow.hydra_login_request.client_client_id
+              }`,
+            }),
+            flowType: "registration",
+            cardImage: "ory-logo.svg",
+            additionalProps: {
+              loginURL: initLoginUrl,
+            },
+          }),
         })
       })
       .catch(redirectOnSoftError(res, next, initFlowUrl))

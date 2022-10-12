@@ -121,7 +121,7 @@ export const navigationMenu = ({
             href: "verification",
             iconLeft: "user-check",
             iconRight: "up-right-from-square",
-            disabled: !Boolean(session),
+            disabled: false,
             testId: "verification",
             target: "_blank",
           },

@@ -29,7 +29,11 @@
             "type": "object"
           }
         },
-        "required": ["schema_id", "traits", "state"],
+        "required": [
+          "schema_id",
+          "traits",
+          "state"
+        ],
         "type": "object"
       },
       "Duration": {
@@ -88,6 +92,28 @@
           }
         },
         "type": "object"
+      },
+      "NullBool": {
+        "nullable": true,
+        "type": "boolean"
+      },
+      "NullInt": {
+        "nullable": true,
+        "type": "integer"
+      },
+      "NullString": {
+        "nullable": true,
+        "type": "string"
+      },
+      "NullTime": {
+        "format": "date-time",
+        "nullable": true,
+        "type": "string"
+      },
+      "NullUUID": {
+        "format": "uuid4",
+        "nullable": true,
+        "type": "string"
       },
       "OAuth2Client": {
         "description": "OAuth2Client struct for OAuth2Client",
@@ -294,6 +320,10 @@
       "TemplateType": {
         "type": "string"
       },
+      "Time": {
+        "format": "date-time",
+        "type": "string"
+      },
       "UUID": {
         "format": "uuid4",
         "type": "string"
@@ -335,7 +365,10 @@
             "type": "array"
           }
         },
-        "required": ["schema_id", "traits"],
+        "required": [
+          "schema_id",
+          "traits"
+        ],
         "type": "object"
       },
       "adminCreateIdentityImportCredentialsOidc": {
@@ -372,7 +405,10 @@
             "type": "string"
           }
         },
-        "required": ["subject", "provider"],
+        "required": [
+          "subject",
+          "provider"
+        ],
         "type": "object"
       },
       "adminCreateIdentityImportCredentialsPassword": {
@@ -409,7 +445,9 @@
             "type": "string"
           }
         },
-        "required": ["identity_id"],
+        "required": [
+          "identity_id"
+        ],
         "type": "object"
       },
       "adminIdentityImportCredentials": {
@@ -425,7 +463,12 @@
       },
       "authenticatorAssuranceLevel": {
         "description": "The authenticator assurance level can be one of \"aal1\", \"aal2\", or \"aal3\". A higher number means that it is harder\nfor an attacker to compromise the account.\n\nGenerally, \"aal1\" implies that one authentication factor was used while AAL2 implies that two factors (e.g.\npassword + TOTP) have been used.\n\nTo learn more about these levels please head over to: https://www.ory.sh/kratos/docs/concepts/credentials",
-        "enum": ["aal0", "aal1", "aal2", "aal3"],
+        "enum": [
+          "aal0",
+          "aal1",
+          "aal2",
+          "aal3"
+        ],
         "title": "Authenticator Assurance Level (AAL)",
         "type": "string"
       },
@@ -438,12 +481,20 @@
       },
       "courierMessageStatus": {
         "description": "A Message's Status",
-        "enum": ["queued", "sent", "processing", "abandoned"],
+        "enum": [
+          "queued",
+          "sent",
+          "processing",
+          "abandoned"
+        ],
         "type": "string"
       },
       "courierMessageType": {
         "description": "It can either be `email` or `phone`",
-        "enum": ["email", "phone"],
+        "enum": [
+          "email",
+          "phone"
+        ],
         "title": "A Message's Type",
         "type": "string"
       },
@@ -493,7 +544,9 @@
             "type": "string"
           }
         },
-        "required": ["message"],
+        "required": [
+          "message"
+        ],
         "title": "ErrAALNotSatisfied is returned when an active session was found but the requested AAL is not satisfied.",
         "type": "object"
       },
@@ -540,7 +593,9 @@
             "type": "string"
           }
         },
-        "required": ["message"],
+        "required": [
+          "message"
+        ],
         "type": "object"
       },
       "healthNotReadyStatus": {
@@ -629,7 +684,12 @@
             "x-omitempty": true
           }
         },
-        "required": ["id", "schema_id", "schema_url", "traits"],
+        "required": [
+          "id",
+          "schema_id",
+          "schema_url",
+          "traits"
+        ],
         "title": "Identity represents an Ory Kratos identity",
         "type": "object"
       },
@@ -712,7 +772,13 @@
       },
       "identityCredentialsType": {
         "description": "and so on.",
-        "enum": ["password", "totp", "oidc", "webauthn", "lookup_secret"],
+        "enum": [
+          "password",
+          "totp",
+          "oidc",
+          "webauthn",
+          "lookup_secret"
+        ],
         "title": "CredentialsType  represents several different credential types, like password credentials, passwordless credentials,",
         "type": "string"
       },
@@ -748,7 +814,10 @@
       },
       "identityState": {
         "description": "The state can either be `active` or `inactive`.",
-        "enum": ["active", "inactive"],
+        "enum": [
+          "active",
+          "inactive"
+        ],
         "title": "An Identity's State",
         "type": "string"
       },
@@ -770,7 +839,9 @@
             "$ref": "#/components/schemas/genericError"
           }
         },
-        "required": ["error"],
+        "required": [
+          "error"
+        ],
         "title": "JSON API Error Response",
         "type": "object"
       },
@@ -797,7 +868,10 @@
             "example": "foobar"
           }
         },
-        "required": ["op", "path"],
+        "required": [
+          "op",
+          "path"
+        ],
         "type": "object"
       },
       "jsonPatchDocument": {
@@ -895,9 +969,21 @@
             "type": "string"
           }
         },
-        "required": ["message", "redirect_browser_to"],
+        "required": [
+          "message",
+          "redirect_browser_to"
+        ],
         "title": "Is sent when a privileged session is required to perform the settings update.",
         "type": "object"
+      },
+      "nullDuration": {
+        "nullable": true,
+        "pattern": "^[0-9]+(ns|us|ms|s|m|h)$",
+        "type": "string"
+      },
+      "nullInt64": {
+        "nullable": true,
+        "type": "integer"
       },
       "nullJsonRawMessage": {
         "description": "NullJSONRawMessage represents a json.RawMessage that works well with JSON, SQL, and Swagger and is NULLable-"
@@ -950,7 +1036,11 @@
             "$ref": "#/components/schemas/RecoveryAddressType"
           }
         },
-        "required": ["id", "value", "via"],
+        "required": [
+          "id",
+          "value",
+          "via"
+        ],
         "type": "object"
       },
       "revokedSessions": {
@@ -1010,7 +1100,9 @@
             "type": "string"
           }
         },
-        "required": ["message"],
+        "required": [
+          "message"
+        ],
         "title": "Is sent when a flow requires a browser to change its location.",
         "type": "object"
       },
@@ -1035,7 +1127,9 @@
             "type": "string"
           }
         },
-        "required": ["id"],
+        "required": [
+          "id"
+        ],
         "type": "object"
       },
       "selfServiceFlowExpiredError": {
@@ -1090,7 +1184,9 @@
             "type": "string"
           }
         },
-        "required": ["message"],
+        "required": [
+          "message"
+        ],
         "type": "object"
       },
       "selfServiceFlowType": {
@@ -1114,9 +1210,6 @@
             "format": "date-time",
             "type": "string"
           },
-          "hydra_login_request": {
-            "$ref": "#/components/schemas/LoginRequest"
-          },
           "id": {
             "description": "ID represents the flow's unique ID. When performing the login flow, this\nrepresents the id in the login UI's query parameter: http://\u003cselfservice.flows.login.ui_url\u003e/?flow=\u003cflow_id\u003e",
             "format": "uuid",
@@ -1126,6 +1219,12 @@
             "description": "IssuedAt is the time (UTC) when the flow started.",
             "format": "date-time",
             "type": "string"
+          },
+          "oauth2_login_challenge": {
+            "$ref": "#/components/schemas/NullUUID"
+          },
+          "oauth2_login_request": {
+            "$ref": "#/components/schemas/LoginRequest"
           },
           "refresh": {
             "description": "Refresh stores whether this login flow should enforce re-authentication.",
@@ -1176,7 +1275,10 @@
             "type": "string"
           }
         },
-        "required": ["logout_url", "logout_token"],
+        "required": [
+          "logout_url",
+          "logout_token"
+        ],
         "type": "object"
       },
       "selfServiceRecoveryFlow": {
@@ -1233,7 +1335,11 @@
       },
       "selfServiceRecoveryFlowState": {
         "description": "The state represents the state of the recovery flow.\n\nchoose_method: ask the user to choose a method (e.g. recover account via email)\nsent_email: the email has been sent to the user\npassed_challenge: the request was successful and the recovery challenge was passed.",
-        "enum": ["choose_method", "sent_email", "passed_challenge"],
+        "enum": [
+          "choose_method",
+          "sent_email",
+          "passed_challenge"
+        ],
         "title": "Recovery Flow State",
         "type": "string"
       },
@@ -1249,7 +1355,9 @@
             "type": "string"
           }
         },
-        "required": ["recovery_link"],
+        "required": [
+          "recovery_link"
+        ],
         "type": "object"
       },
       "selfServiceRegistrationFlow": {
@@ -1262,9 +1370,6 @@
             "format": "date-time",
             "type": "string"
           },
-          "hydra_login_request": {
-            "$ref": "#/components/schemas/LoginRequest"
-          },
           "id": {
             "description": "ID represents the flow's unique ID. When performing the registration flow, this\nrepresents the id in the registration ui's query parameter: http://\u003cselfservice.flows.registration.ui_url\u003e/?flow=\u003cid\u003e",
             "format": "uuid",
@@ -1274,6 +1379,12 @@
             "description": "IssuedAt is the time (UTC) when the flow occurred.",
             "format": "date-time",
             "type": "string"
+          },
+          "oauth2_login_challenge": {
+            "$ref": "#/components/schemas/NullUUID"
+          },
+          "oauth2_login_request": {
+            "$ref": "#/components/schemas/LoginRequest"
           },
           "request_url": {
             "description": "RequestURL is the initial URL that was requested from Ory Kratos. It can be used\nto forward information contained in the URL's path or query for example.",
@@ -1358,7 +1469,10 @@
       },
       "selfServiceSettingsFlowState": {
         "description": "show_form: No user data has been collected, or it is invalid, and thus the form should be shown.\nsuccess: Indicates that the settings flow has been updated successfully with the provided data.\nDone will stay true when repeatedly checking. If set to true, done will revert back to false only\nwhen a flow with invalid (e.g. \"please use a valid phone number\") data was sent.",
-        "enum": ["show_form", "success"],
+        "enum": [
+          "show_form",
+          "success"
+        ],
         "title": "State represents the state of this flow. It knows two states:",
         "type": "string"
       },
@@ -1402,13 +1516,22 @@
             "$ref": "#/components/schemas/uiContainer"
           }
         },
-        "required": ["id", "type", "ui", "state"],
+        "required": [
+          "id",
+          "type",
+          "ui",
+          "state"
+        ],
         "title": "A Verification Flow",
         "type": "object"
       },
       "selfServiceVerificationFlowState": {
         "description": "The state represents the state of the verification flow.\n\nchoose_method: ask the user to choose a method (e.g. recover account via email)\nsent_email: the email has been sent to the user\npassed_challenge: the request was successful and the recovery challenge was passed.",
-        "enum": ["choose_method", "sent_email", "passed_challenge"],
+        "enum": [
+          "choose_method",
+          "sent_email",
+          "passed_challenge"
+        ],
         "title": "Verification Flow State",
         "type": "string"
       },
@@ -1449,7 +1572,10 @@
             "type": "string"
           }
         },
-        "required": ["id", "identity"],
+        "required": [
+          "id",
+          "identity"
+        ],
         "type": "object"
       },
       "sessionAuthenticationMethod": {
@@ -1520,7 +1646,11 @@
             "$ref": "#/components/schemas/uiNodes"
           }
         },
-        "required": ["action", "method", "nodes"],
+        "required": [
+          "action",
+          "method",
+          "nodes"
+        ],
         "type": "object"
       },
       "submitSelfServiceFlowWithWebAuthnRegistrationMethod": {
@@ -1580,7 +1710,10 @@
             "type": "string"
           }
         },
-        "required": ["method", "lookup_secret"],
+        "required": [
+          "method",
+          "lookup_secret"
+        ],
         "title": "submitSelfServiceLoginFlowWithLookupSecretMethodBody is used to decode the login form payload.",
         "type": "object"
       },
@@ -1604,7 +1737,10 @@
             "type": "object"
           }
         },
-        "required": ["provider", "method"],
+        "required": [
+          "provider",
+          "method"
+        ],
         "type": "object"
       },
       "submitSelfServiceLoginFlowWithPasswordMethodBody": {
@@ -1630,7 +1766,11 @@
             "type": "string"
           }
         },
-        "required": ["method", "password", "identifier"],
+        "required": [
+          "method",
+          "password",
+          "identifier"
+        ],
         "title": "submitSelfServiceLoginFlowWithPasswordMethodBody is used to decode the login form payload.",
         "type": "object"
       },
@@ -1649,7 +1789,10 @@
             "type": "string"
           }
         },
-        "required": ["method", "totp_code"],
+        "required": [
+          "method",
+          "totp_code"
+        ],
         "title": "submitSelfServiceLoginFlowWithTotpMethodBody is used to decode the login form payload.",
         "type": "object"
       },
@@ -1672,7 +1815,10 @@
             "type": "string"
           }
         },
-        "required": ["identifier", "method"],
+        "required": [
+          "identifier",
+          "method"
+        ],
         "title": "submitSelfServiceLoginFlowWithWebAuthnMethodBody is used to decode the login form payload.",
         "type": "object"
       },
@@ -1684,7 +1830,9 @@
             "type": "string"
           }
         },
-        "required": ["session_token"],
+        "required": [
+          "session_token"
+        ],
         "type": "object"
       },
       "submitSelfServiceRecoveryFlowBody": {
@@ -1715,7 +1863,10 @@
             "type": "string"
           }
         },
-        "required": ["email", "method"],
+        "required": [
+          "email",
+          "method"
+        ],
         "type": "object"
       },
       "submitSelfServiceRegistrationFlowBody": {
@@ -1759,7 +1910,10 @@
             "type": "object"
           }
         },
-        "required": ["provider", "method"],
+        "required": [
+          "provider",
+          "method"
+        ],
         "type": "object"
       },
       "submitSelfServiceRegistrationFlowWithPasswordMethodBody": {
@@ -1782,7 +1936,11 @@
             "type": "object"
           }
         },
-        "required": ["password", "traits", "method"],
+        "required": [
+          "password",
+          "traits",
+          "method"
+        ],
         "type": "object"
       },
       "submitSelfServiceRegistrationFlowWithWebAuthnMethodBody": {
@@ -1808,7 +1966,10 @@
             "type": "string"
           }
         },
-        "required": ["traits", "method"],
+        "required": [
+          "traits",
+          "method"
+        ],
         "type": "object"
       },
       "submitSelfServiceSettingsFlowBody": {
@@ -1874,7 +2035,9 @@
             "type": "string"
           }
         },
-        "required": ["method"],
+        "required": [
+          "method"
+        ],
         "type": "object"
       },
       "submitSelfServiceSettingsFlowWithOidcMethodBody": {
@@ -1901,7 +2064,9 @@
             "type": "string"
           }
         },
-        "required": ["method"],
+        "required": [
+          "method"
+        ],
         "type": "object"
       },
       "submitSelfServiceSettingsFlowWithPasswordMethodBody": {
@@ -1919,7 +2084,10 @@
             "type": "string"
           }
         },
-        "required": ["password", "method"],
+        "required": [
+          "password",
+          "method"
+        ],
         "type": "object"
       },
       "submitSelfServiceSettingsFlowWithProfileMethodBody": {
@@ -1938,7 +2106,10 @@
             "type": "object"
           }
         },
-        "required": ["traits", "method"],
+        "required": [
+          "traits",
+          "method"
+        ],
         "type": "object"
       },
       "submitSelfServiceSettingsFlowWithTotpMethodBody": {
@@ -1960,7 +2131,9 @@
             "type": "boolean"
           }
         },
-        "required": ["method"],
+        "required": [
+          "method"
+        ],
         "type": "object"
       },
       "submitSelfServiceSettingsFlowWithWebAuthnMethodBody": {
@@ -1986,7 +2159,9 @@
             "type": "string"
           }
         },
-        "required": ["method"],
+        "required": [
+          "method"
+        ],
         "type": "object"
       },
       "submitSelfServiceVerificationFlowBody": {
@@ -2018,7 +2193,10 @@
             "type": "string"
           }
         },
-        "required": ["email", "method"],
+        "required": [
+          "email",
+          "method"
+        ],
         "type": "object"
       },
       "successfulSelfServiceLoginWithoutBrowser": {
@@ -2032,7 +2210,9 @@
             "type": "string"
           }
         },
-        "required": ["session"],
+        "required": [
+          "session"
+        ],
         "type": "object"
       },
       "successfulSelfServiceRegistrationWithoutBrowser": {
@@ -2049,7 +2229,9 @@
             "type": "string"
           }
         },
-        "required": ["identity"],
+        "required": [
+          "identity"
+        ],
         "type": "object"
       },
       "tokenPagination": {
@@ -2102,7 +2284,11 @@
             "$ref": "#/components/schemas/uiNodes"
           }
         },
-        "required": ["action", "method", "nodes"],
+        "required": [
+          "action",
+          "method",
+          "nodes"
+        ],
         "type": "object"
       },
       "uiNode": {
@@ -2134,12 +2320,24 @@
           },
           "type": {
             "description": "The node's type\ntext Text\ninput Input\nimg Image\na Anchor\nscript Script",
-            "enum": ["text", "input", "img", "a", "script"],
+            "enum": [
+              "text",
+              "input",
+              "img",
+              "a",
+              "script"
+            ],
             "type": "string",
             "x-go-enum-desc": "text Text\ninput Input\nimg Image\na Anchor\nscript Script"
           }
         },
-        "required": ["type", "group", "attributes", "messages", "meta"],
+        "required": [
+          "type",
+          "group",
+          "attributes",
+          "messages",
+          "meta"
+        ],
         "title": "Node represents a flow's nodes",
         "type": "object"
       },
@@ -2161,7 +2359,12 @@
             "$ref": "#/components/schemas/uiText"
           }
         },
-        "required": ["href", "title", "id", "node_type"],
+        "required": [
+          "href",
+          "title",
+          "id",
+          "node_type"
+        ],
         "title": "AnchorAttributes represents the attributes of an anchor node.",
         "type": "object"
       },
@@ -2220,7 +2423,13 @@
             "type": "integer"
           }
         },
-        "required": ["src", "id", "width", "height", "node_type"],
+        "required": [
+          "src",
+          "id",
+          "width",
+          "height",
+          "node_type"
+        ],
         "title": "ImageAttributes represents the attributes of an image node.",
         "type": "object"
       },
@@ -2291,7 +2500,12 @@
             "nullable": true
           }
         },
-        "required": ["name", "type", "disabled", "node_type"],
+        "required": [
+          "name",
+          "type",
+          "disabled",
+          "node_type"
+        ],
         "type": "object"
       },
       "uiNodeMeta": {
@@ -2371,7 +2585,11 @@
             "$ref": "#/components/schemas/uiText"
           }
         },
-        "required": ["text", "id", "node_type"],
+        "required": [
+          "text",
+          "id",
+          "node_type"
+        ],
         "title": "TextAttributes represents the attributes of a text node.",
         "type": "object"
       },
@@ -2398,7 +2616,11 @@
             "$ref": "#/components/schemas/uiTextType"
           }
         },
-        "required": ["id", "text", "type"],
+        "required": [
+          "id",
+          "text",
+          "type"
+        ],
         "type": "object"
       },
       "uiTextType": {
@@ -2449,7 +2671,12 @@
             "$ref": "#/components/schemas/identityVerifiableAddressType"
           }
         },
-        "required": ["value", "verified", "via", "status"],
+        "required": [
+          "value",
+          "verified",
+          "via",
+          "status"
+        ],
         "type": "object"
       },
       "version": {
@@ -2502,8 +2729,10 @@
             "description": "webAuthnJavaScript"
           }
         },
-        "summary": "# Get WebAuthn JavaScript",
-        "tags": ["v0alpha2"]
+        "summary": "Get WebAuthn JavaScript",
+        "tags": [
+          "v0alpha2"
+        ]
       }
     },
     "/admin/courier/messages": {
@@ -2583,8 +2812,10 @@
             "description": "jsonError"
           }
         },
-        "summary": "# List Messages",
-        "tags": ["v0alpha2"]
+        "summary": "List Messages",
+        "tags": [
+          "v0alpha2"
+        ]
       }
     },
     "/admin/identities": {
@@ -2643,8 +2874,10 @@
             "oryAccessToken": []
           }
         ],
-        "summary": "# List Identities",
-        "tags": ["v0alpha2"]
+        "summary": "List Identities",
+        "tags": [
+          "v0alpha2"
+        ]
       },
       "post": {
         "description": "This endpoint creates an identity. Learn how identities work in [Ory Kratos' User And Identity Model Documentation](https://www.ory.sh/docs/next/kratos/concepts/identity-user-model).",
@@ -2706,8 +2939,10 @@
             "oryAccessToken": []
           }
         ],
-        "summary": "# Create an Identity",
-        "tags": ["v0alpha2"]
+        "summary": "Create an Identity",
+        "tags": [
+          "v0alpha2"
+        ]
       }
     },
     "/admin/identities/{id}": {
@@ -2755,8 +2990,10 @@
             "oryAccessToken": []
           }
         ],
-        "summary": "# Delete an Identity",
-        "tags": ["v0alpha2"]
+        "summary": "Delete an Identity",
+        "tags": [
+          "v0alpha2"
+        ]
       },
       "get": {
         "description": "Learn how identities work in [Ory Kratos' User And Identity Model Documentation](https://www.ory.sh/docs/next/kratos/concepts/identity-user-model).",
@@ -2820,8 +3057,10 @@
             "oryAccessToken": []
           }
         ],
-        "summary": "# Get an Identity",
-        "tags": ["v0alpha2"]
+        "summary": "Get an Identity",
+        "tags": [
+          "v0alpha2"
+        ]
       },
       "patch": {
         "description": "NOTE: The fields `id`, `stateChangedAt` and `credentials` are not updateable.\n\nLearn how identities work in [Ory Kratos' User And Identity Model Documentation](https://www.ory.sh/docs/next/kratos/concepts/identity-user-model).",
@@ -2905,7 +3144,9 @@
           }
         ],
         "summary": "Partially updates an Identity's field using [JSON Patch](https://jsonpatch.com/)",
-        "tags": ["v0alpha2"]
+        "tags": [
+          "v0alpha2"
+        ]
       },
       "put": {
         "description": "This endpoint updates an identity. The full identity payload (except credentials) is expected. This endpoint does not support patching.\n\nLearn how identities work in [Ory Kratos' User And Identity Model Documentation](https://www.ory.sh/docs/next/kratos/concepts/identity-user-model).",
@@ -2988,8 +3229,10 @@
             "oryAccessToken": []
           }
         ],
-        "summary": "# Update an Identity",
-        "tags": ["v0alpha2"]
+        "summary": "Update an Identity",
+        "tags": [
+          "v0alpha2"
+        ]
       }
     },
     "/admin/identities/{id}/sessions": {
@@ -3058,7 +3301,9 @@
           }
         ],
         "summary": "Calling this endpoint irrecoverably and permanently deletes and invalidates all sessions that belong to the given Identity.",
-        "tags": ["v0alpha2"]
+        "tags": [
+          "v0alpha2"
+        ]
       },
       "get": {
         "description": "This endpoint is useful for:\n\nListing all sessions that belong to an Identity in an administrative context.",
@@ -3163,7 +3408,9 @@
           }
         ],
         "summary": "This endpoint returns all sessions that belong to the given Identity.",
-        "tags": ["v0alpha2"]
+        "tags": [
+          "v0alpha2"
+        ]
       }
     },
     "/admin/recovery/link": {
@@ -3222,8 +3469,10 @@
             "description": "jsonError"
           }
         },
-        "summary": "# Create a Recovery Link",
-        "tags": ["v0alpha2"]
+        "summary": "Create a Recovery Link",
+        "tags": [
+          "v0alpha2"
+        ]
       }
     },
     "/admin/sessions/{id}/extend": {
@@ -3289,7 +3538,9 @@
           }
         ],
         "summary": "Calling this endpoint extends the given session ID. If `session.earliest_possible_extend` is set it\nwill only extend the session after the specified time has passed.",
-        "tags": ["v0alpha2"]
+        "tags": [
+          "v0alpha2"
+        ]
       }
     },
     "/health/alive": {
@@ -3307,7 +3558,9 @@
                       "type": "string"
                     }
                   },
-                  "required": ["status"],
+                  "required": [
+                    "status"
+                  ],
                   "type": "object"
                 }
               }
@@ -3326,7 +3579,9 @@
           }
         },
         "summary": "Check HTTP Server Status",
-        "tags": ["metadata"]
+        "tags": [
+          "metadata"
+        ]
       }
     },
     "/health/ready": {
@@ -3344,7 +3599,9 @@
                       "type": "string"
                     }
                   },
-                  "required": ["status"],
+                  "required": [
+                    "status"
+                  ],
                   "type": "object"
                 }
               }
@@ -3364,7 +3621,9 @@
                       "type": "object"
                     }
                   },
-                  "required": ["errors"],
+                  "required": [
+                    "errors"
+                  ],
                   "type": "object"
                 }
               }
@@ -3373,7 +3632,9 @@
           }
         },
         "summary": "Check HTTP Server and Database Status",
-        "tags": ["metadata"]
+        "tags": [
+          "metadata"
+        ]
       }
     },
     "/schemas": {
@@ -3427,7 +3688,9 @@
             "description": "jsonError"
           }
         },
-        "tags": ["v0alpha2"]
+        "tags": [
+          "v0alpha2"
+        ]
       }
     },
     "/schemas/{id}": {
@@ -3477,7 +3740,9 @@
             "description": "jsonError"
           }
         },
-        "tags": ["v0alpha2"]
+        "tags": [
+          "v0alpha2"
+        ]
       }
     },
     "/self-service/errors": {
@@ -3537,8 +3802,10 @@
             "description": "jsonError"
           }
         },
-        "summary": "# Get Self-Service Errors",
-        "tags": ["v0alpha2"]
+        "summary": "Get Self-Service Errors",
+        "tags": [
+          "v0alpha2"
+        ]
       }
     },
     "/self-service/login": {
@@ -3643,8 +3910,10 @@
             "description": "jsonError"
           }
         },
-        "summary": "# Submit a Login Flow",
-        "tags": ["v0alpha2"]
+        "summary": "Submit a Login Flow",
+        "tags": [
+          "v0alpha2"
+        ]
       }
     },
     "/self-service/login/api": {
@@ -3710,16 +3979,18 @@
           }
         },
         "summary": "Initialize Login Flow for APIs, Services, Apps, ...",
-        "tags": ["v0alpha2"]
+        "tags": [
+          "v0alpha2"
+        ]
       }
     },
     "/self-service/login/browser": {
       "get": {
-        "description": "This endpoint initializes a browser-based user login flow. This endpoint will set the appropriate\ncookies and anti-CSRF measures required for browser-based flows.\n\nIf this endpoint is opened as a link in the browser, it will be redirected to\n`selfservice.flows.login.ui_url` with the flow ID set as the query parameter `?flow=`. If a valid user session\nexists already, the browser will be redirected to `urls.default_redirect_url` unless the query parameter\n`?refresh=true` was set.\n\nIf this endpoint is called via an AJAX request, the response contains the flow without a redirect. In the\ncase of an error, the `error.id` of the JSON response body can be one of:\n\n`session_already_available`: The user is already signed in.\n`session_aal1_required`: Multi-factor auth (e.g. 2fa) was requested but the user has no session yet.\n`security_csrf_violation`: Unable to fetch the flow because a CSRF violation occurred.\n`security_identity_mismatch`: The requested `?return_to` address is not allowed to be used. Adjust this in the configuration!\n\nThe optional query parameter login_challenge is set when using Kratos with\nHydra in an OAUTH flow. See the selfservice.hydra_admin_url configuration\noption.\n\nThis endpoint is NOT INTENDED for clients that do not have a browser (Chrome, Firefox, ...) as cookies are needed.\n\nMore information can be found at [Ory Kratos User Login](https://www.ory.sh/docs/kratos/self-service/flows/user-login) and [User Registration Documentation](https://www.ory.sh/docs/kratos/self-service/flows/user-registration).",
+        "description": "This endpoint initializes a browser-based user login flow. This endpoint will set the appropriate\ncookies and anti-CSRF measures required for browser-based flows.\n\nIf this endpoint is opened as a link in the browser, it will be redirected to\n`selfservice.flows.login.ui_url` with the flow ID set as the query parameter `?flow=`. If a valid user session\nexists already, the browser will be redirected to `urls.default_redirect_url` unless the query parameter\n`?refresh=true` was set.\n\nIf this endpoint is called via an AJAX request, the response contains the flow without a redirect. In the\ncase of an error, the `error.id` of the JSON response body can be one of:\n\n`session_already_available`: The user is already signed in.\n`session_aal1_required`: Multi-factor auth (e.g. 2fa) was requested but the user has no session yet.\n`security_csrf_violation`: Unable to fetch the flow because a CSRF violation occurred.\n`security_identity_mismatch`: The requested `?return_to` address is not allowed to be used. Adjust this in the configuration!\n\nThe optional query parameter login_challenge is set when using Kratos with\nHydra in an OAuth2 flow. See the selfservice.hydra_admin_url configuration\noption.\n\nThis endpoint is NOT INTENDED for clients that do not have a browser (Chrome, Firefox, ...) as cookies are needed.\n\nMore information can be found at [Ory Kratos User Login](https://www.ory.sh/docs/kratos/self-service/flows/user-login) and [User Registration Documentation](https://www.ory.sh/docs/kratos/self-service/flows/user-registration).",
         "operationId": "initializeSelfServiceLoginFlowForBrowsers",
         "parameters": [
           {
-            "description": "An optional Hydra login challenge. If present, Kratos will cooperate with\nOry Hydra to act as an OAUTH identity provider.\n\nThe value for this parameter comes from `login_challenge` URL Query parameter sent to your\napplication (e.g. `/login?login_challenge=abcde`).",
+            "description": "An optional Hydra login challenge. If present, Kratos will cooperate with\nOry Hydra to act as an OAuth2 identity provider.\n\nThe value for this parameter comes from `login_challenge` URL Query parameter sent to your\napplication (e.g. `/login?login_challenge=abcde`).",
             "in": "query",
             "name": "login_challenge",
             "schema": {
@@ -3794,8 +4065,10 @@
             "description": "jsonError"
           }
         },
-        "summary": "# Initialize Login Flow for Browsers",
-        "tags": ["v0alpha2"]
+        "summary": "Initialize Login Flow for Browsers",
+        "tags": [
+          "v0alpha2"
+        ]
       }
     },
     "/self-service/login/flows": {
@@ -3873,8 +4146,10 @@
             "description": "jsonError"
           }
         },
-        "summary": "# Get Login Flow",
-        "tags": ["v0alpha2"]
+        "summary": "Get Login Flow",
+        "tags": [
+          "v0alpha2"
+        ]
       }
     },
     "/self-service/logout": {
@@ -3917,8 +4192,10 @@
             "description": "jsonError"
           }
         },
-        "summary": "# Complete Self-Service Logout",
-        "tags": ["v0alpha2"]
+        "summary": "Complete Self-Service Logout",
+        "tags": [
+          "v0alpha2"
+        ]
       }
     },
     "/self-service/logout/api": {
@@ -3962,7 +4239,9 @@
           }
         },
         "summary": "Perform Logout for APIs, Services, Apps, ...",
-        "tags": ["v0alpha2"]
+        "tags": [
+          "v0alpha2"
+        ]
       }
     },
     "/self-service/logout/browser": {
@@ -4011,8 +4290,10 @@
             "description": "jsonError"
           }
         },
-        "summary": "# Create a Logout URL for Browsers",
-        "tags": ["v0alpha2"]
+        "summary": "Create a Logout URL for Browsers",
+        "tags": [
+          "v0alpha2"
+        ]
       }
     },
     "/self-service/recovery": {
@@ -4107,8 +4388,10 @@
             "description": "jsonError"
           }
         },
-        "summary": "# Complete Recovery Flow",
-        "tags": ["v0alpha2"]
+        "summary": "Complete Recovery Flow",
+        "tags": [
+          "v0alpha2"
+        ]
       }
     },
     "/self-service/recovery/api": {
@@ -4148,7 +4431,9 @@
           }
         },
         "summary": "Initialize Recovery Flow for APIs, Services, Apps, ...",
-        "tags": ["v0alpha2"]
+        "tags": [
+          "v0alpha2"
+        ]
       }
     },
     "/self-service/recovery/browser": {
@@ -4200,8 +4485,10 @@
             "description": "jsonError"
           }
         },
-        "summary": "# Initialize Recovery Flow for Browsers",
-        "tags": ["v0alpha2"]
+        "summary": "Initialize Recovery Flow for Browsers",
+        "tags": [
+          "v0alpha2"
+        ]
       }
     },
     "/self-service/recovery/flows": {
@@ -4269,8 +4556,10 @@
             "description": "jsonError"
           }
         },
-        "summary": "# Get Recovery Flow",
-        "tags": ["v0alpha2"]
+        "summary": "Get Recovery Flow",
+        "tags": [
+          "v0alpha2"
+        ]
       }
     },
     "/self-service/registration": {
@@ -4367,8 +4656,10 @@
             "description": "jsonError"
           }
         },
-        "summary": "# Submit a Registration Flow",
-        "tags": ["v0alpha2"]
+        "summary": "Submit a Registration Flow",
+        "tags": [
+          "v0alpha2"
+        ]
       }
     },
     "/self-service/registration/api": {
@@ -4408,7 +4699,9 @@
           }
         },
         "summary": "Initialize Registration Flow for APIs, Services, Apps, ...",
-        "tags": ["v0alpha2"]
+        "tags": [
+          "v0alpha2"
+        ]
       }
     },
     "/self-service/registration/browser": {
@@ -4416,6 +4709,14 @@
         "description": "This endpoint initializes a browser-based user registration flow. This endpoint will set the appropriate\ncookies and anti-CSRF measures required for browser-based flows.\n\n:::info\n\nThis endpoint is EXPERIMENTAL and subject to potential breaking changes in the future.\n\n:::\n\nIf this endpoint is opened as a link in the browser, it will be redirected to\n`selfservice.flows.registration.ui_url` with the flow ID set as the query parameter `?flow=`. If a valid user session\nexists already, the browser will be redirected to `urls.default_redirect_url`.\n\nIf this endpoint is called via an AJAX request, the response contains the flow without a redirect. In the\ncase of an error, the `error.id` of the JSON response body can be one of:\n\n`session_already_available`: The user is already signed in.\n`security_csrf_violation`: Unable to fetch the flow because a CSRF violation occurred.\n`security_identity_mismatch`: The requested `?return_to` address is not allowed to be used. Adjust this in the configuration!\n\nIf this endpoint is called via an AJAX request, the response contains the registration flow without a redirect.\n\nThis endpoint is NOT INTENDED for clients that do not have a browser (Chrome, Firefox, ...) as cookies are needed.\n\nMore information can be found at [Ory Kratos User Login](https://www.ory.sh/docs/kratos/self-service/flows/user-login) and [User Registration Documentation](https://www.ory.sh/docs/kratos/self-service/flows/user-registration).",
         "operationId": "initializeSelfServiceRegistrationFlowForBrowsers",
         "parameters": [
+          {
+            "description": "An optional Hydra login challenge. If present, Kratos will cooperate with\nOry Hydra to act as an OAuth2 identity provider.\n\nThe value for this parameter comes from `login_challenge` URL Query parameter sent to your\napplication (e.g. `/registration?login_challenge=abcde`).",
+            "in": "query",
+            "name": "login_challenge",
+            "schema": {
+              "type": "string"
+            }
+          },
           {
             "description": "The URL to return the browser to after the flow was completed.",
             "in": "query",
@@ -4450,8 +4751,10 @@
             "description": "jsonError"
           }
         },
-        "summary": "# Initialize Registration Flow for Browsers",
-        "tags": ["v0alpha2"]
+        "summary": "Initialize Registration Flow for Browsers",
+        "tags": [
+          "v0alpha2"
+        ]
       }
     },
     "/self-service/registration/flows": {
@@ -4529,8 +4832,10 @@
             "description": "jsonError"
           }
         },
-        "summary": "# Get Registration Flow",
-        "tags": ["v0alpha2"]
+        "summary": "Get Registration Flow",
+        "tags": [
+          "v0alpha2"
+        ]
       }
     },
     "/self-service/settings": {
@@ -4660,8 +4965,10 @@
             "sessionToken": []
           }
         ],
-        "summary": "# Complete Settings Flow",
-        "tags": ["v0alpha2"]
+        "summary": "Complete Settings Flow",
+        "tags": [
+          "v0alpha2"
+        ]
       }
     },
     "/self-service/settings/api": {
@@ -4711,7 +5018,9 @@
           }
         },
         "summary": "Initialize Settings Flow for APIs, Services, Apps, ...",
-        "tags": ["v0alpha2"]
+        "tags": [
+          "v0alpha2"
+        ]
       }
     },
     "/self-service/settings/browser": {
@@ -4791,8 +5100,10 @@
             "description": "jsonError"
           }
         },
-        "summary": "# Initialize Settings Flow for Browsers",
-        "tags": ["v0alpha2"]
+        "summary": "Initialize Settings Flow for Browsers",
+        "tags": [
+          "v0alpha2"
+        ]
       }
     },
     "/self-service/settings/flows": {
@@ -4888,8 +5199,10 @@
             "description": "jsonError"
           }
         },
-        "summary": "# Get Settings Flow",
-        "tags": ["v0alpha2"]
+        "summary": "Get Settings Flow",
+        "tags": [
+          "v0alpha2"
+        ]
       }
     },
     "/self-service/verification": {
@@ -4984,8 +5297,10 @@
             "description": "jsonError"
           }
         },
-        "summary": "# Complete Verification Flow",
-        "tags": ["v0alpha2"]
+        "summary": "Complete Verification Flow",
+        "tags": [
+          "v0alpha2"
+        ]
       }
     },
     "/self-service/verification/api": {
@@ -5025,7 +5340,9 @@
           }
         },
         "summary": "Initialize Verification Flow for APIs, Services, Apps, ...",
-        "tags": ["v0alpha2"]
+        "tags": [
+          "v0alpha2"
+        ]
       }
     },
     "/self-service/verification/browser": {
@@ -5067,8 +5384,10 @@
             "description": "jsonError"
           }
         },
-        "summary": "# Initialize Verification Flow for Browser Clients",
-        "tags": ["v0alpha2"]
+        "summary": "Initialize Verification Flow for Browser Clients",
+        "tags": [
+          "v0alpha2"
+        ]
       }
     },
     "/self-service/verification/flows": {
@@ -5136,8 +5455,10 @@
             "description": "jsonError"
           }
         },
-        "summary": "# Get Verification Flow",
-        "tags": ["v0alpha2"]
+        "summary": "Get Verification Flow",
+        "tags": [
+          "v0alpha2"
+        ]
       }
     },
     "/sessions": {
@@ -5215,7 +5536,9 @@
           }
         },
         "summary": "Calling this endpoint invalidates all except the current session that belong to the logged-in user.\nSession data are not deleted.",
-        "tags": ["v0alpha2"]
+        "tags": [
+          "v0alpha2"
+        ]
       },
       "get": {
         "description": "This endpoint is useful for:\n\nDisplaying all other sessions that belong to the logged-in user",
@@ -5314,7 +5637,9 @@
           }
         },
         "summary": "This endpoints returns all other active sessions that belong to the logged-in user.\nThe current session can be retrieved by calling the `/sessions/whoami` endpoint.",
-        "tags": ["v0alpha2"]
+        "tags": [
+          "v0alpha2"
+        ]
       }
     },
     "/sessions/whoami": {
@@ -5383,8 +5708,10 @@
             "description": "jsonError"
           }
         },
-        "summary": "# Check Who the Current HTTP Session Belongs To",
-        "tags": ["v0alpha2"]
+        "summary": "Check Who the Current HTTP Session Belongs To",
+        "tags": [
+          "v0alpha2"
+        ]
       }
     },
     "/sessions/{id}": {
@@ -5438,7 +5765,9 @@
           }
         },
         "summary": "Calling this endpoint invalidates the specified session. The current session cannot be revoked.\nSession data are not deleted.",
-        "tags": ["v0alpha2"]
+        "tags": [
+          "v0alpha2"
+        ]
       }
     },
     "/version": {
@@ -5456,7 +5785,9 @@
                       "type": "string"
                     }
                   },
-                  "required": ["version"],
+                  "required": [
+                    "version"
+                  ],
                   "type": "object"
                 }
               }
@@ -5465,7 +5796,9 @@
           }
         },
         "summary": "Return Running Software Version.",
-        "tags": ["metadata"]
+        "tags": [
+          "metadata"
+        ]
       }
     }
   },

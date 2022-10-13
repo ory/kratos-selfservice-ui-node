@@ -27,14 +27,10 @@ export const createRegistrationRoute: RouteCreator =
     const initFlowQuery = new URLSearchParams({
       return_to: return_to.toString(),
     })
-    const initLoginQuery = new URLSearchParams({
-      return_to: return_to.toString(),
-    })
 
     if (isQuerySet(login_challenge)) {
       logger.debug("login_challenge found in URL query: ", { query: req.query })
       initFlowQuery.append("login_challenge", login_challenge)
-      initLoginQuery.append("login_challenge", login_challenge)
     } else {
       logger.debug("no login_challenge found in URL query: ", {
         query: req.query,
@@ -45,11 +41,6 @@ export const createRegistrationRoute: RouteCreator =
       kratosBrowserUrl,
       "registration",
       initFlowQuery,
-    )
-    const initLoginUrl = getUrlForFlow(
-      kratosBrowserUrl,
-      "login",
-      initLoginQuery,
     )
 
     // The flow is used to identify the settings and registration flow and
@@ -66,6 +57,15 @@ export const createRegistrationRoute: RouteCreator =
       .getSelfServiceRegistrationFlow(flow, req.header("Cookie"))
       .then(({ data: flow }: { data: SelfServiceRegistrationFlow & any }) => {
         // Render the data using a view (e.g. Jade Template):
+        const initLoginQuery = new URLSearchParams({
+          return_to: return_to.toString(),
+        })
+        if (flow.oauth2_login_request?.challenge) {
+          initLoginQuery.set(
+            "login_challenge",
+            flow.oauth2_login_request.challenge,
+          )
+        }
         res.render("registration", {
           nodes: flow.ui.nodes,
           webAuthnHandler: filterNodesByGroups({
@@ -92,7 +92,11 @@ export const createRegistrationRoute: RouteCreator =
             flowType: "registration",
             cardImage: "ory-logo.svg",
             additionalProps: {
-              loginURL: initLoginUrl,
+              loginURL: getUrlForFlow(
+                kratosBrowserUrl,
+                "login",
+                initLoginQuery,
+              ),
             },
           }),
         })

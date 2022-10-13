@@ -1,11 +1,15 @@
-import { SelfServiceLoginFlow } from "@ory/client"
+import { SelfServiceLoginFlow, UiNodeInputAttributes } from "@ory/client"
+import { UserAuthCard, SelfServiceFlow } from "@ory/elements-markup"
+import {
+  filterNodesByGroups,
+  isUiNodeInputAttributes,
+} from "@ory/integrations/ui"
 import {
   defaultConfig,
   getUrlForFlow,
   isQuerySet,
   logger,
   redirectOnSoftError,
-  removeTrailingSlash,
   RouteCreator,
   RouteRegistrator,
 } from "../pkg"
@@ -79,10 +83,38 @@ export const createLoginRoute: RouteCreator =
         )
 
         res.render("login", {
-          ...flow,
-          isAuthenticated: flow.refresh || flow.requested_aal === "aal2",
-          signUpUrl: initRegistrationUrl,
-          logoutUrl: logoutUrl,
+          nodes: flow.ui.nodes,
+          webAuthnHandler: filterNodesByGroups({
+            nodes: flow.ui.nodes,
+            groups: ["webauthn"],
+            attributes: ["button"],
+            withoutDefaultAttributes: true,
+            withoutDefaultGroup: true,
+          })
+            .filter(({ attributes }) => isUiNodeInputAttributes(attributes))
+            .map(({ attributes }) => {
+              return (attributes as UiNodeInputAttributes).onclick
+            })
+            .filter((c) => c !== undefined),
+          card: UserAuthCard({
+            title: !(flow.refresh || flow.requested_aal === "aal2")
+              ? "Sign In"
+              : "Two-Factor Authentication",
+            ...(flow.hydra_login_request && {
+              subtitle: `To authenticate ${
+                flow.hydra_login_request.client_client_name ||
+                flow.hydra_login_request.client_client_id
+              }`,
+            }),
+            flow: flow as SelfServiceFlow,
+            flowType: "login",
+            cardImage: "ory-logo.svg",
+            additionalProps: {
+              forgotPasswordURL: "recovery",
+              signupURL: initRegistrationUrl,
+              logoutURL: logoutUrl,
+            },
+          }),
         })
       })
       .catch(redirectOnSoftError(res, next, initFlowUrl))

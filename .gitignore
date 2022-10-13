@@ -98,3 +98,10 @@ jspm_packages/
 
 lib
 .idea
+
+pnpm-lock.yaml
+
+.vscode
+
+# Ignore the elements repository that gets cloned in on npm install
+elements/

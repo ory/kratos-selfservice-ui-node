@@ -31,7 +31,7 @@ export const createWelcomeRoute: RouteCreator =
         selectedLink: "welcome",
       }),
       projectInfoText: Typography({
-        children: `Your Ory Identity Experience is running at ${req.header(
+        children: `Your Ory Account Experience is running at ${req.header(
           "host",
         )}.`,
         type: "regular",

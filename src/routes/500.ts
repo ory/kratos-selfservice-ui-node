@@ -8,7 +8,6 @@ export const register500Route: RouteRegistrator = (app) => {
     res.status(500).render("error", {
       card: UserErrorCard({
         title: "Internal Server Error",
-        cardImage: "ory-logo.svg",
         backUrl: req.header("Referer") || "welcome",
         error: {
           id: "404",

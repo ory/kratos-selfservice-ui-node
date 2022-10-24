@@ -28,7 +28,6 @@ export const createErrorRoute: RouteCreator =
         res.status(200).render("error", {
           card: UserErrorCard({
             error: data,
-            cardImage: "ory-logo.svg",
             title: "An error occurred",
             backUrl: req.header("Referer") || "welcome",
           }),

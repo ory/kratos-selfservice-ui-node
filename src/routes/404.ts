@@ -6,7 +6,6 @@ export const register404Route: RouteRegistrator = (app) => {
     res.status(404).render("error", {
       card: UserErrorCard({
         title: "404 - Page not found",
-        cardImage: "ory-logo.svg",
         backUrl: "sessions",
         error: {
           id: "404",

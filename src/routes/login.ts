@@ -108,7 +108,6 @@ export const createLoginRoute: RouteCreator =
             }),
             flow: flow as SelfServiceFlow,
             flowType: "login",
-            cardImage: "ory-logo.svg",
             additionalProps: {
               forgotPasswordURL: "recovery",
               signupURL: initRegistrationUrl,

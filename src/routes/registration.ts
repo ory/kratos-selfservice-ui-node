@@ -90,7 +90,6 @@ export const createRegistrationRoute: RouteCreator =
               }`,
             }),
             flowType: "registration",
-            cardImage: "ory-logo.svg",
             additionalProps: {
               loginURL: getUrlForFlow(
                 kratosBrowserUrl,

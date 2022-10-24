@@ -111,3 +111,9 @@ footer {
     display: none;
   }
 }
+
+@media screen and (max-width: 40em) {
+  body {
+    background: var(--ory-theme-background-surface);
+  }
+}

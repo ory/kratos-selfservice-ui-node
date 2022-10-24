@@ -14,8 +14,7 @@ export const createVerificationRoute: RouteCreator =
     res.locals.projectName = "Verify account"
 
     const { flow, return_to = "" } = req.query
-    const helpers = createHelpers(req)
-    const { sdk, kratosBrowserUrl } = helpers
+    const { sdk, kratosBrowserUrl, logo } = createHelpers(req)
     const initFlowUrl = getUrlForFlow(
       kratosBrowserUrl,
       "verification",
@@ -50,6 +49,7 @@ export const createVerificationRoute: RouteCreator =
               title: "Verify your account",
               flow: flow as SelfServiceFlow,
               flowType: "verification",
+              cardImage: logo,
               additionalProps: {
                 signupURL: initRegistrationUrl,
               },

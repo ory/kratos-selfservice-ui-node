@@ -5,6 +5,7 @@ export interface RouteOptions {
   sdk: V0alpha2ApiInterface
   apiBaseUrl: string
   kratosBrowserUrl: string
+  logo?: string
 }
 
 export type RouteOptionsCreator = (req: Request) => RouteOptions

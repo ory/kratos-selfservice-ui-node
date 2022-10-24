@@ -15,8 +15,7 @@ export const createRecoveryRoute: RouteCreator =
     res.locals.projectName = "Recover account"
 
     const { flow, return_to = "" } = req.query
-    const helpers = createHelpers(req)
-    const { sdk, kratosBrowserUrl } = helpers
+    const { sdk, kratosBrowserUrl, logo } = createHelpers(req)
     const initFlowUrl = getUrlForFlow(
       kratosBrowserUrl,
       "recovery",
@@ -47,6 +46,7 @@ export const createRecoveryRoute: RouteCreator =
             title: "Recover your account",
             flow: flow as SelfServiceFlow,
             flowType: "recovery",
+            cardImage: logo,
             additionalProps: {
               loginURL: initLoginUrl,
             },

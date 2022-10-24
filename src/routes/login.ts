@@ -25,8 +25,7 @@ export const createLoginRoute: RouteCreator =
       return_to = "",
       login_challenge,
     } = req.query
-    const helpers = createHelpers(req)
-    const { sdk, kratosBrowserUrl } = helpers
+    const { sdk, kratosBrowserUrl, logo } = createHelpers(req)
 
     const initFlowQuery = new URLSearchParams({
       aal: aal.toString(),
@@ -108,7 +107,7 @@ export const createLoginRoute: RouteCreator =
             }),
             flow: flow as SelfServiceFlow,
             flowType: "login",
-            cardImage: "ory-logo.svg",
+            cardImage: logo,
             additionalProps: {
               forgotPasswordURL: "recovery",
               signupURL: initRegistrationUrl,

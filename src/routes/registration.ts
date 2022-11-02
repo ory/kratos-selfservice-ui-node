@@ -1,6 +1,5 @@
 // Copyright © 2022 Ory Corp
 // SPDX-License-Identifier: Apache-2.0
-
 import { SelfServiceRegistrationFlow, UiNodeInputAttributes } from "@ory/client"
 import { UserAuthCard } from "@ory/elements-markup"
 import {

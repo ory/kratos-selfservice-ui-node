@@ -1,3 +1,6 @@
+// Copyright © 2022 Ory Corp
+// SPDX-License-Identifier: Apache-2.0
+
 import { Request, Response } from "express"
 import { RouteRegistrator } from "../pkg"
 

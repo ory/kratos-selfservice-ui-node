@@ -1,3 +1,5 @@
+// Copyright © 2022 Ory Corp
+// SPDX-License-Identifier: Apache-2.0
 import express, { Request, Response } from "express"
 import hbs from "express-handlebars"
 import * as fs from "fs"

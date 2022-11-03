@@ -1,3 +1,5 @@
+// Copyright © 2022 Ory Corp
+// SPDX-License-Identifier: Apache-2.0
 import { UserErrorCard } from "@ory/elements-markup"
 import { NextFunction, Request, Response } from "express"
 import { RouteRegistrator } from "../pkg"

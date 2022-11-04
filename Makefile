@@ -42,7 +42,7 @@ clean-sdk:
 	npm i
 
 format: .bin/ory node_modules
-	.bin/ory dev headers copyright --exclude=.prettierrc.js --exclude=types
+	.bin/ory dev headers copyright --type=open-source --exclude=.prettierrc.js --exclude=types
 	npm exec -- prettier --write .
 
 licenses: .bin/licenses node_modules  # checks open-source licenses

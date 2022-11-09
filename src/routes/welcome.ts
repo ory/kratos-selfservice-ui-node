@@ -44,7 +44,7 @@ export const createWelcomeRoute: RouteCreator =
         CardGradient({
           heading: "Getting Started",
           content:
-            "Jump start your project and complete the quickstart tutorial to get a broader overview of Ory Cloud.",
+            "Jump start your project and complete the quickstart tutorial to get a broader overview of Ory Network.",
           action:
             "https://www.ory.sh/docs/getting-started/integrate-auth/expressjs",
           target: "_blank",
@@ -67,7 +67,7 @@ export const createWelcomeRoute: RouteCreator =
         CardGradient({
           heading: "Sessions",
           content:
-            "Ory Cloud manages sessions for you - get to know how sessions work.",
+            "Ory Network manages sessions for you - get to know how sessions work.",
           action: "https://www.ory.sh/docs/kratos/session-management/overview",
           target: "_blank",
         }),

@@ -13,7 +13,7 @@ export const registerStaticRoutes: RouteRegistrator = (app) => {
   app.use("/", express.static("public"))
   app.use("/.well-known/ory/webauthn.js", (req, res) => {
     res.contentType("text/javascript")
-    sdk.getWebAuthnJavaScript().then(({ data }) => {
+    sdk.frontend.getWebAuthnJavaScript().then(({ data }) => {
       res.send(data)
     })
   })

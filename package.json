@@ -23,7 +23,7 @@
   },
   "dependencies": {
     "@ory/client": "^1.0.1",
-    "@ory/elements-markup": "^0.0.1-alpha.26",
+    "@ory/elements-markup": "^0.0.1-alpha.27",
     "@ory/integrations": "^0.2.8",
     "axios": "^0.27.2",
     "cookie-parser": "^1.4.5",

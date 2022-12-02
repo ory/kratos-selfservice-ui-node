@@ -1,6 +1,6 @@
 // Copyright © 2022 Ory Corp
 // SPDX-License-Identifier: Apache-2.0
-import { Configuration, V0alpha2Api } from "@ory/client"
+import { Configuration, FrontendApi, IdentityApi, OAuth2Api } from "@ory/client"
 
 const apiBaseUrlInternal =
   process.env.KRATOS_PUBLIC_URL ||
@@ -9,12 +9,16 @@ const apiBaseUrlInternal =
 
 export const apiBaseUrl = process.env.KRATOS_BROWSER_URL || apiBaseUrlInternal
 
+const config = new Configuration({
+  basePath: apiBaseUrlInternal,
+  // accessToken: "Your Ory Cloud API Key / Personal Access Token"
+})
+
 // Sets up the SDK
-let sdk = new V0alpha2Api(
-  new Configuration({
-    basePath: apiBaseUrlInternal,
-    // accessToken: "Your Ory Cloud API Key / Personal Access Token"
-  }),
-)
+const sdk = {
+  identity: new IdentityApi(config),
+  frontend: new FrontendApi(config),
+  oauth2: new OAuth2Api(config),
+}
 
 export default sdk

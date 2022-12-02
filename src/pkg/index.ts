@@ -23,11 +23,11 @@ export const getUrlForFlow = (
     query ? `?${query.toString()}` : ""
   }`
 
-export const defaultConfig: RouteOptionsCreator = () => {
+export const defaultConfig = () => {
   return {
     apiBaseUrl: apiBaseUrl,
     kratosBrowserUrl: apiBaseUrl,
-    sdk,
+    frontend: {},
   }
 }
 

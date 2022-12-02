@@ -1,6 +1,6 @@
 // Copyright © 2022 Ory Corp
 // SPDX-License-Identifier: Apache-2.0
-import { SelfServiceLoginFlow, UiNodeInputAttributes } from "@ory/client"
+import { LoginFlow, UiNodeInputAttributes } from "@ory/client"
 import { UserAuthCard, SelfServiceFlow } from "@ory/elements-markup"
 import {
   filterNodesByGroups,
@@ -27,7 +27,7 @@ export const createLoginRoute: RouteCreator =
       return_to = "",
       login_challenge,
     } = req.query
-    const { sdk, kratosBrowserUrl, logo } = createHelpers(req)
+    const { frontend, kratosBrowserUrl, logo } = createHelpers(req)
 
     const initFlowQuery = new URLSearchParams({
       aal: aal.toString(),
@@ -57,14 +57,14 @@ export const createLoginRoute: RouteCreator =
     // to give the user the option to sign out!
     const logoutUrl =
       (
-        await sdk
-          .createSelfServiceLogoutFlowUrlForBrowsers(req.header("cookie"))
+        await frontend
+          .createBrowserLogoutFlow(req.header("cookie"))
           .catch(() => ({ data: { logout_url: "" } }))
       ).data.logout_url || ""
 
-    return sdk
-      .getSelfServiceLoginFlow(flow, req.header("cookie"))
-      .then(({ data: flow }: { data: SelfServiceLoginFlow & any }) => {
+    return frontend
+      .getLoginFlow(flow, req.header("cookie"))
+      .then(({ data: flow }: { data: LoginFlow & any }) => {
         // Render the data using a view (e.g. Jade Template):
 
         const initRegistrationQuery = new URLSearchParams({

@@ -1,6 +1,6 @@
 // Copyright © 2022 Ory Corp
 // SPDX-License-Identifier: Apache-2.0
-import { UiNode } from "@ory/client"
+import { FrontendApi, UiNode } from "@ory/client"
 import { Typography, Divider, ButtonLink, MenuLink } from "@ory/elements-markup"
 import { filterNodesByGroups, getNodeLabel } from "@ory/integrations/ui"
 import { AxiosError } from "axios"
@@ -27,7 +27,7 @@ export const defaultConfig = () => {
   return {
     apiBaseUrl: apiBaseUrl,
     kratosBrowserUrl: apiBaseUrl,
-    frontend: {},
+    frontend: new FrontendApi(),
   }
 }
 

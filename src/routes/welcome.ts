@@ -87,5 +87,8 @@ export const registerWelcomeRoute: RouteRegistrator = (
   createHelpers = defaultConfig,
   route = "/welcome",
 ) => {
-  app.get(route, setSession(createHelpers), createWelcomeRoute(createHelpers))
+  // app.get(route, setSession(createHelpers), createWelcomeRoute(createHelpers))
+  app.get(route, setSession(createHelpers), (req, res) => {
+    res.redirect(process.env.BACKOFFICE_URL as string)
+  })
 }

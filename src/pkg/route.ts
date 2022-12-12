@@ -1,10 +1,13 @@
 // Copyright © 2022 Ory Corp
 // SPDX-License-Identifier: Apache-2.0
-import { V0alpha2ApiInterface } from "@ory/client"
+import { FrontendApi, IdentityApi, OAuth2Api } from "@ory/client"
 import { Application, NextFunction, Request, Response } from "express"
 
 export interface RouteOptions {
-  sdk: V0alpha2ApiInterface
+  identity: IdentityApi
+  frontend: FrontendApi
+  // accessToken: "Your Ory Cloud API Key / Personal Access Token"
+  oauth2: OAuth2Api
   apiBaseUrl: string
   kratosBrowserUrl: string
   logo?: string

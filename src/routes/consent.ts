@@ -1,0 +1,225 @@
+// Copyright © 2022 Ory Corp
+// SPDX-License-Identifier: Apache-2.0
+import { AcceptOAuth2ConsentRequestSession } from "@ory/client"
+import { UserConsentCard } from "@ory/elements-markup"
+import bodyParser from "body-parser"
+import csrf from "csurf"
+import { defaultConfig, RouteCreator, RouteRegistrator } from "../pkg"
+import { register404Route } from "./404"
+import { oidcConformityMaybeFakeSession } from "./stub/oidc-cert"
+
+// A simple express handler that shows the Hydra consent screen.
+export const createConsentRoute: RouteCreator =
+  (createHelpers) => (req, res, next) => {
+    res.locals.projectName = "An application requests access to your data!"
+
+    const { oauth2 } = createHelpers(req)
+    const { consent_challenge } = req.query
+
+    // The challenge is used to fetch information about the consent request from ORY hydraAdmin.
+    const challenge = String(consent_challenge)
+    if (!challenge) {
+      next(
+        new Error("Expected a consent challenge to be set but received none."),
+      )
+      return
+    }
+
+    // This section processes consent requests and either shows the consent UI or
+    // accepts the consent request right away if the user has given consent to this
+    // app before
+    oauth2
+      .getOAuth2ConsentRequest({ consentChallenge: challenge })
+      // This will be called if the HTTP request was successful
+      .then(({ data: body }) => {
+        // If a user has granted this application the requested scope, hydra will tell us to not show the UI.
+        if (body.skip) {
+          // You can apply logic here, for example grant another scope, or do whatever...
+          // ...
+
+          // Now it's time to grant the consent request. You could also deny the request if something went terribly wrong
+          return oauth2
+            .acceptOAuth2ConsentRequest({
+              consentChallenge: challenge,
+              acceptOAuth2ConsentRequest: {
+                // We can grant all scopes that have been requested - hydra already checked for us that no additional scopes
+                // are requested accidentally.
+                grant_scope: body.requested_scope,
+
+                // ORY Hydra checks if requested audiences are allowed by the client, so we can simply echo this.
+                grant_access_token_audience:
+                  body.requested_access_token_audience,
+
+                // The session allows us to set session data for id and access tokens
+                session: {
+                  // This data will be available when introspecting the token. Try to avoid sensitive information here,
+                  // unless you limit who can introspect tokens.
+                  // accessToken: { foo: 'bar' },
+                  // This data will be available in the ID token.
+                  // idToken: { baz: 'bar' },
+                },
+              },
+            })
+            .then(({ data: body }) => {
+              // All we need to do now is to redirect the user back to hydra!
+              res.redirect(String(body.redirect_to))
+            })
+        }
+
+        // If consent can't be skipped we MUST show the consent UI.
+        res.render("consent", {
+          card: UserConsentCard({
+            consent: body,
+            csrfToken: req.csrfToken(),
+            challenge: challenge,
+            cardImage: body.client?.logo_uri || "/ory-logo.svg",
+            client_name: body.client?.client_name || "unknown client",
+            requested_scope: body.requested_scope,
+            user: body.subject,
+            client: body.client,
+            action: (process.env.BASE_URL || "") + "/consent",
+          }),
+        })
+      })
+      // This will handle any error that happens when making HTTP calls to hydra
+      .catch(next)
+    // The consent request has now either been accepted automatically or rendered.
+  }
+
+export const createConsentPostRoute: RouteCreator =
+  (createHelpers) => (req, res, next) => {
+    // The challenge is a hidden input field, so we have to retrieve it from the request body
+    const challenge = req.body.consent_challenge
+    const { oauth2 } = createHelpers(req)
+
+    // Let's see if the user decided to accept or reject the consent request..
+    if (req.body.submit === "Deny access") {
+      // Looks like the consent request was denied by the user
+      return (
+        oauth2
+          .rejectOAuth2ConsentRequest({
+            consentChallenge: challenge,
+            rejectOAuth2Request: {
+              error: "access_denied",
+              error_description: "The resource owner denied the request",
+            },
+          })
+          .then(({ data: body }) => {
+            // All we need to do now is to redirect the browser back to hydra!
+            res.redirect(String(body.redirect_to))
+          })
+          // This will handle any error that happens when making HTTP calls to hydra
+          .catch(next)
+      )
+    }
+    // label:consent-deny-end
+
+    let grantScope = req.body.grant_scope
+    if (!Array.isArray(grantScope)) {
+      grantScope = [grantScope]
+    }
+
+    // The session allows us to set session data for id and access tokens
+    let session: AcceptOAuth2ConsentRequestSession = {
+      // This data will be available when introspecting the token. Try to avoid sensitive information here,
+      // unless you limit who can introspect tokens.
+      access_token: {
+        // foo: 'bar'
+      },
+
+      // This data will be available in the ID token.
+      id_token: {
+        // baz: 'bar'
+      },
+    }
+
+    // Here is also the place to add data to the ID or access token. For example,
+    // if the scope 'profile' is added, add the family and given name to the ID Token claims:
+    // if (grantScope.indexOf('profile')) {
+    //   session.id_token.family_name = 'Doe'
+    //   session.id_token.given_name = 'John'
+    // }
+
+    // Let's fetch the consent request again to be able to set `grantAccessTokenAudience` properly.
+    oauth2
+      .getOAuth2ConsentRequest({ consentChallenge: challenge })
+      // This will be called if the HTTP request was successful
+      .then(({ data: body }) => {
+        return oauth2
+          .acceptOAuth2ConsentRequest({
+            consentChallenge: challenge,
+            acceptOAuth2ConsentRequest: {
+              // We can grant all scopes that have been requested - hydra already checked for us that no additional scopes
+              // are requested accidentally.
+              grant_scope: grantScope,
+
+              // If the environment variable CONFORMITY_FAKE_CLAIMS is set we are assuming that
+              // the app is built for the automated OpenID Connect Conformity Test Suite. You
+              // can peak inside the code for some ideas, but be aware that all data is fake
+              // and this only exists to fake a login system which works in accordance to OpenID Connect.
+              //
+              // If that variable is not set, the session will be used as-is.
+              session: oidcConformityMaybeFakeSession(
+                grantScope,
+                body,
+                session,
+              ),
+
+              // ORY Hydra checks if requested audiences are allowed by the client, so we can simply echo this.
+              grant_access_token_audience: body.requested_access_token_audience,
+
+              // This tells hydra to remember this consent request and allow the same client to request the same
+              // scopes from the same user, without showing the UI, in the future.
+              remember: Boolean(req.body.remember),
+
+              // When this "remember" sesion expires, in seconds. Set this to 0 so it will never expire.
+              remember_for: 3600,
+            },
+          })
+          .then(({ data: body }) => {
+            // All we need to do now is to redirect the user back!
+            res.redirect(String(body.redirect_to))
+          })
+      })
+      .catch(next)
+  }
+
+// Sets up csrf protection
+const csrfProtection = csrf({
+  cookie: {
+    sameSite: "lax",
+  },
+})
+
+var parseForm = bodyParser.urlencoded({ extended: false })
+
+export const registerConsentRoute: RouteRegistrator = function (
+  app,
+  createHelpers = defaultConfig,
+) {
+  if (process.env.HYDRA_ADMIN_URL) {
+    return app.get(
+      "/consent",
+      csrfProtection,
+      createConsentRoute(createHelpers),
+    )
+  } else {
+    return register404Route
+  }
+}
+
+export const registerConsentPostRoute: RouteRegistrator = function (
+  app,
+  createHelpers = defaultConfig,
+) {
+  if (process.env.HYDRA_ADMIN_URL) {
+    return app.post(
+      "/consent",
+      parseForm,
+      csrfProtection,
+      createConsentPostRoute(createHelpers),
+    )
+  } else {
+    return register404Route
+  }
+}

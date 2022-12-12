@@ -107,3 +107,6 @@ pnpm-lock.yaml
 # Ignore the elements repository that gets cloned in on npm install
 elements/
 .bin/
+
+# 
+.docker

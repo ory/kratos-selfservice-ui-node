@@ -16,7 +16,7 @@ export const createVerificationRoute: RouteCreator =
     res.locals.projectName = "Verify account"
 
     const { flow, return_to = "" } = req.query
-    const { sdk, kratosBrowserUrl, logo } = createHelpers(req)
+    const { frontend, kratosBrowserUrl, logo } = createHelpers(req)
     const initFlowUrl = getUrlForFlow(
       kratosBrowserUrl,
       "verification",
@@ -42,8 +42,8 @@ export const createVerificationRoute: RouteCreator =
     }
 
     return (
-      sdk
-        .getSelfServiceVerificationFlow(flow, req.header("cookie"))
+      frontend
+        .getVerificationFlow({ id: flow, cookie: req.header("cookie") })
         .then(({ data: flow }) => {
           // Render the data using a view (e.g. Jade Template):
           res.render("verification", {

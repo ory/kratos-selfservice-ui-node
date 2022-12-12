@@ -1,6 +1,6 @@
 // Copyright © 2022 Ory Corp
 // SPDX-License-Identifier: Apache-2.0
-import { SelfServiceRegistrationFlow, UiNodeInputAttributes } from "@ory/client"
+import { RegistrationFlow, UiNodeInputAttributes } from "@ory/client"
 import { UserAuthCard } from "@ory/elements-markup"
 import {
   filterNodesByGroups,
@@ -23,7 +23,7 @@ export const createRegistrationRoute: RouteCreator =
     res.locals.projectName = "Create account"
 
     const { flow, return_to = "", login_challenge } = req.query
-    const { sdk, kratosBrowserUrl, logo } = createHelpers(req)
+    const { frontend, kratosBrowserUrl, logo } = createHelpers(req)
 
     const initFlowQuery = new URLSearchParams({
       return_to: return_to.toString(),
@@ -54,9 +54,9 @@ export const createRegistrationRoute: RouteCreator =
       return
     }
 
-    sdk
-      .getSelfServiceRegistrationFlow(flow, req.header("Cookie"))
-      .then(({ data: flow }: { data: SelfServiceRegistrationFlow & any }) => {
+    frontend
+      .getRegistrationFlow({ id: flow, cookie: req.header("Cookie") })
+      .then(({ data: flow }: { data: RegistrationFlow & any }) => {
         // Render the data using a view (e.g. Jade Template):
         const initLoginQuery = new URLSearchParams({
           return_to: return_to.toString(),

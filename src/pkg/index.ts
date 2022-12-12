@@ -101,7 +101,7 @@ export const handlebarsHelpers = {
   },
   oryBranding: () =>
     Typography({
-      children: `Protected by `,
+      children: "",
       type: "regular",
       size: "tiny",
       color: "foregroundSubtle",

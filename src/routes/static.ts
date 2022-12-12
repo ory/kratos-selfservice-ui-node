@@ -9,6 +9,13 @@ import sdk from "../pkg/sdk"
 export const registerStaticRoutes: RouteRegistrator = (app) => {
   RegisterOryElementsExpress(app, {
     ...defaultLightTheme,
+    accent: {
+      def: "#6E56D1",
+      muted: "#836fd7",
+      emphasis: "#5135c5",
+      disabled: "#E0E0E0",
+      subtle: "#eceefe",
+    },
   })
   app.use("/", express.static("public"))
   app.use("/.well-known/ory/webauthn.js", (req, res) => {

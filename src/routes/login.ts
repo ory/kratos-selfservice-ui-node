@@ -1,7 +1,7 @@
 // Copyright © 2022 Ory Corp
 // SPDX-License-Identifier: Apache-2.0
-import { LoginFlow, UiNodeInputAttributes } from "@ory/client"
-import { UserAuthCard, SelfServiceFlow } from "@ory/elements-markup"
+import { UiNodeInputAttributes } from "@ory/client"
+import { SelfServiceFlow, UserAuthCard } from "@ory/elements-markup"
 import {
   filterNodesByGroups,
   isUiNodeInputAttributes,
@@ -64,7 +64,7 @@ export const createLoginRoute: RouteCreator =
 
     return frontend
       .getLoginFlow({ id: flow, cookie: req.header("cookie") })
-      .then(({ data: flow }: { data: LoginFlow & any }) => {
+      .then(({ data: flow }) => {
         // Render the data using a view (e.g. Jade Template):
 
         const initRegistrationQuery = new URLSearchParams({
@@ -101,10 +101,10 @@ export const createLoginRoute: RouteCreator =
             title: !(flow.refresh || flow.requested_aal === "aal2")
               ? "Sign In"
               : "Two-Factor Authentication",
-            ...(flow.hydra_login_request && {
+            ...(flow.oauth2_login_request && {
               subtitle: `To authenticate ${
-                flow.hydra_login_request.client_client_name ||
-                flow.hydra_login_request.client_client_id
+                flow.oauth2_login_request.client.client_name ||
+                flow.oauth2_login_request.client.client_id
               }`,
             }),
             flow: flow as SelfServiceFlow,

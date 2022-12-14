@@ -1,6 +1,6 @@
 // Copyright © 2022 Ory Corp
 // SPDX-License-Identifier: Apache-2.0
-import { UserAuthCard, SelfServiceFlow } from "@ory/elements-markup"
+import { SelfServiceFlow, UserAuthCard } from "@ory/elements-markup"
 import {
   defaultConfig,
   getUrlForFlow,
@@ -16,7 +16,8 @@ export const createVerificationRoute: RouteCreator =
     res.locals.projectName = "Verify account"
 
     const { flow, return_to = "" } = req.query
-    const { frontend, kratosBrowserUrl, logo } = createHelpers(req)
+    const { frontend, kratosBrowserUrl, logoUrl } = createHelpers(req, res)
+
     const initFlowUrl = getUrlForFlow(
       kratosBrowserUrl,
       "verification",
@@ -51,7 +52,7 @@ export const createVerificationRoute: RouteCreator =
               title: "Verify your account",
               flow: flow as SelfServiceFlow,
               flowType: "verification",
-              cardImage: logo,
+              cardImage: logoUrl,
               additionalProps: {
                 signupURL: initRegistrationUrl,
               },

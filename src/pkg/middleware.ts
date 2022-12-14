@@ -54,7 +54,7 @@ const addSessionToRequest =
 export const requireAuth =
   (createHelpers: RouteOptionsCreator) =>
   (req: Request, res: Response, next: NextFunction) => {
-    const { frontend, apiBaseUrl } = createHelpers(req)
+    const { frontend, apiBaseUrl } = createHelpers(req, res)
     frontend
       .toSession({ cookie: req.header("cookie") })
       .then(addSessionToRequest(req))
@@ -78,7 +78,7 @@ export const requireAuth =
 export const setSession =
   (createHelpers: RouteOptionsCreator) =>
   (req: Request, res: Response, next: NextFunction) => {
-    const { frontend, apiBaseUrl } = createHelpers(req)
+    const { frontend, apiBaseUrl } = createHelpers(req, res)
     frontend
       .toSession({ cookie: req.header("cookie") })
       .then(addSessionToRequest(req))
@@ -95,7 +95,7 @@ export const setSession =
 export const requireNoAuth =
   (createHelpers: RouteOptionsCreator) =>
   (req: Request, res: Response, next: NextFunction) => {
-    const { frontend } = createHelpers(req)
+    const { frontend } = createHelpers(req, res)
     frontend
       .toSession({ cookie: req.header("cookie") })
       .then(() => {

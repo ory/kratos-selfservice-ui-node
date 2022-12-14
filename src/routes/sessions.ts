@@ -12,7 +12,7 @@ import { navigationMenu } from "../pkg/ui"
 export const createSessionsRoute: RouteCreator =
   (createHelpers) => async (req, res) => {
     res.locals.projectName = "Session Information"
-    const { frontend } = createHelpers(req)
+    const { frontend } = createHelpers(req, res)
     const session = req.session
 
     // Create a logout URL

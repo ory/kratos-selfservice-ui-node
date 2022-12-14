@@ -27,7 +27,7 @@ export const createLoginRoute: RouteCreator =
       return_to = "",
       login_challenge,
     } = req.query
-    const { frontend, kratosBrowserUrl, logo } = createHelpers(req)
+    const { frontend, kratosBrowserUrl, logoUrl } = createHelpers(req, res)
 
     const initFlowQuery = new URLSearchParams({
       aal: aal.toString(),
@@ -109,7 +109,7 @@ export const createLoginRoute: RouteCreator =
             }),
             flow: flow as SelfServiceFlow,
             flowType: "login",
-            cardImage: logo,
+            cardImage: logoUrl,
             additionalProps: {
               forgotPasswordURL: "recovery",
               signupURL: initRegistrationUrl,

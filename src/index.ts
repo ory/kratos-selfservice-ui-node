@@ -10,8 +10,6 @@ import { middleware as middlewareLogger } from "./pkg/logger"
 import {
   register404Route,
   register500Route,
-  registerConsentPostRoute,
-  registerConsentRoute,
   registerErrorRoute,
   registerHealthRoute,
   registerLoginRoute,
@@ -44,8 +42,6 @@ app.engine(
 registerStaticRoutes(app)
 registerHealthRoute(app)
 registerLoginRoute(app)
-registerConsentRoute(app)
-registerConsentPostRoute(app)
 registerRecoveryRoute(app)
 registerRegistrationRoute(app)
 registerSettingsRoute(app)

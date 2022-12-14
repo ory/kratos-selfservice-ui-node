@@ -17,7 +17,7 @@ export const createRecoveryRoute: RouteCreator =
     res.locals.projectName = "Recover account"
 
     const { flow, return_to = "" } = req.query
-    const { sdk, kratosBrowserUrl, logo } = createHelpers(req)
+    const { frontend, kratosBrowserUrl, logo } = createHelpers(req)
     const initFlowUrl = getUrlForFlow(
       kratosBrowserUrl,
       "recovery",
@@ -40,8 +40,8 @@ export const createRecoveryRoute: RouteCreator =
       return
     }
 
-    return sdk
-      .getSelfServiceRecoveryFlow(flow, req.header("cookie"))
+    return frontend
+      .getRecoveryFlow({ id: flow, cookie: req.header("cookie") })
       .then(({ data: flow }) => {
         res.render("recovery", {
           card: UserAuthCard({

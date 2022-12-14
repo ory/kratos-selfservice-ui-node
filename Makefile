@@ -1,15 +1,12 @@
 rand := $(shell openssl rand -hex 6)
-ROOT_DIR := $(dir $(realpath $(lastword $(MAKEFILE_LIST))))
-DOCKER_UPSTREAM ?= $(shell cat $(ROOT_DIR)/.docker 2> /dev/null)
-DOCKER ?= $(shell which podman || which docker)
 
 .PHONY: docker-dev-build
 docker-dev-build:
-	$(DOCKER) build --format docker -f ./Dockerfile-dev -t $(DOCKER_UPSTREAM):latest .
+		docker build -f ./Dockerfile-dev -t oryd/kratos-selfservice-ui-node:latest .
 
 .PHONY: docker
 docker:
-	$(DOCKER) build --format docker -t $(DOCKER_UPSTREAM):latest .
+	docker build -t oryd/kratos-selfservice-ui-node:latest .
 
 .PHONY: build-sdk
 build-sdk:
@@ -37,7 +34,7 @@ publish-sdk: build-sdk
 
 .PHONY: build-sdk-docker
 build-sdk-docker: build-sdk
-	$(DOCKER) build -t $(DOCKER_UPSTREAM):latest . --build-arg LINK=true
+	docker build -t oryd/kratos-selfservice-ui-node:latest . --build-arg LINK=true
 
 .PHONY: clean-sdk
 clean-sdk:

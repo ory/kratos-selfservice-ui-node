@@ -23,7 +23,7 @@ export const createRegistrationRoute: RouteCreator =
     res.locals.projectName = "Create account"
 
     const { flow, return_to = "", login_challenge } = req.query
-    const { frontend, kratosBrowserUrl, logo } = createHelpers(req)
+    const { frontend, kratosBrowserUrl, logoUrl } = createHelpers(req, res)
 
     const initFlowQuery = new URLSearchParams({
       return_to: return_to.toString(),
@@ -91,7 +91,7 @@ export const createRegistrationRoute: RouteCreator =
               }`,
             }),
             flowType: "registration",
-            cardImage: logo,
+            cardImage: logoUrl,
             additionalProps: {
               loginURL: getUrlForFlow(
                 kratosBrowserUrl,

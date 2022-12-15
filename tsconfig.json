@@ -12,5 +12,5 @@
     "esModuleInterop": true,
     "skipLibCheck": true
   },
-  "exclude": ["contrib", "elements"]
+  "exclude": ["contrib"]
 }

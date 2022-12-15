@@ -1,6 +1,6 @@
 // Copyright © 2022 Ory Corp
 // SPDX-License-Identifier: Apache-2.0
-import { UserAuthCard, SelfServiceFlow } from "@ory/elements-markup"
+import { SelfServiceFlow, UserAuthCard } from "@ory/elements-markup"
 import {
   defaultConfig,
   getUrlForFlow,
@@ -17,7 +17,7 @@ export const createRecoveryRoute: RouteCreator =
     res.locals.projectName = "Recover account"
 
     const { flow, return_to = "" } = req.query
-    const { frontend, kratosBrowserUrl, logo } = createHelpers(req)
+    const { frontend, kratosBrowserUrl, logoUrl } = createHelpers(req, res)
     const initFlowUrl = getUrlForFlow(
       kratosBrowserUrl,
       "recovery",
@@ -48,7 +48,7 @@ export const createRecoveryRoute: RouteCreator =
             title: "Recover your account",
             flow: flow as SelfServiceFlow,
             flowType: "recovery",
-            cardImage: logo,
+            cardImage: logoUrl,
             additionalProps: {
               loginURL: initLoginUrl,
             },

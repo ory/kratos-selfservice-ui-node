@@ -2,18 +2,18 @@
 // SPDX-License-Identifier: Apache-2.0
 import { UiNodeInputAttributes } from "@ory/client"
 import {
-  Nav,
-  UserSettingsCard,
-  UserSettingsFlowType,
   Divider,
-  NavSectionLinks,
-  hasPassword,
-  Typography,
   hasLookupSecret,
   hasOidc,
+  hasPassword,
   hasTotp,
   hasWebauthn,
+  Nav,
+  NavSectionLinks,
   NodeMessages,
+  Typography,
+  UserSettingsCard,
+  UserSettingsFlowType,
 } from "@ory/elements-markup"
 import {
   filterNodesByGroups,
@@ -35,7 +35,7 @@ export const createSettingsRoute: RouteCreator =
     res.locals.projectName = "Account settings"
 
     const { flow, return_to = "" } = req.query
-    const helpers = createHelpers(req)
+    const helpers = createHelpers(req, res)
     const { frontend, kratosBrowserUrl } = helpers
     const initFlowUrl = getUrlForFlow(
       kratosBrowserUrl,

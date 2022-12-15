@@ -13,7 +13,7 @@ export const createWelcomeRoute: RouteCreator =
   (createHelpers) => async (req, res) => {
     res.locals.projectName = "Welcome to Ory"
 
-    const { frontend } = createHelpers(req)
+    const { frontend } = createHelpers(req, res)
     const session = req.session
 
     // Create a logout URL

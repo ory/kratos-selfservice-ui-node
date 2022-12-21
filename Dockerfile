@@ -23,6 +23,6 @@ RUN npm run build
 USER 10000
 
 ENTRYPOINT ["/bin/sh", "-c"]
-CMD ["npm run serve"]
+CMD ["npm run serve --offline"]
 
 EXPOSE 3000

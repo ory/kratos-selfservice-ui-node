@@ -16,7 +16,7 @@ export const createErrorRoute: RouteCreator =
     const { id } = req.query
 
     // Get the SDK
-    const { sdk, logo } = createHelpers(req)
+    const { frontend, logoUrl } = createHelpers(req, res)
 
     if (!isQuerySet(id)) {
       // No error was send, redirecting back to home.
@@ -24,13 +24,13 @@ export const createErrorRoute: RouteCreator =
       return
     }
 
-    sdk
-      .getSelfServiceError(id)
+    frontend
+      .getFlowError({ id })
       .then(({ data }) => {
         res.status(200).render("error", {
           card: UserErrorCard({
             error: data,
-            cardImage: logo,
+            cardImage: logoUrl,
             title: "An error occurred",
             backUrl: req.header("Referer") || "welcome",
           }),

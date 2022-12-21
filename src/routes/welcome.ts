@@ -13,14 +13,14 @@ export const createWelcomeRoute: RouteCreator =
   (createHelpers) => async (req, res) => {
     res.locals.projectName = "Welcome to Ory"
 
-    const { sdk } = createHelpers(req)
+    const { frontend } = createHelpers(req, res)
     const session = req.session
 
     // Create a logout URL
     const logoutUrl =
       (
-        await sdk
-          .createSelfServiceLogoutFlowUrlForBrowsers(req.header("cookie"))
+        await frontend
+          .createBrowserLogoutFlow({ cookie: req.header("cookie") })
           .catch(() => ({ data: { logout_url: "" } }))
       ).data.logout_url || ""
 

@@ -10,7 +10,7 @@ export const register500Route: RouteRegistrator = (app, createHelpers) => {
     res.status(500).render("error", {
       card: UserErrorCard({
         title: "Internal Server Error",
-        cardImage: createHelpers?.(req).logo,
+        cardImage: createHelpers?.(req, res).logoUrl,
         backUrl: req.header("Referer") || "welcome",
         error: {
           id: "404",

@@ -54,9 +54,9 @@ const addSessionToRequest =
 export const requireAuth =
   (createHelpers: RouteOptionsCreator) =>
   (req: Request, res: Response, next: NextFunction) => {
-    const { sdk, apiBaseUrl } = createHelpers(req)
-    sdk
-      .toSession(undefined, req.header("cookie"))
+    const { frontend, apiBaseUrl } = createHelpers(req, res)
+    frontend
+      .toSession({ cookie: req.header("cookie") })
       .then(addSessionToRequest(req))
       .then(() => next())
       .catch((err: AxiosError) => {
@@ -78,9 +78,9 @@ export const requireAuth =
 export const setSession =
   (createHelpers: RouteOptionsCreator) =>
   (req: Request, res: Response, next: NextFunction) => {
-    const { sdk, apiBaseUrl } = createHelpers(req)
-    sdk
-      .toSession(undefined, req.header("cookie"))
+    const { frontend, apiBaseUrl } = createHelpers(req, res)
+    frontend
+      .toSession({ cookie: req.header("cookie") })
       .then(addSessionToRequest(req))
       .catch(maybeInitiate2FA(res, apiBaseUrl))
       .then(() => next())
@@ -95,9 +95,9 @@ export const setSession =
 export const requireNoAuth =
   (createHelpers: RouteOptionsCreator) =>
   (req: Request, res: Response, next: NextFunction) => {
-    const { sdk } = createHelpers(req)
-    sdk
-      .toSession(undefined, req.header("cookie"))
+    const { frontend } = createHelpers(req, res)
+    frontend
+      .toSession({ cookie: req.header("cookie") })
       .then(() => {
         res.redirect("welcome")
       })

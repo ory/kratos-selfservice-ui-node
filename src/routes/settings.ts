@@ -2,18 +2,18 @@
 // SPDX-License-Identifier: Apache-2.0
 import { UiNodeInputAttributes } from "@ory/client"
 import {
-  Nav,
-  UserSettingsCard,
-  UserSettingsFlowType,
   Divider,
-  NavSectionLinks,
-  hasPassword,
-  Typography,
   hasLookupSecret,
   hasOidc,
+  hasPassword,
   hasTotp,
   hasWebauthn,
+  Nav,
+  NavSectionLinks,
   NodeMessages,
+  Typography,
+  UserSettingsCard,
+  UserSettingsFlowType,
 } from "@ory/elements-markup"
 import {
   filterNodesByGroups,
@@ -35,8 +35,8 @@ export const createSettingsRoute: RouteCreator =
     res.locals.projectName = "Account settings"
 
     const { flow, return_to = "" } = req.query
-    const helpers = createHelpers(req)
-    const { sdk, kratosBrowserUrl } = helpers
+    const helpers = createHelpers(req, res)
+    const { frontend, kratosBrowserUrl } = helpers
     const initFlowUrl = getUrlForFlow(
       kratosBrowserUrl,
       "settings",
@@ -58,8 +58,8 @@ export const createSettingsRoute: RouteCreator =
     // Create a logout URL
     const logoutUrl =
       (
-        await sdk
-          .createSelfServiceLogoutFlowUrlForBrowsers(req.header("cookie"))
+        await frontend
+          .createBrowserLogoutFlow({ cookie: req.header("cookie") })
           .catch(() => ({ data: { logout_url: "" } }))
       ).data.logout_url || ""
 
@@ -71,8 +71,8 @@ export const createSettingsRoute: RouteCreator =
         ? `You are currently logged in as ${identityCredentialTrait} `
         : ""
 
-    return sdk
-      .getSelfServiceSettingsFlow(flow, undefined, req.header("cookie"))
+    return frontend
+      .getSettingsFlow({ id: flow, cookie: req.header("cookie") })
       .then(({ data: flow }) => {
         const conditionalLinks: NavSectionLinks[] = [
           {

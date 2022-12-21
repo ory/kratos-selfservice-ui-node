@@ -1,7 +1,7 @@
 // Copyright © 2022 Ory Corp
 // SPDX-License-Identifier: Apache-2.0
-import { SelfServiceLoginFlow, UiNodeInputAttributes } from "@ory/client"
-import { UserAuthCard, SelfServiceFlow } from "@ory/elements-markup"
+import { UiNodeInputAttributes } from "@ory/client"
+import { SelfServiceFlow, UserAuthCard } from "@ory/elements-markup"
 import {
   filterNodesByGroups,
   isUiNodeInputAttributes,
@@ -27,7 +27,7 @@ export const createLoginRoute: RouteCreator =
       return_to = "",
       login_challenge,
     } = req.query
-    const { sdk, kratosBrowserUrl, logo } = createHelpers(req)
+    const { frontend, kratosBrowserUrl, logoUrl } = createHelpers(req, res)
 
     const initFlowQuery = new URLSearchParams({
       aal: aal.toString(),
@@ -57,14 +57,14 @@ export const createLoginRoute: RouteCreator =
     // to give the user the option to sign out!
     const logoutUrl =
       (
-        await sdk
-          .createSelfServiceLogoutFlowUrlForBrowsers(req.header("cookie"))
+        await frontend
+          .createBrowserLogoutFlow({ cookie: req.header("cookie") })
           .catch(() => ({ data: { logout_url: "" } }))
       ).data.logout_url || ""
 
-    return sdk
-      .getSelfServiceLoginFlow(flow, req.header("cookie"))
-      .then(({ data: flow }: { data: SelfServiceLoginFlow & any }) => {
+    return frontend
+      .getLoginFlow({ id: flow, cookie: req.header("cookie") })
+      .then(({ data: flow }) => {
         // Render the data using a view (e.g. Jade Template):
 
         const initRegistrationQuery = new URLSearchParams({
@@ -101,15 +101,15 @@ export const createLoginRoute: RouteCreator =
             title: !(flow.refresh || flow.requested_aal === "aal2")
               ? "Sign In"
               : "Two-Factor Authentication",
-            ...(flow.hydra_login_request && {
+            ...(flow.oauth2_login_request && {
               subtitle: `To authenticate ${
-                flow.hydra_login_request.client_client_name ||
-                flow.hydra_login_request.client_client_id
+                flow.oauth2_login_request.client.client_name ||
+                flow.oauth2_login_request.client.client_id
               }`,
             }),
             flow: flow as SelfServiceFlow,
             flowType: "login",
-            cardImage: logo,
+            cardImage: logoUrl,
             additionalProps: {
               forgotPasswordURL: "recovery",
               signupURL: initRegistrationUrl,

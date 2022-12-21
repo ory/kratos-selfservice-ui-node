@@ -1,16 +1,19 @@
 // Copyright © 2022 Ory Corp
 // SPDX-License-Identifier: Apache-2.0
-import { V0alpha2ApiInterface } from "@ory/client"
+import { FrontendApi, OAuth2Api } from "@ory/client"
+import { Theme } from "@ory/elements-markup"
 import { Application, NextFunction, Request, Response } from "express"
 
 export interface RouteOptions {
-  sdk: V0alpha2ApiInterface
+  frontend: FrontendApi
+  oauth2: OAuth2Api
   apiBaseUrl: string
   kratosBrowserUrl: string
-  logo?: string
+  logoUrl?: string
+  theme?: Theme
 }
 
-export type RouteOptionsCreator = (req: Request) => RouteOptions
+export type RouteOptionsCreator = (req: Request, res: Response) => RouteOptions
 
 export type RouteCreator = (
   opts: RouteOptionsCreator,

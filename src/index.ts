@@ -39,7 +39,6 @@ app.engine(
   }),
 )
 
-registerStaticRoutes(app)
 registerHealthRoute(app)
 registerLoginRoute(app)
 registerRecoveryRoute(app)
@@ -54,6 +53,7 @@ app.get("/", (req: Request, res: Response) => {
   res.redirect(303, "welcome")
 })
 
+registerStaticRoutes(app)
 register404Route(app)
 register500Route(app)
 

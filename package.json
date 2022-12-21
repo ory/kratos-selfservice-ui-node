@@ -12,10 +12,10 @@
   },
   "license": "Apache-2.0",
   "author": "Aeneas Rekkas",
-  "main": "src/index.ts",
+  "main": "src/bootstrap.ts",
   "scripts": {
     "build": "rm -rf lib/* && tsc",
-    "serve": "node lib/index.js",
+    "serve": "node lib/bootstrap.js",
     "start": "nodemon",
     "test": "exit 0",
     "format:check": "prettier --check .",

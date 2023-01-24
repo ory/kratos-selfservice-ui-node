@@ -13,6 +13,9 @@
   "license": "Apache-2.0",
   "author": "Aeneas Rekkas",
   "main": "src/index.ts",
+  "files": [
+    "lib/*"
+  ],
   "scripts": {
     "build": "rm -rf lib/* && tsc",
     "serve": "node lib/index.js",

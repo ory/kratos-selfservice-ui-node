@@ -14,7 +14,8 @@
   "author": "Aeneas Rekkas",
   "main": "src/index.ts",
   "files": [
-    "lib/*"
+    "lib/*",
+    "views/*"
   ],
   "scripts": {
     "build": "rm -rf lib/* && tsc",

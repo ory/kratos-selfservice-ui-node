@@ -66,9 +66,9 @@ export const createLoginRoute: RouteCreator =
       .getLoginFlow({ id: flow, cookie: req.header("cookie") })
       .then(({ data: flow }) => {
         // Render the data using a view (e.g. Jade Template):
-
         const initRegistrationQuery = new URLSearchParams({
-          return_to: return_to.toString(),
+          return_to:
+            (return_to && return_to.toString()) || flow.return_to || "",
         })
         if (flow.oauth2_login_request?.challenge) {
           initRegistrationQuery.set(

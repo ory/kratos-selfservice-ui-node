@@ -24,14 +24,6 @@ export const createVerificationRoute: RouteCreator =
       new URLSearchParams({ return_to: return_to.toString() }),
     )
 
-    const initRegistrationUrl = getUrlForFlow(
-      kratosBrowserUrl,
-      "registration",
-      new URLSearchParams({
-        return_to: return_to.toString(),
-      }),
-    )
-
     // The flow is used to identify the settings and registration flow and
     // return data like the csrf_token and so on.
     if (!isQuerySet(flow)) {
@@ -46,6 +38,14 @@ export const createVerificationRoute: RouteCreator =
       frontend
         .getVerificationFlow({ id: flow, cookie: req.header("cookie") })
         .then(({ data: flow }) => {
+          const initRegistrationUrl = getUrlForFlow(
+            kratosBrowserUrl,
+            "registration",
+            new URLSearchParams({
+              return_to:
+                (return_to && return_to.toString()) || flow.return_to || "",
+            }),
+          )
           // Render the data using a view (e.g. Jade Template):
           res.render("verification", {
             card: UserAuthCard({

@@ -24,12 +24,6 @@ export const createRecoveryRoute: RouteCreator =
       new URLSearchParams({ return_to: return_to.toString() }),
     )
 
-    const initLoginUrl = getUrlForFlow(
-      kratosBrowserUrl,
-      "login",
-      new URLSearchParams({ return_to: return_to.toString() }),
-    )
-
     // The flow is used to identify the settings and registration flow and
     // return data like the csrf_token and so on.
     if (!isQuerySet(flow)) {
@@ -43,6 +37,15 @@ export const createRecoveryRoute: RouteCreator =
     return frontend
       .getRecoveryFlow({ id: flow, cookie: req.header("cookie") })
       .then(({ data: flow }) => {
+        const initLoginUrl = getUrlForFlow(
+          kratosBrowserUrl,
+          "login",
+          new URLSearchParams({
+            return_to:
+              (return_to && return_to.toString()) || flow.return_to || "",
+          }),
+        )
+
         res.render("recovery", {
           card: UserAuthCard({
             title: "Recover your account",

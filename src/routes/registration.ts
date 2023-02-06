@@ -22,11 +22,15 @@ export const createRegistrationRoute: RouteCreator =
   (createHelpers) => (req, res, next) => {
     res.locals.projectName = "Create account"
 
-    const { flow, return_to = "", login_challenge } = req.query
+    const { flow, return_to, after_verification_return_to, login_challenge } =
+      req.query
     const { frontend, kratosBrowserUrl, logoUrl } = createHelpers(req, res)
 
     const initFlowQuery = new URLSearchParams({
-      return_to: return_to.toString(),
+      ...(return_to && { return_to: return_to.toString() }),
+      ...(after_verification_return_to && {
+        after_verification_return_to: after_verification_return_to.toString(),
+      }),
     })
 
     if (isQuerySet(login_challenge)) {
@@ -59,7 +63,8 @@ export const createRegistrationRoute: RouteCreator =
       .then(({ data: flow }) => {
         // Render the data using a view (e.g. Jade Template):
         const initLoginQuery = new URLSearchParams({
-          return_to: return_to.toString(),
+          return_to:
+            (return_to && return_to.toString()) || flow.return_to || "",
         })
         if (flow.oauth2_login_request?.challenge) {
           initLoginQuery.set(

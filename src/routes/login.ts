@@ -83,14 +83,13 @@ export const createLoginRoute: RouteCreator =
           initRegistrationQuery,
         )
 
-        const initRecoveryQuery = new URLSearchParams({
-          return_to:
-            (return_to && return_to.toString()) || flow.return_to || "",
-        })
         const initRecoveryUrl = getUrlForFlow(
           kratosBrowserUrl,
           "recovery",
-          initRecoveryQuery,
+          new URLSearchParams({
+            return_to:
+              (return_to && return_to.toString()) || flow.return_to || "",
+          }),
         )
 
         res.render("login", {

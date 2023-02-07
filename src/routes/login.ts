@@ -83,6 +83,16 @@ export const createLoginRoute: RouteCreator =
           initRegistrationQuery,
         )
 
+        const initRecoveryQuery = new URLSearchParams({
+          return_to:
+            (return_to && return_to.toString()) || flow.return_to || "",
+        })
+        const initRecoveryUrl = getUrlForFlow(
+          kratosBrowserUrl,
+          "recovery",
+          initRecoveryQuery,
+        )
+
         res.render("login", {
           nodes: flow.ui.nodes,
           webAuthnHandler: filterNodesByGroups({
@@ -111,7 +121,7 @@ export const createLoginRoute: RouteCreator =
             flowType: "login",
             cardImage: logoUrl,
             additionalProps: {
-              forgotPasswordURL: "recovery",
+              forgotPasswordURL: initRecoveryUrl,
               signupURL: initRegistrationUrl,
               logoutURL: logoutUrl,
             },

@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 import { FrontendApi, OAuth2Api } from "@ory/client"
 import { Theme } from "@ory/elements-markup"
-import { Application, NextFunction, Request, Response } from "express"
+import { NextFunction, Request, Response, Router } from "express"
 
 export interface RouteOptions {
   frontend: FrontendApi
@@ -20,7 +20,7 @@ export type RouteCreator = (
 ) => (req: Request, res: Response, next: NextFunction) => void
 
 export type RouteRegistrator = (
-  app: Application,
+  router: Router,
   createHelpers?: RouteOptionsCreator,
   route?: string,
 ) => void

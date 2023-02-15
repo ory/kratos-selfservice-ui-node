@@ -40,10 +40,7 @@ check whether the session is valid or not.
 ### Base Path
 
 If you host this application at a sub-path, you can set the `BASE_PATH`
-environment variable. Please note that the app itself still expects to be served
-at `/`. Usually, you can configure your reverse proxy or API gateway to strip
-the path prefix. For example, in
-[Kong you would use the `strip_path` option](https://docs.konghq.com/kubernetes-ingress-controller/1.3.x/guides/using-rewrites/).
+environment variable.
 
 ## Development
 

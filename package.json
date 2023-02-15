@@ -29,6 +29,7 @@
     "@ory/client": "1.1.7",
     "@ory/elements-markup": "0.0.1-beta.3",
     "@ory/integrations": "1.1.0",
+    "@vanilla-extract/dynamic": "^2.0.3",
     "axios": "1.2.6",
     "body-parser": "1.20.1",
     "cookie-parser": "1.4.6",

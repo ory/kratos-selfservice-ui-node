@@ -12,15 +12,15 @@ import { RouteOptionsCreator } from "./route"
  *
  * @internal
  * @param res
- * @param apiBaseUrl
+ * @param kratosBrowserUrl
  */
 const maybeInitiate2FA =
-  (res: Response, apiBaseUrl: string) => (err: AxiosError) => {
+  (res: Response, kratosBrowserUrl: string) => (err: AxiosError) => {
     // 403 on toSession means that we need to request 2FA
     if (err.response && err.response.status === 403) {
       res.redirect(
         getUrlForFlow(
-          apiBaseUrl,
+          kratosBrowserUrl,
           "login",
           new URLSearchParams({ aal: "aal2" }),
         ),
@@ -54,14 +54,14 @@ const addSessionToRequest =
 export const requireAuth =
   (createHelpers: RouteOptionsCreator) =>
   (req: Request, res: Response, next: NextFunction) => {
-    const { frontend, apiBaseUrl } = createHelpers(req, res)
+    const { frontend, kratosBrowserUrl } = createHelpers(req, res)
     frontend
       .toSession({ cookie: req.header("cookie") })
       .then(addSessionToRequest(req))
       .then(() => next())
       .catch((err: AxiosError) => {
-        if (!maybeInitiate2FA(res, apiBaseUrl)(err)) {
-          res.redirect(getUrlForFlow(apiBaseUrl, "login"))
+        if (!maybeInitiate2FA(res, kratosBrowserUrl)(err)) {
+          res.redirect(getUrlForFlow(kratosBrowserUrl, "login"))
           return
         }
       })
@@ -78,11 +78,11 @@ export const requireAuth =
 export const setSession =
   (createHelpers: RouteOptionsCreator) =>
   (req: Request, res: Response, next: NextFunction) => {
-    const { frontend, apiBaseUrl } = createHelpers(req, res)
+    const { frontend, kratosBrowserUrl } = createHelpers(req, res)
     frontend
       .toSession({ cookie: req.header("cookie") })
       .then(addSessionToRequest(req))
-      .catch(maybeInitiate2FA(res, apiBaseUrl))
+      .catch(maybeInitiate2FA(res, kratosBrowserUrl))
       .then(() => next())
   }
 

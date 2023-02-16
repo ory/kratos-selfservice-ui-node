@@ -6,7 +6,7 @@ import { filterNodesByGroups, getNodeLabel } from "@ory/integrations/ui"
 import { AxiosError } from "axios"
 import { NextFunction, Response } from "express"
 import { RouteOptionsCreator } from "./route"
-import sdk, { apiBaseUrl } from "./sdk"
+import sdk from "./sdk"
 import { toUiNodePartial } from "./ui"
 
 export * from "./logger"
@@ -23,13 +23,7 @@ export const getUrlForFlow = (
     query ? `?${query.toString()}` : ""
   }`
 
-export const defaultConfig: RouteOptionsCreator = () => {
-  return {
-    apiBaseUrl: apiBaseUrl,
-    kratosBrowserUrl: apiBaseUrl,
-    ...sdk,
-  }
-}
+export const defaultConfig: RouteOptionsCreator = () => sdk
 
 export const isQuerySet = (x: any): x is string =>
   typeof x === "string" && x.length > 0

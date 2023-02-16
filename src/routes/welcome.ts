@@ -75,7 +75,8 @@ export const createWelcomeRoute: RouteCreator =
           heading: "Custom UI",
           content:
             "Implementing these pages in your language and framework of choice is straightforward using our SDKs.",
-          action: "https://www.ory.sh/docs/guides/bring-your-user-interface",
+          action:
+            "https://www.ory.sh/docs/kratos/bring-your-own-ui/configure-ory-to-use-your-ui",
           target: "_blank",
         }),
       ].join("\n"),

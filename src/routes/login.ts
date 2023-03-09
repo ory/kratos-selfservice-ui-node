@@ -25,14 +25,28 @@ export const createLoginRoute: RouteCreator =
       aal = "",
       refresh = "",
       return_to = "",
+      redirect_uri = "",
       login_challenge,
     } = req.query
     const { frontend, kratosBrowserUrl, logoUrl } = createHelpers(req, res)
 
+    let returnTo = ""
+    // OAuth flows use redirect_uri instead of return_to
+    // we should map it to the returnTo
+    // return_to query parameter will override redirect_uri
+    if (redirect_uri) {
+      returnTo = redirect_uri.toString()
+    }
+
+    // return_to query parameter will override redirect_uri
+    if (return_to) {
+      returnTo = return_to.toString()
+    }
+
     const initFlowQuery = new URLSearchParams({
       aal: aal.toString(),
       refresh: refresh.toString(),
-      return_to: return_to.toString(),
+      return_to: returnTo,
     })
 
     if (isQuerySet(login_challenge)) {
@@ -67,8 +81,7 @@ export const createLoginRoute: RouteCreator =
       .then(({ data: flow }) => {
         // Render the data using a view (e.g. Jade Template):
         const initRegistrationQuery = new URLSearchParams({
-          return_to:
-            (return_to && return_to.toString()) || flow.return_to || "",
+          return_to: returnTo.length > 0 ? returnTo : flow.return_to || "",
         })
         if (flow.oauth2_login_request?.challenge) {
           initRegistrationQuery.set(
@@ -87,8 +100,7 @@ export const createLoginRoute: RouteCreator =
           kratosBrowserUrl,
           "recovery",
           new URLSearchParams({
-            return_to:
-              (return_to && return_to.toString()) || flow.return_to || "",
+            return_to: returnTo.length > 0 ? returnTo : flow.return_to || "",
           }),
         )
 

@@ -91,8 +91,8 @@ export const createRegistrationRoute: RouteCreator =
             flow: flow,
             ...(flow.oauth2_login_request && {
               subtitle: `To authenticate ${
-                flow.oauth2_login_request.client.client_name ||
-                flow.oauth2_login_request.client.client_id
+                flow.oauth2_login_request.client?.client_name ||
+                flow.oauth2_login_request.client?.client_id
               }`,
             }),
             flowType: "registration",

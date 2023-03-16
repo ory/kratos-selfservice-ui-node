@@ -149,7 +149,7 @@ export const createSettingsRoute: RouteCreator =
               }),
             Typography({
               children:
-                "Here you can manage settings related to your account. Keep in mind that certain actions require a you to re-authenticate.",
+                "Here you can manage settings related to your account. Keep in mind that certain actions require you to re-authenticate.",
               color: "foregroundMuted",
               size: "small",
             }),

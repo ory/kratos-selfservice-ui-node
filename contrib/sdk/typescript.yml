@@ -4,4 +4,5 @@ supportsES6: true
 ensureUniqueParams: true
 modelPropertyNaming: original
 disallowAdditionalPropertiesIfNotPresent: false
-withInterfaces: true
+withInterfaces: false
+useSingleRequestParameter: true

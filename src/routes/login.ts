@@ -6,6 +6,7 @@ import {
   filterNodesByGroups,
   isUiNodeInputAttributes,
 } from "@ory/integrations/ui"
+import { URLSearchParams } from "url"
 import {
   defaultConfig,
   getUrlForFlow,
@@ -65,6 +66,27 @@ export const createLoginRoute: RouteCreator =
     return frontend
       .getLoginFlow({ id: flow, cookie: req.header("cookie") })
       .then(({ data: flow }) => {
+        if (flow.ui.messages && flow.ui.messages.length > 0) {
+          // the login requires that the user verifies their email address before logging in
+          if (flow.ui.messages.some(({ id }) => id === 4000010)) {
+            frontend
+              .createBrowserVerificationFlow()
+              .then(({ data: verificationFlow }) => {
+                res.redirect(
+                  303,
+                  `/verification?${new URLSearchParams({
+                    flow: verificationFlow.id,
+                    message:
+                      "You need to verify your email address before logging in.",
+                  }).toString()}`,
+                )
+              })
+              .catch(redirectOnSoftError(res, next, initFlowUrl))
+
+            return
+          }
+        }
+
         // Render the data using a view (e.g. Jade Template):
         const initRegistrationQuery = new URLSearchParams({
           return_to:

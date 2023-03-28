@@ -1,5 +1,6 @@
 // Copyright © 2022 Ory Corp
 // SPDX-License-Identifier: Apache-2.0
+import { UiText } from "@ory/client"
 import { SelfServiceFlow, UserAuthCard } from "@ory/elements-markup"
 import {
   defaultConfig,
@@ -15,7 +16,7 @@ export const createVerificationRoute: RouteCreator =
   (createHelpers) => (req, res, next) => {
     res.locals.projectName = "Verify account"
 
-    const { flow, return_to = "" } = req.query
+    const { flow, return_to = "", message } = req.query
     const { frontend, kratosBrowserUrl, logoUrl } = createHelpers(req, res)
 
     const initFlowUrl = getUrlForFlow(
@@ -46,6 +47,19 @@ export const createVerificationRoute: RouteCreator =
                 (return_to && return_to.toString()) || flow.return_to || "",
             }),
           )
+
+          if (message) {
+            const m: UiText = {
+              id: 0,
+              text: message.toString(),
+              type: "info",
+            }
+
+            flow.ui.messages
+              ? flow.ui.messages.push(m)
+              : (flow.ui.messages = [m])
+          }
+
           // Render the data using a view (e.g. Jade Template):
           res.render("verification", {
             card: UserAuthCard({

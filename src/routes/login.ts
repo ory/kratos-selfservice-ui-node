@@ -1,6 +1,6 @@
 // Copyright © 2022 Ory Corp
 // SPDX-License-Identifier: Apache-2.0
-import { UiNodeInputAttributes } from "@ory/client"
+import { LoginFlow, UiNodeInputAttributes } from "@ory/client"
 import { SelfServiceFlow, UserAuthCard } from "@ory/elements-markup"
 import {
   filterNodesByGroups,
@@ -63,6 +63,42 @@ export const createLoginRoute: RouteCreator =
           .catch(() => ({ data: { logout_url: "" } }))
       ).data.logout_url || ""
 
+    const redirectToVerificationFlow = (loginFlow: LoginFlow) => {
+      // we will create a new verification flow and redirect the user to the verification page
+      frontend
+        .createBrowserVerificationFlow({
+          returnTo:
+            (return_to && return_to.toString()) || loginFlow.return_to || "",
+        })
+        .then(({ headers, data: verificationFlow }) => {
+          // we need the csrf cookie from the verification flow
+          res.setHeader("set-cookie", headers["set-cookie"])
+          // encode the verification flow id in the query parameters
+          const verificationParameters = new URLSearchParams({
+            flow: verificationFlow.id,
+            message: JSON.stringify(loginFlow.ui.messages),
+          })
+          // redirect to the verification page with the custom message
+          res.redirect("/verification?" + verificationParameters.toString())
+        })
+        .catch(
+          redirectOnSoftError(
+            res,
+            next,
+            getUrlForFlow(
+              kratosBrowserUrl,
+              "verification",
+              new URLSearchParams({
+                return_to:
+                  (return_to && return_to.toString()) ||
+                  loginFlow.return_to ||
+                  "",
+              }),
+            ),
+          ),
+        )
+    }
+
     return frontend
       .getLoginFlow({ id: flow, cookie: req.header("cookie") })
       .then(({ data: flow }) => {
@@ -70,41 +106,7 @@ export const createLoginRoute: RouteCreator =
           // the login requires that the user verifies their email address before logging in
           if (flow.ui.messages.some(({ id }) => id === 4000010)) {
             // we will create a new verification flow and redirect the user to the verification page
-            frontend
-              .createBrowserVerificationFlow({
-                returnTo:
-                  (return_to && return_to.toString()) || flow.return_to || "",
-              })
-              .then(({ headers, data: verificationFlow }) => {
-                // we need the csrf cookie from the verification flow
-                res.setHeader("set-cookie", headers["set-cookie"])
-                // encode the verification flow id in the query parameters
-                const verificationParameters = new URLSearchParams({
-                  flow: verificationFlow.id,
-                  message: JSON.stringify(flow.ui.messages),
-                })
-                // redirect to the verification page with the custom message
-                res.redirect(
-                  "/verification?" + verificationParameters.toString(),
-                )
-              })
-              .catch(
-                redirectOnSoftError(
-                  res,
-                  next,
-                  getUrlForFlow(
-                    kratosBrowserUrl,
-                    "verification",
-                    new URLSearchParams({
-                      return_to:
-                        (return_to && return_to.toString()) ||
-                        flow.return_to ||
-                        "",
-                    }),
-                  ),
-                ),
-              )
-            return
+            return redirectToVerificationFlow(flow)
           }
         }
 

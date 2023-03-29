@@ -69,20 +69,42 @@ export const createLoginRoute: RouteCreator =
         if (flow.ui.messages && flow.ui.messages.length > 0) {
           // the login requires that the user verifies their email address before logging in
           if (flow.ui.messages.some(({ id }) => id === 4000010)) {
+            // we will create a new verification flow and redirect the user to the verification page
             frontend
-              .createBrowserVerificationFlow()
-              .then(({ data: verificationFlow }) => {
+              .createBrowserVerificationFlow({
+                returnTo:
+                  (return_to && return_to.toString()) || flow.return_to || "",
+              })
+              .then(({ headers, data: verificationFlow }) => {
+                // we need the csrf cookie from the verification flow
+                res.setHeader("set-cookie", headers["set-cookie"])
+                // encode the verification flow id in the query parameters
+                const verificationParameters = new URLSearchParams({
+                  flow: verificationFlow.id,
+                  message:
+                    "You need to verify your email address before you can log in.",
+                })
+                // redirect to the verification page with the custom message
                 res.redirect(
-                  303,
-                  `/verification?${new URLSearchParams({
-                    flow: verificationFlow.id,
-                    message:
-                      "You need to verify your email address before logging in.",
-                  }).toString()}`,
+                  "/verification?" + verificationParameters.toString(),
                 )
               })
-              .catch(redirectOnSoftError(res, next, initFlowUrl))
-
+              .catch(
+                redirectOnSoftError(
+                  res,
+                  next,
+                  getUrlForFlow(
+                    kratosBrowserUrl,
+                    "verification",
+                    new URLSearchParams({
+                      return_to:
+                        (return_to && return_to.toString()) ||
+                        flow.return_to ||
+                        "",
+                    }),
+                  ),
+                ),
+              )
             return
           }
         }

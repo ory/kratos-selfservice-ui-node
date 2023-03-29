@@ -81,8 +81,7 @@ export const createLoginRoute: RouteCreator =
                 // encode the verification flow id in the query parameters
                 const verificationParameters = new URLSearchParams({
                   flow: verificationFlow.id,
-                  message:
-                    "You need to verify your email address before you can log in.",
+                  message: JSON.stringify(flow.ui.messages),
                 })
                 // redirect to the verification page with the custom message
                 res.redirect(

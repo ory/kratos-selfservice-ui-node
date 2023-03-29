@@ -50,16 +50,12 @@ export const createVerificationRoute: RouteCreator =
 
           // check for custom messages in the query string
           if (isQuerySet(message)) {
-            const m: UiText = {
-              id: 0,
-              text: message,
-              type: "error",
-            }
+            const m: Array<UiText> = JSON.parse(message)
 
             // add them to the flow data so they can be rendered by the UI
             flow.ui.messages
-              ? flow.ui.messages.push(m)
-              : (flow.ui.messages = [m])
+              ? flow.ui.messages.push(...m)
+              : (flow.ui.messages = m)
           }
 
           // Render the data using a view (e.g. Jade Template):

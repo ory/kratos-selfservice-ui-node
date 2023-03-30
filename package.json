@@ -26,8 +26,8 @@
     "prepublishOnly": "npm run build"
   },
   "dependencies": {
-    "@ory/client": "1.1.22",
-    "@ory/elements-markup": "0.0.1-beta.5",
+    "@ory/client": "1.1.23",
+    "@ory/elements-markup": "0.0.1-beta.6",
     "@ory/integrations": "1.1.0",
     "axios": "1.2.6",
     "body-parser": "1.20.1",

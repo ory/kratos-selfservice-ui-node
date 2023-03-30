@@ -39,11 +39,15 @@ check whether the session is valid or not.
 
 ### Base Path
 
-If you host this application at a sub-path, you can set the `BASE_PATH`
-environment variable. Please note that the app itself still expects to be served
-at `/`. Usually, you can configure your reverse proxy or API gateway to strip
-the path prefix. For example, in
-[Kong you would use the `strip_path` option](https://docs.konghq.com/kubernetes-ingress-controller/1.3.x/guides/using-rewrites/).
+There are two ways of serving this application under a base path:
+
+1. Let Express.js handle the routing by setting the `BASE_PATH` environment
+   variable to the sub-path, e.g. `/myapp`.
+2. Use a reverse proxy or API gateway to strip the path prefix.
+
+The second approach is not always possible, especially when running the
+application on a serverless environment. In this case, the first approach is
+recommended.
 
 ## Development
 

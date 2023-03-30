@@ -1,11 +1,12 @@
 // Copyright © 2022 Ory Corp
 // SPDX-License-Identifier: Apache-2.0
-import { UiNodeInputAttributes } from "@ory/client"
+import { LoginFlow, UiNodeInputAttributes } from "@ory/client"
 import { SelfServiceFlow, UserAuthCard } from "@ory/elements-markup"
 import {
   filterNodesByGroups,
   isUiNodeInputAttributes,
 } from "@ory/integrations/ui"
+import { URLSearchParams } from "url"
 import {
   defaultConfig,
   getUrlForFlow,
@@ -62,9 +63,53 @@ export const createLoginRoute: RouteCreator =
           .catch(() => ({ data: { logout_url: "" } }))
       ).data.logout_url || ""
 
+    const redirectToVerificationFlow = (loginFlow: LoginFlow) => {
+      // we will create a new verification flow and redirect the user to the verification page
+      frontend
+        .createBrowserVerificationFlow({
+          returnTo:
+            (return_to && return_to.toString()) || loginFlow.return_to || "",
+        })
+        .then(({ headers, data: verificationFlow }) => {
+          // we need the csrf cookie from the verification flow
+          res.setHeader("set-cookie", headers["set-cookie"])
+          // encode the verification flow id in the query parameters
+          const verificationParameters = new URLSearchParams({
+            flow: verificationFlow.id,
+            message: JSON.stringify(loginFlow.ui.messages),
+          })
+          // redirect to the verification page with the custom message
+          res.redirect("/verification?" + verificationParameters.toString())
+        })
+        .catch(
+          redirectOnSoftError(
+            res,
+            next,
+            getUrlForFlow(
+              kratosBrowserUrl,
+              "verification",
+              new URLSearchParams({
+                return_to:
+                  (return_to && return_to.toString()) ||
+                  loginFlow.return_to ||
+                  "",
+              }),
+            ),
+          ),
+        )
+    }
+
     return frontend
       .getLoginFlow({ id: flow, cookie: req.header("cookie") })
       .then(({ data: flow }) => {
+        if (flow.ui.messages && flow.ui.messages.length > 0) {
+          // the login requires that the user verifies their email address before logging in
+          if (flow.ui.messages.some(({ id }) => id === 4000010)) {
+            // we will create a new verification flow and redirect the user to the verification page
+            return redirectToVerificationFlow(flow)
+          }
+        }
+
         // Render the data using a view (e.g. Jade Template):
         const initRegistrationQuery = new URLSearchParams({
           return_to:
@@ -112,8 +157,8 @@ export const createLoginRoute: RouteCreator =
               : "Two-Factor Authentication",
             ...(flow.oauth2_login_request && {
               subtitle: `To authenticate ${
-                flow.oauth2_login_request.client.client_name ||
-                flow.oauth2_login_request.client.client_id
+                flow.oauth2_login_request.client?.client_name ||
+                flow.oauth2_login_request.client?.client_id
               }`,
             }),
             flow: flow as SelfServiceFlow,

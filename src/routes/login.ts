@@ -6,15 +6,16 @@ import {
   filterNodesByGroups,
   isUiNodeInputAttributes,
 } from "@ory/integrations/ui"
+import path from "path"
 import { URLSearchParams } from "url"
 import {
+  RouteCreator,
+  RouteRegistrator,
   defaultConfig,
   getUrlForFlow,
   isQuerySet,
   logger,
   redirectOnSoftError,
-  RouteCreator,
-  RouteRegistrator,
 } from "../pkg"
 
 export const createLoginRoute: RouteCreator =
@@ -78,8 +79,20 @@ export const createLoginRoute: RouteCreator =
             flow: verificationFlow.id,
             message: JSON.stringify(loginFlow.ui.messages),
           })
+
+          const baseUrl = req.path.split("/")
+          // get rid of the last part of the path (e.g. "login")
+          baseUrl.pop()
+
           // redirect to the verification page with the custom message
-          res.redirect("/verification?" + verificationParameters.toString())
+          res.redirect(
+            303,
+            // join the base url with the verification path
+            path.join(
+              req.baseUrl,
+              "verification?" + verificationParameters.toString(),
+            ),
+          )
         })
         .catch(
           redirectOnSoftError(

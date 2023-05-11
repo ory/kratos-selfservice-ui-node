@@ -1,6 +1,9 @@
 // Copyright © 2022 Ory Corp
 // SPDX-License-Identifier: Apache-2.0
-import { UiNode } from "@ory/client"
+import {
+  UiNode,
+  ErrorAuthenticatorAssuranceLevelNotSatisfied,
+} from "@ory/client"
 import { ButtonLink, Divider, MenuLink, Typography } from "@ory/elements-markup"
 import { filterNodesByGroups, getNodeLabel } from "@ory/integrations/ui"
 import { AxiosError } from "axios"
@@ -31,8 +34,18 @@ export const defaultConfig: RouteOptionsCreator = () => {
   }
 }
 
+export const isUUID =
+  /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/
+
 export const isQuerySet = (x: any): x is string =>
   typeof x === "string" && x.length > 0
+
+const isErrorAuthenticatorAssuranceLevel = (
+  err: unknown,
+): err is ErrorAuthenticatorAssuranceLevelNotSatisfied => {
+  const e = err as ErrorAuthenticatorAssuranceLevelNotSatisfied
+  return e.id !== undefined && e.id === "session_aal2_required"
+}
 
 // Redirects to the specified URL if the error is an AxiosError with a 404, 410,
 // or 403 error code.
@@ -49,6 +62,16 @@ export const redirectOnSoftError =
       err.response.status === 410 ||
       err.response.status === 403
     ) {
+      const error = err.response.data as { error: unknown }
+      if (error.error !== undefined) {
+        // in some cases Kratos will require us to redirect to a different page when the session_aal2_required
+        // for example, when recovery redirects us to settings
+        // but settings requires us to redirect to login?aal=aal2
+        if (isErrorAuthenticatorAssuranceLevel(error.error)) {
+          res.redirect(error.error.details?.redirect_browser_to || redirectTo)
+          return
+        }
+      }
       res.redirect(`${redirectTo}`)
       return
     }

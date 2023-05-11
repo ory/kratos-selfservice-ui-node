@@ -1,6 +1,9 @@
 // Copyright © 2022 Ory Corp
 // SPDX-License-Identifier: Apache-2.0
-import { UiNodeInputAttributes } from "@ory/client"
+import {
+  ErrorAuthenticatorAssuranceLevelNotSatisfied,
+  UiNodeInputAttributes,
+} from "@ory/client"
 import {
   Divider,
   hasLookupSecret,
@@ -19,6 +22,7 @@ import {
   filterNodesByGroups,
   isUiNodeInputAttributes,
 } from "@ory/integrations/ui"
+import { AxiosError } from "axios"
 import {
   defaultConfig,
   getUrlForFlow,

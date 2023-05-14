@@ -10,17 +10,19 @@ import { middleware as middlewareLogger } from "./pkg/logger"
 import {
   register404Route,
   register500Route,
+  registerConsentPostRoute,
+  registerConsentRoute,
   registerErrorRoute,
   registerHealthRoute,
   registerLoginRoute,
   registerRecoveryRoute,
   registerRegistrationRoute,
+  registerSessionsRoute,
   registerSettingsRoute,
   registerStaticRoutes,
   registerVerificationRoute,
   registerWelcomeRoute,
 } from "./routes"
-import { registerSessionsRoute } from "./routes/sessions"
 
 const baseUrl = process.env.BASE_PATH || "/"
 
@@ -44,6 +46,8 @@ app.engine(
 
 registerHealthRoute(router)
 registerLoginRoute(router)
+registerConsentRoute(app)
+registerConsentPostRoute(app)
 registerRecoveryRoute(router)
 registerRegistrationRoute(router)
 registerSettingsRoute(router)

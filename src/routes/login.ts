@@ -165,9 +165,11 @@ export const createLoginRoute: RouteCreator =
             })
             .filter((c) => c !== undefined),
           card: UserAuthCard({
-            title: !(flow.refresh || flow.requested_aal === "aal2")
-              ? "Sign In"
-              : "Two-Factor Authentication",
+            title: flow.refresh
+              ? "Confirm it's you"
+              : flow.requested_aal === "aal2"
+              ? "Two-Factor Authentication"
+              : "Sign In",
             ...(flow.oauth2_login_request && {
               subtitle: `To authenticate ${
                 flow.oauth2_login_request.client?.client_name ||

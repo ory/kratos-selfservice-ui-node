@@ -3,7 +3,7 @@
 import { Session } from "@ory/client"
 import { AxiosError } from "axios"
 import { NextFunction, Request, Response } from "express"
-import { getUrlForFlow } from "./index"
+import { getUrlForFlow, isUUID } from "./index"
 import { RouteOptionsCreator } from "./route"
 
 /**
@@ -55,6 +55,16 @@ export const requireAuth =
   (createHelpers: RouteOptionsCreator) =>
   (req: Request, res: Response, next: NextFunction) => {
     const { frontend, apiBaseUrl } = createHelpers(req, res)
+
+    // when accessing settings with a valid flow id
+    // we allow the settings page to trigger the
+    // login flow on session_aal2_required
+    if (req.url.includes("/settings") && req.query.flow) {
+      if (isUUID.test(req.query.flow.toString())) {
+        next()
+        return
+      }
+    }
     frontend
       .toSession({ cookie: req.header("cookie") })
       .then(addSessionToRequest(req))

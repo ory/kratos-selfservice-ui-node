@@ -82,6 +82,7 @@ export const createConsentRoute: RouteCreator =
         // If a user has granted this application the requested scope, hydra will tell us to not show the UI.
         if (
           body.skip ||
+          body.client?.skip_consent ||
           (body.client?.client_id &&
             trustedClients.indexOf(body.client?.client_id) > -1)
         ) {

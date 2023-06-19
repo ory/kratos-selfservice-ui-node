@@ -15,14 +15,14 @@ import { RouteOptionsCreator } from "./route"
  * @param apiBaseUrl
  */
 const maybeInitiate2FA =
-  (res: Response, apiBaseUrl: string) => (err: AxiosError) => {
+  (req: Request, res: Response, apiBaseUrl: string) => (err: AxiosError) => {
     // 403 on toSession means that we need to request 2FA
     if (err.response && err.response.status === 403) {
       res.redirect(
         getUrlForFlow(
           apiBaseUrl,
           "login",
-          new URLSearchParams({ aal: "aal2" }),
+          new URLSearchParams({ aal: "aal2", return_to: req.url.toString() }),
         ),
       )
       return true
@@ -70,7 +70,7 @@ export const requireAuth =
       .then(addSessionToRequest(req))
       .then(() => next())
       .catch((err: AxiosError) => {
-        if (!maybeInitiate2FA(res, apiBaseUrl)(err)) {
+        if (!maybeInitiate2FA(req, res, apiBaseUrl)(err)) {
           res.redirect(getUrlForFlow(apiBaseUrl, "login"))
           return
         }
@@ -92,7 +92,7 @@ export const setSession =
     frontend
       .toSession({ cookie: req.header("cookie") })
       .then(addSessionToRequest(req))
-      .catch(maybeInitiate2FA(res, apiBaseUrl))
+      .catch(maybeInitiate2FA(req, res, apiBaseUrl))
       .then(() => next())
   }
 

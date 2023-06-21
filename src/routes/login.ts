@@ -141,7 +141,7 @@ export const createLoginRoute: RouteCreator =
           "registration",
           initRegistrationQuery,
         )
-        if (flow.refresh) {
+        if (!flow.refresh) {
           initRecoveryUrl = getUrlForFlow(
             kratosBrowserUrl,
             "recovery",

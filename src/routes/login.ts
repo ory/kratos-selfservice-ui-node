@@ -57,12 +57,21 @@ export const createLoginRoute: RouteCreator =
     // It is probably a bit strange to have a logout URL here, however this screen
     // is also used for 2FA flows. If something goes wrong there, we probably want
     // to give the user the option to sign out!
-    const logoutUrl =
-      (
-        await frontend
-          .createBrowserLogoutFlow({ cookie: req.header("cookie") })
-          .catch(() => ({ data: { logout_url: "" } }))
-      ).data.logout_url || ""
+    const getLogoutUrl = async (loginFlow: LoginFlow) => {
+      return (
+        (
+          await frontend
+            .createBrowserLogoutFlow({
+              cookie: req.header("cookie"),
+              returnTo:
+                (return_to && return_to.toString()) ||
+                loginFlow.return_to ||
+                "",
+            } as { cookie: string; returnTo: string })
+            .catch(() => ({ data: { logout_url: "" } }))
+        ).data.logout_url || ""
+      )
+    }
 
     const redirectToVerificationFlow = (loginFlow: LoginFlow) => {
       // we will create a new verification flow and redirect the user to the verification page
@@ -114,7 +123,7 @@ export const createLoginRoute: RouteCreator =
 
     return frontend
       .getLoginFlow({ id: flow, cookie: req.header("cookie") })
-      .then(({ data: flow }) => {
+      .then(async ({ data: flow }) => {
         if (flow.ui.messages && flow.ui.messages.length > 0) {
           // the login requires that the user verifies their email address before logging in
           if (flow.ui.messages.some(({ id }) => id === 4000010)) {
@@ -152,6 +161,11 @@ export const createLoginRoute: RouteCreator =
           )
         }
 
+        let logoutUrl = ""
+        if (flow.requested_aal === "aal2") {
+          logoutUrl = await getLogoutUrl(flow)
+        }
+
         res.render("login", {
           nodes: flow.ui.nodes,
           webAuthnHandler: filterNodesByGroups({
@@ -170,13 +184,12 @@ export const createLoginRoute: RouteCreator =
             title: flow.refresh
               ? "Confirm it's you"
               : flow.requested_aal === "aal2"
-              ? "Two-Factor Authentication"
-              : "Sign In",
+                ? "Two-Factor Authentication"
+                : "Sign In",
             ...(flow.oauth2_login_request && {
-              subtitle: `To authenticate ${
-                flow.oauth2_login_request.client?.client_name ||
+              subtitle: `To authenticate ${flow.oauth2_login_request.client?.client_name ||
                 flow.oauth2_login_request.client?.client_id
-              }`,
+                }`,
             }),
             flow: flow as SelfServiceFlow,
             flowType: "login",

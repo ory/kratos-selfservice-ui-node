@@ -44,7 +44,7 @@ const isErrorAuthenticatorAssuranceLevel = (
   err: unknown,
 ): err is ErrorAuthenticatorAssuranceLevelNotSatisfied => {
   const e = err as ErrorAuthenticatorAssuranceLevelNotSatisfied
-  return e.id !== undefined && e.id === "session_aal2_required"
+  return e.error?.id !== undefined && e.error?.id === "session_aal2_required"
 }
 
 // Redirects to the specified URL if the error is an AxiosError with a 404, 410,
@@ -68,7 +68,7 @@ export const redirectOnSoftError =
         // for example, when recovery redirects us to settings
         // but settings requires us to redirect to login?aal=aal2
         if (isErrorAuthenticatorAssuranceLevel(error.error)) {
-          res.redirect(error.error.details?.redirect_browser_to || redirectTo)
+          res.redirect(error.error.redirect_browser_to || redirectTo)
           return
         }
       }

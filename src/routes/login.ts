@@ -57,12 +57,22 @@ export const createLoginRoute: RouteCreator =
     // It is probably a bit strange to have a logout URL here, however this screen
     // is also used for 2FA flows. If something goes wrong there, we probably want
     // to give the user the option to sign out!
-    const logoutUrl =
-      (
-        await frontend
-          .createBrowserLogoutFlow({ cookie: req.header("cookie") })
-          .catch(() => ({ data: { logout_url: "" } }))
-      ).data.logout_url || ""
+    const getLogoutUrl = async (loginFlow: LoginFlow) => {
+      let logoutUrl = ""
+      try {
+        logoutUrl = await frontend
+          .createBrowserLogoutFlow({
+            cookie: req.header("cookie"),
+            returnTo:
+              (return_to && return_to.toString()) || loginFlow.return_to || "",
+          })
+          .then(({ data }) => data.logout_url)
+      } catch (err) {
+        logger.error("Unable to create logout URL", { error: err })
+      } finally {
+        return logoutUrl
+      }
+    }
 
     const redirectToVerificationFlow = (loginFlow: LoginFlow) => {
       // we will create a new verification flow and redirect the user to the verification page
@@ -114,7 +124,7 @@ export const createLoginRoute: RouteCreator =
 
     return frontend
       .getLoginFlow({ id: flow, cookie: req.header("cookie") })
-      .then(({ data: flow }) => {
+      .then(async ({ data: flow }) => {
         if (flow.ui.messages && flow.ui.messages.length > 0) {
           // the login requires that the user verifies their email address before logging in
           if (flow.ui.messages.some(({ id }) => id === 4000010)) {
@@ -150,6 +160,11 @@ export const createLoginRoute: RouteCreator =
                 (return_to && return_to.toString()) || flow.return_to || "",
             }),
           )
+        }
+
+        let logoutUrl = ""
+        if (flow.requested_aal === "aal2") {
+          logoutUrl = await getLogoutUrl(flow)
         }
 
         res.render("login", {

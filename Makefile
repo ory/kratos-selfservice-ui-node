@@ -20,7 +20,7 @@ build-sdk:
 		--git-host github.com \
 		-c ./contrib/sdk/typescript.yml
 	(cd ./contrib/sdk/generated; npm i; npm run build)
-	rm -rf node_modules/@ory/kratos-client/*
+	rm -rf node_modules/@ory/client/*
 	cp -r ./contrib/sdk/generated/* node_modules/@ory/client
 
 .PHONY: publish-sdk
@@ -56,5 +56,5 @@ licenses: .bin/licenses node_modules  # checks open-source licenses
 	touch .bin/ory
 
 node_modules: package-lock.json
-	npm ci
+	npm ci --legacy-peer-deps
 	touch node_modules

@@ -43,7 +43,6 @@ export const isQuerySet = (x: any): x is string =>
 const isErrorAuthenticatorAssuranceLevel = (
   err: unknown,
 ): err is ErrorAuthenticatorAssuranceLevelNotSatisfied => {
-  console.log({ err })
   return (
     (err as ErrorAuthenticatorAssuranceLevelNotSatisfied).error?.id ==
     "session_aal2_required"

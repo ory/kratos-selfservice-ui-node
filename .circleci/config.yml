@@ -9,7 +9,7 @@ jobs:
       - restore_cache:
           keys:
             - kratos-selfservice-ui-node-{{ checksum "package-lock.json" }}
-      - run: npm ci
+      - run: npm ci --legacy-peer-deps
       - save_cache:
           paths:
             - node_modules
@@ -25,7 +25,7 @@ jobs:
       - restore_cache:
           keys:
             - kratos-selfservice-ui-node-{{ checksum "package-lock.json" }}
-      - run: npm ci
+      - run: npm ci --legacy-peer-deps
       - save_cache:
           paths:
             - node_modules

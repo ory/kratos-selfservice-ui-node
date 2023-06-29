@@ -56,5 +56,5 @@ licenses: .bin/licenses node_modules  # checks open-source licenses
 	touch .bin/ory
 
 node_modules: package-lock.json
-	npm ci
+	npm ci --legacy-peer-deps
 	touch node_modules

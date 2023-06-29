@@ -43,8 +43,10 @@ export const isQuerySet = (x: any): x is string =>
 const isErrorAuthenticatorAssuranceLevel = (
   err: unknown,
 ): err is ErrorAuthenticatorAssuranceLevelNotSatisfied => {
-  const e = err as ErrorAuthenticatorAssuranceLevelNotSatisfied
-  return e.error?.id !== undefined && e.error?.id === "session_aal2_required"
+  return (
+    (err as ErrorAuthenticatorAssuranceLevelNotSatisfied).error?.id ==
+    "session_aal2_required"
+  )
 }
 
 // Redirects to the specified URL if the error is an AxiosError with a 404, 410,
@@ -62,15 +64,17 @@ export const redirectOnSoftError =
       err.response.status === 410 ||
       err.response.status === 403
     ) {
-      const error = err.response.data as { error: unknown }
-      if (error.error !== undefined) {
-        // in some cases Kratos will require us to redirect to a different page when the session_aal2_required
-        // for example, when recovery redirects us to settings
-        // but settings requires us to redirect to login?aal=aal2
-        if (isErrorAuthenticatorAssuranceLevel(error.error)) {
-          res.redirect(error.error.redirect_browser_to || redirectTo)
-          return
-        }
+      // in some cases Kratos will require us to redirect to a different page when the session_aal2_required
+      // for example, when recovery redirects us to settings
+      // but settings requires us to redirect to login?aal=aal2
+      const authenticatorAssuranceLevelError = err.response.data as unknown
+      if (
+        isErrorAuthenticatorAssuranceLevel(authenticatorAssuranceLevelError)
+      ) {
+        res.redirect(
+          authenticatorAssuranceLevelError.redirect_browser_to || redirectTo,
+        )
+        return
       }
       res.redirect(`${redirectTo}`)
       return

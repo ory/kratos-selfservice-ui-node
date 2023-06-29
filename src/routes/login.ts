@@ -58,19 +58,20 @@ export const createLoginRoute: RouteCreator =
     // is also used for 2FA flows. If something goes wrong there, we probably want
     // to give the user the option to sign out!
     const getLogoutUrl = async (loginFlow: LoginFlow) => {
-      return (
-        (
-          await frontend
-            .createBrowserLogoutFlow({
-              cookie: req.header("cookie"),
-              returnTo:
-                (return_to && return_to.toString()) ||
-                loginFlow.return_to ||
-                "",
-            } as { cookie: string; returnTo: string })
-            .catch(() => ({ data: { logout_url: "" } }))
-        ).data.logout_url || ""
-      )
+      let logoutUrl = ""
+      try {
+        logoutUrl = await frontend
+          .createBrowserLogoutFlow({
+            cookie: req.header("cookie"),
+            returnTo:
+              (return_to && return_to.toString()) || loginFlow.return_to || "",
+          })
+          .then(({ data }) => data.logout_url)
+      } catch (err) {
+        logger.error("Unable to create logout URL", { error: err })
+      } finally {
+        return logoutUrl
+      }
     }
 
     const redirectToVerificationFlow = (loginFlow: LoginFlow) => {

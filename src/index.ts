@@ -57,7 +57,7 @@ registerWelcomeRoute(router)
 registerErrorRoute(router)
 
 router.get("/", (req: Request, res: Response) => {
-  res.redirect(303, "welcome")
+  res.redirect(303, `${baseUrl}/welcome`)
 })
 
 registerStaticRoutes(router)

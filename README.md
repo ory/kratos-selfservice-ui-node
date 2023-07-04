@@ -42,7 +42,7 @@ check whether the session is valid or not.
 There are two ways of serving this application under a base path:
 
 1. Let Express.js handle the routing by setting the `BASE_PATH` environment
-   variable to the sub-path, e.g. `/myapp`.
+   variable to the sub-path, e.g. `/myapp`. (without trailing slash)
 2. Use a reverse proxy or API gateway to strip the path prefix.
 
 The second approach is not always possible, especially when running the

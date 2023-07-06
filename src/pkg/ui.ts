@@ -137,7 +137,7 @@ export const navigationMenu = ({
             target: "_blank",
           },
           {
-            name: "Logout",
+            name: "Log out",
             href: logoutUrl || "",
             iconLeft: "arrow-right-to-bracket",
             iconRight: "up-right-from-square",

@@ -6,17 +6,16 @@ import { RouteRegistrator } from "../pkg"
 
 export const register500Route: RouteRegistrator = (app, createHelpers) => {
   app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
-    console.error(err.stack)
+    console.error(err, err.stack)
     res.status(500).render("error", {
       card: UserErrorCard({
         title: "Internal Server Error",
         cardImage: createHelpers?.(req, res).logoUrl,
         backUrl: req.header("Referer") || "welcome",
         error: {
-          id: "404",
+          id: "backend-error",
           error: {
             ...err,
-            code: 500,
           },
         },
       }),

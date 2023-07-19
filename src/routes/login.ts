@@ -163,7 +163,7 @@ export const createLoginRoute: RouteCreator =
         }
 
         let logoutUrl = ""
-        if (flow.requested_aal === "aal2") {
+        if (flow.requested_aal === "aal2" || flow.refresh) {
           logoutUrl = await getLogoutUrl(flow)
         }
 

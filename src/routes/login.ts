@@ -163,7 +163,7 @@ export const createLoginRoute: RouteCreator =
         }
 
         let logoutUrl = ""
-        if (flow.requested_aal === "aal2") {
+        if (flow.requested_aal === "aal2" || flow.refresh) {
           logoutUrl = await getLogoutUrl(flow)
         }
 
@@ -185,13 +185,12 @@ export const createLoginRoute: RouteCreator =
             title: flow.refresh
               ? "Confirm it's you"
               : flow.requested_aal === "aal2"
-              ? "Two-Factor Authentication"
-              : "Sign In",
+                ? "Two-Factor Authentication"
+                : "Sign In",
             ...(flow.oauth2_login_request && {
-              subtitle: `To authenticate ${
-                flow.oauth2_login_request.client?.client_name ||
+              subtitle: `To authenticate ${flow.oauth2_login_request.client?.client_name ||
                 flow.oauth2_login_request.client?.client_id
-              }`,
+                }`,
             }),
             flow: flow as SelfServiceFlow,
             flowType: "login",

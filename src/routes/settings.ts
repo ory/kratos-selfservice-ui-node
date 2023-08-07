@@ -1,9 +1,6 @@
 // Copyright © 2022 Ory Corp
 // SPDX-License-Identifier: Apache-2.0
-import {
-  ErrorAuthenticatorAssuranceLevelNotSatisfied,
-  UiNodeInputAttributes,
-} from "@ory/client"
+import { UiNodeInputAttributes } from "@ory/client"
 import {
   Divider,
   hasLookupSecret,
@@ -22,7 +19,6 @@ import {
   filterNodesByGroups,
   isUiNodeInputAttributes,
 } from "@ory/integrations/ui"
-import { AxiosError } from "axios"
 import {
   defaultConfig,
   getUrlForFlow,
@@ -59,14 +55,6 @@ export const createSettingsRoute: RouteCreator =
 
     const session = req.session
 
-    // Create a logout URL
-    const logoutUrl =
-      (
-        await frontend
-          .createBrowserLogoutFlow({ cookie: req.header("cookie") })
-          .catch(() => ({ data: { logout_url: "" } }))
-      ).data.logout_url || ""
-
     const identityCredentialTrait =
       session?.identity.traits.email || session?.identity.traits.username || ""
 
@@ -77,7 +65,17 @@ export const createSettingsRoute: RouteCreator =
 
     return frontend
       .getSettingsFlow({ id: flow, cookie: req.header("cookie") })
-      .then(({ data: flow }) => {
+      .then(async ({ data: flow }) => {
+        const logoutUrl =
+          (await frontend
+            .createBrowserLogoutFlow({
+              cookie: req.header("cookie"),
+              returnTo:
+                (return_to && return_to.toString()) || flow.return_to || "",
+            })
+            .then(({ data }) => data.logout_url)
+            .catch(() => "")) || ""
+
         const conditionalLinks: NavSectionLinks[] = [
           {
             name: "Profile",

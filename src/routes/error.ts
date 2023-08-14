@@ -1,7 +1,8 @@
 // Copyright © 2022 Ory Corp
 // SPDX-License-Identifier: Apache-2.0
-import { FlowError, FrontendApi } from "@ory/client"
+import { FlowError, FrontendApi, GenericError } from "@ory/client"
 import { UserErrorCard } from "@ory/elements-markup"
+import { isAxiosError } from "axios"
 import {
   RouteCreator,
   RouteRegistrator,
@@ -11,11 +12,12 @@ import {
 
 type OAuth2Error = {
   error: string
-  error_description: string
+  error_description?: string
+  error_hint?: string
 }
 
 function isOAuth2Error(query: qs.ParsedQs): query is OAuth2Error {
-  return query.error !== undefined && query.error_description !== undefined
+  return query.error !== undefined
 }
 
 /**
@@ -35,10 +37,15 @@ async function fetchError(
     return {
       id: decodeURIComponent(query.error.toString()),
       error: {
-        id: decodeURIComponent(query.error.toString()),
-        message: decodeURIComponent(query.error_description.toString()),
         status: "OAuth2 Error",
-        code: 599,
+        id: decodeURIComponent(query.error.toString()),
+        message: decodeURIComponent(
+          query.error_description?.toString() || "No description provided",
+        ),
+        ...(query.error_hint
+          ? { hint: decodeURIComponent(query.error_hint.toString()) }
+          : {}),
+        code: 599, // Dummy code to trigger the full error screen
       },
     }
   } else if (isQuerySet(query.id)) {
@@ -76,8 +83,30 @@ export const createErrorRoute: RouteCreator =
         }),
       })
     } catch (err) {
-      // The error could not be found or there was an error fetching it, redirect back to home.
-      res.redirect("welcome")
+      let error: FlowError
+      if (isAxiosError(err)) {
+        error = err.response?.data.error
+      } else {
+        error = {
+          id: "Failed to fetch error details",
+          error: err as GenericError,
+        }
+      }
+
+      res.status(200).render("error", {
+        card: UserErrorCard({
+          error: {
+            id: "Failed to fetch error details",
+            error: {
+              ...error,
+              code: 500,
+            },
+          },
+          cardImage: logoUrl,
+          title: "An error occurred",
+          backUrl: req.header("Referer") || "welcome",
+        }),
+      })
       return
     }
   }

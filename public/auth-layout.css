@@ -2,7 +2,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding-top: 4rem;
+  padding: 4rem;
   /* we need this padding since the footer will hide content at the bottom of the container */
   padding-bottom: 5.5rem;
 }

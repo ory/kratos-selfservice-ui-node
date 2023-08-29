@@ -5,7 +5,7 @@ import express, { Request, Response } from "express"
 import { engine } from "express-handlebars"
 import * as fs from "fs"
 import * as https from "https"
-import { handlebarsHelpers } from "./pkg"
+import { addFavicon, defaultConfig, handlebarsHelpers } from "./pkg"
 import { middleware as middlewareLogger } from "./pkg/logger"
 import {
   register404Route,
@@ -31,6 +31,7 @@ const router = express.Router()
 
 app.use(middlewareLogger)
 app.use(cookieParser())
+app.use(addFavicon(defaultConfig))
 app.set("view engine", "hbs")
 
 app.engine(

@@ -77,6 +77,16 @@ export const requireAuth =
       })
   }
 
+export const addFavicon =
+  (createHelpers: RouteOptionsCreator) =>
+  (req: Request, res: Response, next: NextFunction) => {
+    const { faviconUrl, faviconType } = createHelpers(req, res)
+    res.locals.faviconUrl = faviconUrl
+    res.locals.faviconType = faviconType
+
+    next()
+  }
+
 /**
  * Sets the session in the request. If no session is found,
  * the request still succeeds.

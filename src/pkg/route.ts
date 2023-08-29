@@ -11,6 +11,8 @@ export interface RouteOptions {
   apiBaseUrl: string
   kratosBrowserUrl: string
   logoUrl?: string
+  faviconUrl?: string
+  faviconType?: string
   theme?: Theme
 }
 

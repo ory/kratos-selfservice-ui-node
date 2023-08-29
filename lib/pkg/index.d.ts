@@ -1,0 +1,24 @@
+import { UiNode } from "@ory/client";
+import { AxiosError } from "axios";
+import { NextFunction, Response } from "express";
+import { RouteOptionsCreator } from "./route";
+export * from "./logger";
+export * from "./middleware";
+export * from "./route";
+export declare const removeTrailingSlash: (s: string) => string;
+export declare const getUrlForFlow: (base: string, flow: string, query?: URLSearchParams) => string;
+export declare const defaultConfig: RouteOptionsCreator;
+export declare const isUUID: RegExp;
+export declare const isQuerySet: (x: any) => x is string;
+export declare const redirectOnSoftError: (res: Response, next: NextFunction, redirectTo: string) => (err: AxiosError) => void;
+export declare const handlebarsHelpers: {
+    jsonPretty: (context: any) => string;
+    onlyNodes: (nodes: Array<UiNode>, groups: string, attributes: string, withoutDefaultGroup?: boolean, withoutDefaultAttributes?: boolean) => UiNode[];
+    toUiNodePartial: (node: UiNode) => "ui_node_anchor" | "ui_node_image" | "ui_node_input_hidden" | "ui_node_input_social_button" | "ui_node_input_button" | "ui_node_input_checkbox" | "ui_node_input_default" | "ui_node_script" | "ui_node_text";
+    getNodeLabel: (node: UiNode) => string;
+    divider: (fullWidth: boolean, className?: string) => string | null;
+    buttonLink: (text: string) => string | null;
+    typography: (text: string, size: any, color: any, type?: any) => string | null;
+    menuLink: (text: string, url: string, iconLeft?: string, iconRight?: string) => string | null;
+    oryBranding: () => string | null;
+};

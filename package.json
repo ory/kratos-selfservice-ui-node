@@ -27,7 +27,7 @@
   },
   "dependencies": {
     "@ory/client": "1.1.50",
-    "@ory/elements-markup": "file:../elements/packages/markup",
+    "@ory/elements-markup": "0.1.0-beta.1",
     "@ory/integrations": "1.1.4",
     "axios": "1.2.6",
     "body-parser": "1.20.2",

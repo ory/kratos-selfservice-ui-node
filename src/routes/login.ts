@@ -193,7 +193,7 @@ export const createLoginRoute: RouteCreator =
                 flow.oauth2_login_request.client?.client_id
               }`,
             }),
-            flow: flow as SelfServiceFlow,
+            flow: flow,
             flowType: "login",
             cardImage: logoUrl,
             additionalProps: {

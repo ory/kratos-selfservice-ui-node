@@ -52,7 +52,7 @@ export const createRecoveryRoute: RouteCreator =
         res.render("recovery", {
           card: UserAuthCard({
             title: "Recover your account",
-            flow: flow as SelfServiceFlow,
+            flow: flow,
             flowType: "recovery",
             cardImage: logoUrl,
             additionalProps: {

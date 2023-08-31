@@ -60,7 +60,7 @@ export const createVerificationRoute: RouteCreator =
           res.render("verification", {
             card: UserAuthCard({
               title: "Verify your account",
-              flow: flow as SelfServiceFlow,
+              flow: flow,
               flowType: "verification",
               cardImage: logoUrl,
               additionalProps: {

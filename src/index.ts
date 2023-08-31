@@ -1,10 +1,5 @@
 // Copyright © 2022 Ory Corp
 // SPDX-License-Identifier: Apache-2.0
-import cookieParser from "cookie-parser"
-import express, { Request, Response } from "express"
-import { engine } from "express-handlebars"
-import * as fs from "fs"
-import * as https from "https"
 import { handlebarsHelpers } from "./pkg"
 import { middleware as middlewareLogger } from "./pkg/logger"
 import {
@@ -23,6 +18,13 @@ import {
   registerVerificationRoute,
   registerWelcomeRoute,
 } from "./routes"
+import { locales } from "@ory/elements-markup"
+import { pick as pickLanguage } from "accept-language-parser"
+import cookieParser from "cookie-parser"
+import express, { Request, Response } from "express"
+import { engine } from "express-handlebars"
+import * as fs from "fs"
+import * as https from "https"
 
 const baseUrl = process.env.BASE_PATH || "/"
 
@@ -31,6 +33,13 @@ const router = express.Router()
 
 app.use(middlewareLogger)
 app.use(cookieParser())
+app.use((req, res, next) => {
+  res.locals.lang = pickLanguage(
+    Object.keys(locales),
+    req.header("Accept-Language") || "en",
+  )
+  next()
+})
 app.set("view engine", "hbs")
 
 app.engine(

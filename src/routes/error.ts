@@ -78,7 +78,6 @@ export const createErrorRoute: RouteCreator =
         card: UserErrorCard({
           error,
           cardImage: logoUrl,
-          title: "An error occurred",
           backUrl: req.header("Referer") || "welcome",
         }),
       })

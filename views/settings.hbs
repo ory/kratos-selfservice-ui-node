@@ -1,28 +1,8 @@
-<div class="spacing-32">
-
-  <div class="spacing-32">
-    {{{typography "Account Settings" "headline37" "foregroundDefault"}}}
-    <div>
-      {{{sessionDescription}}}
+{{{settingsScreen.Nav}}}
+<div class="container spacing-32">
+    <div class="content spacing-32">
+        {{{settingsScreen.Body}}}
     </div>
-    {{{errorMessages}}}
-    {{{divider false "divider-left"}}}
-  </div>
 
-    {{{settingsCard "profile"}}}
-    {{{settingsCard "password"}}}
-    {{{settingsCard "oidc"}}}
-    {{{settingsCard "lookupSecret"}}}  
-    {{{settingsCard "webauthn"}}}
-    {{{settingsCard "totp"}}}
-
-  {{> ui_nodes nodes=nodes groups="webauthn" attributes="text/javascript" withoutDefaultGroup=true}}
-
-    <script type="text/javascript">
-    document.getElementsByName("webauthn_register_trigger").forEach((v) =>
-    { v.addEventListener("click", () => {
-    {{{webAuthnHandler}}}
-    }) })
-  </script>
-
+    {{> ory_branding}}
 </div>

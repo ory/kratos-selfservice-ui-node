@@ -13,6 +13,7 @@
   "license": "Apache-2.0",
   "author": "Aeneas Rekkas",
   "main": "src/index.ts",
+  "prettier": "ory-prettier-styles",
   "files": [
     "lib/*",
     "views/*"
@@ -27,8 +28,9 @@
   },
   "dependencies": {
     "@ory/client": "1.1.50",
-    "@ory/elements-markup": "0.0.1-beta.13",
+    "@ory/elements-markup": "file:../elements/packages/markup",
     "@ory/integrations": "1.1.4",
+    "accept-language-parser": "1.5.0",
     "axios": "1.2.6",
     "body-parser": "1.20.2",
     "cookie-parser": "1.4.6",
@@ -42,6 +44,7 @@
   },
   "devDependencies": {
     "@trivago/prettier-plugin-sort-imports": "4.0.0",
+    "@types/accept-language-parser": "^1.5.3",
     "@types/axios": "0.14.0",
     "@types/body-parser": "1.19.2",
     "@types/cookie-parser": "1.4.3",

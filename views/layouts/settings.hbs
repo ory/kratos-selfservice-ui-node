@@ -1,4 +1,4 @@
-<html lang="en">
+<html lang="{{lang}}">
   <head>
     {{> standard_headers}}
     <link type="text/css" rel="stylesheet" href="content-layout.css" />
@@ -6,13 +6,7 @@
   <body>
     <main data-testid="app-express">
       <div class="app-container">
-        {{{nav}}}
-        <div class="container spacing-32">
-          <div class="content">
-            {{{body}}}
-          </div>
-          {{> ory_branding}}
-        </div>
+          {{{body}}}
       </div>
     </main>
   </body>

@@ -87,14 +87,7 @@ export const createRegistrationRoute: RouteCreator =
             })
             .filter((onClickAction) => !!onClickAction),
           card: UserAuthCard({
-            title: "Register an account",
-            flow: flow,
-            ...(flow.oauth2_login_request && {
-              subtitle: `To authenticate ${
-                flow.oauth2_login_request.client?.client_name ||
-                flow.oauth2_login_request.client?.client_id
-              }`,
-            }),
+            flow,
             flowType: "registration",
             cardImage: logoUrl,
             additionalProps: {
@@ -104,7 +97,9 @@ export const createRegistrationRoute: RouteCreator =
                 initLoginQuery,
               ),
             },
-          }),
+          },
+            { locale: res.locals.lang },
+          ),
         })
       })
       .catch(redirectOnSoftError(res, next, initFlowUrl))

@@ -1,7 +1,5 @@
 // Copyright © 2022 Ory Corp
 // SPDX-License-Identifier: Apache-2.0
-import { UiText } from "@ory/client"
-import { SelfServiceFlow, UserAuthCard } from "@ory/elements-markup"
 import {
   defaultConfig,
   getUrlForFlow,
@@ -11,6 +9,8 @@ import {
   RouteCreator,
   RouteRegistrator,
 } from "../pkg"
+import { UiText } from "@ory/client"
+import { UserAuthCard } from "@ory/elements-markup"
 
 export const createVerificationRoute: RouteCreator =
   (createHelpers) => (req, res, next) => {
@@ -58,15 +58,17 @@ export const createVerificationRoute: RouteCreator =
 
           // Render the data using a view (e.g. Jade Template):
           res.render("verification", {
-            card: UserAuthCard({
-              title: "Verify your account",
-              flow: flow as SelfServiceFlow,
-              flowType: "verification",
-              cardImage: logoUrl,
-              additionalProps: {
-                signupURL: initRegistrationUrl,
+            card: UserAuthCard(
+              {
+                flow,
+                flowType: "verification",
+                cardImage: logoUrl,
+                additionalProps: {
+                  signupURL: initRegistrationUrl,
+                },
               },
-            }),
+              { locale: res.locals.lang },
+            ),
           })
         })
         // Handle errors using ExpressJS' next functionality:

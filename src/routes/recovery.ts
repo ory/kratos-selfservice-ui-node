@@ -1,6 +1,5 @@
 // Copyright © 2022 Ory Corp
 // SPDX-License-Identifier: Apache-2.0
-import { SelfServiceFlow, UserAuthCard } from "@ory/elements-markup"
 import {
   defaultConfig,
   getUrlForFlow,
@@ -11,6 +10,7 @@ import {
   RouteCreator,
   RouteRegistrator,
 } from "../pkg"
+import { UserAuthCard } from "@ory/elements-markup"
 
 export const createRecoveryRoute: RouteCreator =
   (createHelpers) => (req, res, next) => {
@@ -47,15 +47,19 @@ export const createRecoveryRoute: RouteCreator =
         )
 
         res.render("recovery", {
-          card: UserAuthCard({
-            title: "Recover your account",
-            flow: flow as SelfServiceFlow,
-            flowType: "recovery",
-            cardImage: logoUrl,
-            additionalProps: {
-              loginURL: initLoginUrl,
+          card: UserAuthCard(
+            {
+              flow,
+              flowType: "recovery",
+              cardImage: logoUrl,
+              additionalProps: {
+                loginURL: initLoginUrl,
+              },
             },
-          }),
+            {
+              locale: res.locals.lang,
+            },
+          ),
         })
       })
       .catch(redirectOnSoftError(res, next, initFlowUrl))

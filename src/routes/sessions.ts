@@ -44,7 +44,7 @@ export const createSessionsRoute: RouteCreator =
         id: session?.identity.id,
         // sometimes the identity schema could contain recursive objects
         // for this use case we will just stringify the object instead of recursively flatten the object
-        ...Object.entries(session?.identity.traits).reduce<any>(
+        ...Object.entries(session?.identity.traits).reduce<Record<string, any>>(
           (traits, [key, value]) => {
             traits[key] =
               typeof value === "object" ? JSON.stringify(value) : value

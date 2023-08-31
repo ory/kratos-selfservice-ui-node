@@ -54,6 +54,7 @@ const isErrorAuthenticatorAssuranceLevel = (
 export const redirectOnSoftError =
   (res: Response, next: NextFunction, redirectTo: string) =>
   (err: AxiosError) => {
+  console.log("redirectOnSoftError", err)
     if (!err.response) {
       next(err)
       return

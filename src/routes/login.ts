@@ -1,7 +1,7 @@
 // Copyright © 2022 Ory Corp
 // SPDX-License-Identifier: Apache-2.0
 import { LoginFlow, UiNodeInputAttributes } from "@ory/client"
-import { SelfServiceFlow, UserAuthCard } from "@ory/elements-markup"
+import { UserAuthCard } from "@ory/elements-markup"
 import {
   filterNodesByGroups,
   isUiNodeInputAttributes,
@@ -182,18 +182,7 @@ export const createLoginRoute: RouteCreator =
             })
             .filter((c) => c !== undefined),
           card: UserAuthCard({
-            title: flow.refresh
-              ? "Confirm it's you"
-              : flow.requested_aal === "aal2"
-              ? "Two-Factor Authentication"
-              : "Sign In",
-            ...(flow.oauth2_login_request && {
-              subtitle: `To authenticate ${
-                flow.oauth2_login_request.client?.client_name ||
-                flow.oauth2_login_request.client?.client_id
-              }`,
-            }),
-            flow: flow as SelfServiceFlow,
+            flow,
             flowType: "login",
             cardImage: logoUrl,
             additionalProps: {
@@ -201,7 +190,9 @@ export const createLoginRoute: RouteCreator =
               signupURL: initRegistrationUrl,
               logoutURL: logoutUrl,
             },
-          }),
+          },
+            { locale: res.locals.lang },
+          ),
         })
       })
       .catch(redirectOnSoftError(res, next, initFlowUrl))

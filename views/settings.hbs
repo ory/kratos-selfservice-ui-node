@@ -4,5 +4,16 @@
         {{{settingsScreen.Body}}}
     </div>
 
-    {{> ory_branding}}
+    {{> ory_branding }}
+
+  {{> ui_nodes nodes=nodes groups="webauthn" attributes="text/javascript" withoutDefaultGroup=true}}
+
+  <script type="text/javascript">
+    document.getElementsByName("webauthn_register_trigger").forEach((v) => {
+      v.addEventListener("click", () => {
+      {{{webAuthnHandler}}}
+      })
+    })
+  </script>
+
 </div>

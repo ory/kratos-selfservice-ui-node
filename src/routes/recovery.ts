@@ -17,7 +17,10 @@ export const createRecoveryRoute: RouteCreator =
     res.locals.projectName = "Recover account"
 
     const { flow, return_to = "" } = req.query
-    const { frontend, kratosBrowserUrl, logoUrl } = createHelpers(req, res)
+    const { frontend, kratosBrowserUrl, logoUrl, faviconUrl, faviconType } =
+      createHelpers(req, res)
+    res.locals.faviconUrl = faviconUrl
+    res.locals.faviconType = faviconType
     const initFlowUrl = getUrlForFlow(
       kratosBrowserUrl,
       "recovery",

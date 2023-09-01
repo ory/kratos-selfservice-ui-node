@@ -30,6 +30,8 @@ export const defaultConfig: RouteOptionsCreator = () => {
   return {
     apiBaseUrl: apiBaseUrl,
     kratosBrowserUrl: apiBaseUrl,
+    faviconUrl: "favico.png",
+    faviconType: "image/png",
     ...sdk,
   }
 }

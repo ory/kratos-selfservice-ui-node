@@ -3,6 +3,8 @@
 import { getUrlForFlow, isUUID } from "./index"
 import { RouteOptionsCreator } from "./route"
 import { Session } from "@ory/client"
+import { locales } from "@ory/elements-markup"
+import { pick as pickLanguage } from "accept-language-parser"
 import { AxiosError } from "axios"
 import { NextFunction, Request, Response } from "express"
 
@@ -11,6 +13,7 @@ import { NextFunction, Request, Response } from "express"
  * or returns false.
  *
  * @internal
+ * @param req
  * @param res
  * @param apiBaseUrl
  */
@@ -125,3 +128,23 @@ export const requireNoAuth =
         next()
       })
   }
+
+/**
+ * Detects the language of the user and sets it in the response locals.
+ *
+ * @param req
+ * @param res
+ * @param next
+ */
+
+export const detectLanguage = (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  res.locals.lang = pickLanguage(
+    Object.keys(locales),
+    req.header("Accept-Language") || "en",
+  )
+  next()
+}

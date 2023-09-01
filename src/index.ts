@@ -1,6 +1,11 @@
 // Copyright © 2022 Ory Corp
 // SPDX-License-Identifier: Apache-2.0
-import { addFavicon, defaultConfig, handlebarsHelpers } from "./pkg"
+import {
+  addFavicon,
+  defaultConfig,
+  detectLanguage,
+  handlebarsHelpers,
+} from "./pkg"
 import { middleware as middlewareLogger } from "./pkg/logger"
 import {
   register404Route,
@@ -18,8 +23,6 @@ import {
   registerVerificationRoute,
   registerWelcomeRoute,
 } from "./routes"
-import { locales } from "@ory/elements-markup"
-import { pick as pickLanguage } from "accept-language-parser"
 import cookieParser from "cookie-parser"
 import express, { Request, Response } from "express"
 import { engine } from "express-handlebars"
@@ -34,13 +37,7 @@ const router = express.Router()
 app.use(middlewareLogger)
 app.use(cookieParser())
 app.use(addFavicon(defaultConfig))
-app.use((req, res, next) => {
-  res.locals.lang = pickLanguage(
-    Object.keys(locales),
-    req.header("Accept-Language") || "en",
-  )
-  next()
-})
+app.use(detectLanguage)
 app.set("view engine", "hbs")
 
 app.engine(

@@ -136,7 +136,6 @@ export const requireNoAuth =
  * @param res
  * @param next
  */
-
 export const detectLanguage = (
   req: Request,
   res: Response,

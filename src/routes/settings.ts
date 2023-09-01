@@ -53,14 +53,20 @@ export const createSettingsRoute: RouteCreator =
         // Render the data using a view (e.g. Jade Template):
         res.render("settings", {
           layout: "settings",
-          settingsScreen: UserSettingsScreen({
-            flow,
-            logoutUrl,
-            navClassName: "main-nav",
-            headerContainerClassName: "spacing-32",
-            dividerClassName: "divider-left",
-            settingsCardContainerClassName: "spacing-32",
-          }),
+          nodes: flow.ui.nodes,
+          settingsScreen: UserSettingsScreen(
+            {
+              flow,
+              logoutUrl,
+              navClassName: "main-nav",
+              headerContainerClassName: "spacing-32",
+              dividerClassName: "divider-left",
+              settingsCardContainerClassName: "spacing-32",
+            },
+            {
+              locale: res.locals.lang,
+            },
+          ),
         })
       })
       .catch(redirectOnSoftError(res, next, initFlowUrl))

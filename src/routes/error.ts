@@ -1,14 +1,14 @@
 // Copyright © 2022 Ory Corp
 // SPDX-License-Identifier: Apache-2.0
-import { FlowError, FrontendApi, GenericError } from "@ory/client"
-import { UserErrorCard } from "@ory/elements-markup"
-import { isAxiosError } from "axios"
 import {
   RouteCreator,
   RouteRegistrator,
   defaultConfig,
   isQuerySet,
 } from "../pkg"
+import { FlowError, FrontendApi, GenericError } from "@ory/client"
+import { UserErrorCard } from "@ory/elements-markup"
+import { isAxiosError } from "axios"
 
 type OAuth2Error = {
   error: string

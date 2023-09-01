@@ -60,7 +60,6 @@ export const createSettingsRoute: RouteCreator =
             headerContainerClassName: "spacing-32",
             dividerClassName: "divider-left",
             settingsCardContainerClassName: "spacing-32",
-
           }),
         })
       })

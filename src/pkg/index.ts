@@ -1,16 +1,15 @@
 // Copyright © 2022 Ory Corp
 // SPDX-License-Identifier: Apache-2.0
+import { RouteOptionsCreator } from "./route"
+import sdk, { apiBaseUrl } from "./sdk"
 import {
   UiNode,
   ErrorAuthenticatorAssuranceLevelNotSatisfied,
 } from "@ory/client"
 import { ButtonLink, Divider, MenuLink, Typography } from "@ory/elements-markup"
-import { filterNodesByGroups, getNodeLabel } from "@ory/integrations/ui"
+import { filterNodesByGroups } from "@ory/integrations/ui"
 import { AxiosError } from "axios"
 import { NextFunction, Response } from "express"
-import { RouteOptionsCreator } from "./route"
-import sdk, { apiBaseUrl } from "./sdk"
-import { toUiNodePartial } from "./ui"
 
 export * from "./logger"
 export * from "./middleware"
@@ -56,7 +55,7 @@ const isErrorAuthenticatorAssuranceLevel = (
 export const redirectOnSoftError =
   (res: Response, next: NextFunction, redirectTo: string) =>
   (err: AxiosError) => {
-  console.log("redirectOnSoftError", err)
+    console.log("redirectOnSoftError", err)
     if (!err.response) {
       next(err)
       return
@@ -102,8 +101,6 @@ export const handlebarsHelpers = {
       withoutDefaultAttributes,
       withoutDefaultGroup,
     }),
-  toUiNodePartial,
-  getNodeLabel: getNodeLabel,
   divider: (fullWidth: boolean, className?: string) =>
     Divider({ className, fullWidth }),
   buttonLink: (text: string) =>

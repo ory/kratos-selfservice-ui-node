@@ -35,8 +35,6 @@ export const createSettingsRoute: RouteCreator =
       return
     }
 
-    const session = req.session
-
     return frontend
       .getSettingsFlow({ id: flow, cookie: req.header("cookie") })
       .then(async ({ data: flow }) => {
@@ -50,23 +48,25 @@ export const createSettingsRoute: RouteCreator =
             .then(({ data }) => data.logout_url)
             .catch(() => "")) || ""
 
+        const settingsScreen = UserSettingsScreen(
+          {
+            flow,
+            logoutUrl,
+            navClassName: "main-nav",
+            headerContainerClassName: "spacing-32",
+            dividerClassName: "divider-left",
+            settingsCardContainerClassName: "spacing-32",
+          },
+          {
+            locale: res.locals.lang,
+          },
+        )
         // Render the data using a view (e.g. Jade Template):
         res.render("settings", {
           layout: "settings",
           nodes: flow.ui.nodes,
-          settingsScreen: UserSettingsScreen(
-            {
-              flow,
-              logoutUrl,
-              navClassName: "main-nav",
-              headerContainerClassName: "spacing-32",
-              dividerClassName: "divider-left",
-              settingsCardContainerClassName: "spacing-32",
-            },
-            {
-              locale: res.locals.lang,
-            },
-          ),
+          nav: settingsScreen.Nav,
+          settingsScreen: settingsScreen.Body,
         })
       })
       .catch(redirectOnSoftError(res, next, initFlowUrl))

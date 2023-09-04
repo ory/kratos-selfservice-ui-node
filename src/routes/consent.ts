@@ -247,7 +247,6 @@ export const registerConsentRoute: RouteRegistrator = function (
     console.log("found HYDRA_ADMIN_URL")
     return app.get(
       "/consent",
-      // @ts-ignore
       csrfProtection,
       createConsentRoute(createHelpers),
     )
@@ -264,7 +263,6 @@ export const registerConsentPostRoute: RouteRegistrator = function (
     return app.post(
       "/consent",
       parseForm,
-      // @ts-ignore
       csrfProtection,
       createConsentPostRoute(createHelpers),
     )

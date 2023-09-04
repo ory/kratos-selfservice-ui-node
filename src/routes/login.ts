@@ -1,22 +1,22 @@
 // Copyright © 2022 Ory Corp
 // SPDX-License-Identifier: Apache-2.0
+import {
+  defaultConfig,
+  getUrlForFlow,
+  isQuerySet,
+  logger,
+  redirectOnSoftError,
+  RouteCreator,
+  RouteRegistrator,
+} from "../pkg"
 import { LoginFlow, UiNodeInputAttributes } from "@ory/client"
-import { SelfServiceFlow, UserAuthCard } from "@ory/elements-markup"
+import { UserAuthCard } from "@ory/elements-markup"
 import {
   filterNodesByGroups,
   isUiNodeInputAttributes,
 } from "@ory/integrations/ui"
 import path from "path"
 import { URLSearchParams } from "url"
-import {
-  RouteCreator,
-  RouteRegistrator,
-  defaultConfig,
-  getUrlForFlow,
-  isQuerySet,
-  logger,
-  redirectOnSoftError,
-} from "../pkg"
 
 export const createLoginRoute: RouteCreator =
   (createHelpers) => async (req, res, next) => {
@@ -67,10 +67,9 @@ export const createLoginRoute: RouteCreator =
               (return_to && return_to.toString()) || loginFlow.return_to || "",
           })
           .then(({ data }) => data.logout_url)
+        return logoutUrl
       } catch (err) {
         logger.error("Unable to create logout URL", { error: err })
-      } finally {
-        return logoutUrl
       }
     }
 
@@ -162,7 +161,7 @@ export const createLoginRoute: RouteCreator =
           )
         }
 
-        let logoutUrl = ""
+        let logoutUrl: string | undefined = ""
         if (flow.requested_aal === "aal2" || flow.refresh) {
           logoutUrl = await getLogoutUrl(flow)
         }
@@ -181,27 +180,19 @@ export const createLoginRoute: RouteCreator =
               return (attributes as UiNodeInputAttributes).onclick
             })
             .filter((c) => c !== undefined),
-          card: UserAuthCard({
-            title: flow.refresh
-              ? "Confirm it's you"
-              : flow.requested_aal === "aal2"
-              ? "Two-Factor Authentication"
-              : "Sign In",
-            ...(flow.oauth2_login_request && {
-              subtitle: `To authenticate ${
-                flow.oauth2_login_request.client?.client_name ||
-                flow.oauth2_login_request.client?.client_id
-              }`,
-            }),
-            flow: flow,
-            flowType: "login",
-            cardImage: logoUrl,
-            additionalProps: {
-              forgotPasswordURL: initRecoveryUrl,
-              signupURL: initRegistrationUrl,
-              logoutURL: logoutUrl,
+          card: UserAuthCard(
+            {
+              flow,
+              flowType: "login",
+              cardImage: logoUrl,
+              additionalProps: {
+                forgotPasswordURL: initRecoveryUrl,
+                signupURL: initRegistrationUrl,
+                logoutURL: logoutUrl,
+              },
             },
-          }),
+            { locale: res.locals.lang },
+          ),
         })
       })
       .catch(redirectOnSoftError(res, next, initFlowUrl))

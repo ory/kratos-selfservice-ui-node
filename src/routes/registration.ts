@@ -1,11 +1,5 @@
 // Copyright © 2022 Ory Corp
 // SPDX-License-Identifier: Apache-2.0
-import { UiNodeInputAttributes } from "@ory/client"
-import { UserAuthCard } from "@ory/elements-markup"
-import {
-  filterNodesByGroups,
-  isUiNodeInputAttributes,
-} from "@ory/integrations/ui"
 import {
   defaultConfig,
   getUrlForFlow,
@@ -16,6 +10,12 @@ import {
   RouteCreator,
   RouteRegistrator,
 } from "../pkg"
+import { UiNodeInputAttributes } from "@ory/client"
+import { UserAuthCard } from "@ory/elements-markup"
+import {
+  filterNodesByGroups,
+  isUiNodeInputAttributes,
+} from "@ory/integrations/ui"
 
 // A simple express handler that shows the registration screen.
 export const createRegistrationRoute: RouteCreator =
@@ -86,25 +86,21 @@ export const createRegistrationRoute: RouteCreator =
               return (attributes as UiNodeInputAttributes).onclick
             })
             .filter((onClickAction) => !!onClickAction),
-          card: UserAuthCard({
-            title: "Register an account",
-            flow: flow,
-            ...(flow.oauth2_login_request && {
-              subtitle: `To authenticate ${
-                flow.oauth2_login_request.client?.client_name ||
-                flow.oauth2_login_request.client?.client_id
-              }`,
-            }),
-            flowType: "registration",
-            cardImage: logoUrl,
-            additionalProps: {
-              loginURL: getUrlForFlow(
-                kratosBrowserUrl,
-                "login",
-                initLoginQuery,
-              ),
+          card: UserAuthCard(
+            {
+              flow,
+              flowType: "registration",
+              cardImage: logoUrl,
+              additionalProps: {
+                loginURL: getUrlForFlow(
+                  kratosBrowserUrl,
+                  "login",
+                  initLoginQuery,
+                ),
+              },
             },
-          }),
+            { locale: res.locals.lang },
+          ),
         })
       })
       .catch(redirectOnSoftError(res, next, initFlowUrl))

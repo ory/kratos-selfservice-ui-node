@@ -1,24 +1,5 @@
 // Copyright © 2022 Ory Corp
 // SPDX-License-Identifier: Apache-2.0
-import { UiNodeInputAttributes } from "@ory/client"
-import {
-  Divider,
-  hasLookupSecret,
-  hasOidc,
-  hasPassword,
-  hasTotp,
-  hasWebauthn,
-  Nav,
-  NavSectionLinks,
-  NodeMessages,
-  Typography,
-  UserSettingsCard,
-  UserSettingsFlowType,
-} from "@ory/elements-markup"
-import {
-  filterNodesByGroups,
-  isUiNodeInputAttributes,
-} from "@ory/integrations/ui"
 import {
   defaultConfig,
   getUrlForFlow,
@@ -29,6 +10,7 @@ import {
   RouteCreator,
   RouteRegistrator,
 } from "../pkg"
+import { UserSettingsScreen } from "@ory/elements-markup"
 
 export const createSettingsRoute: RouteCreator =
   (createHelpers) => async (req, res, next) => {
@@ -53,16 +35,6 @@ export const createSettingsRoute: RouteCreator =
       return
     }
 
-    const session = req.session
-
-    const identityCredentialTrait =
-      session?.identity.traits.email || session?.identity.traits.username || ""
-
-    const sessionText =
-      identityCredentialTrait !== ""
-        ? `You are currently logged in as ${identityCredentialTrait} `
-        : ""
-
     return frontend
       .getSettingsFlow({ id: flow, cookie: req.header("cookie") })
       .then(async ({ data: flow }) => {
@@ -76,115 +48,25 @@ export const createSettingsRoute: RouteCreator =
             .then(({ data }) => data.logout_url)
             .catch(() => "")) || ""
 
-        const conditionalLinks: NavSectionLinks[] = [
+        const settingsScreen = UserSettingsScreen(
           {
-            name: "Profile",
-            href: "#profile",
-            iconLeft: "user",
-            testId: "profile",
+            flow,
+            logoutUrl,
+            navClassName: "main-nav",
+            headerContainerClassName: "spacing-32",
+            dividerClassName: "divider-left",
+            settingsCardContainerClassName: "spacing-32",
           },
-          hasPassword(flow.ui.nodes) && {
-            name: "Password",
-            href: "#password",
-            iconLeft: "lock",
-            testId: "password",
+          {
+            locale: res.locals.lang,
           },
-          hasOidc(flow.ui.nodes) && {
-            name: "Social Sign In",
-            href: "#oidc",
-            iconLeft: "comments",
-            testId: "social-sign-in",
-          },
-          hasLookupSecret(flow.ui.nodes) && {
-            name: "2FA Backup Codes",
-            href: "#lookupSecret",
-            iconLeft: "shield",
-            testId: "backup-codes",
-          },
-          hasWebauthn(flow.ui.nodes) && {
-            name: "Hardware Tokens",
-            href: "#webauthn",
-            iconLeft: "key",
-            testId: "webauthn",
-          },
-          hasTotp(flow.ui.nodes) && {
-            name: "Authenticator App",
-            href: "#totp",
-            iconLeft: "mobile",
-            testId: "totp",
-          },
-        ].filter(Boolean) as NavSectionLinks[]
-
+        )
         // Render the data using a view (e.g. Jade Template):
         res.render("settings", {
           layout: "settings",
-          nav: Nav({
-            className: "main-nav",
-            navTitle: res.locals.projectName,
-            navSections: [
-              {
-                links: conditionalLinks,
-              },
-              {
-                links: [
-                  {
-                    name: "Logout",
-                    href: logoutUrl,
-                    iconLeft: "arrow-right-to-bracket",
-                    testId: "logout",
-                  },
-                ],
-              },
-            ],
-          }),
           nodes: flow.ui.nodes,
-          errorMessages: NodeMessages({
-            uiMessages: flow.ui.messages,
-            textPosition: "start",
-          }),
-          sessionDescription: [
-            sessionText !== "" &&
-              Typography({
-                children: sessionText,
-                color: "foregroundMuted",
-                size: "small",
-              }),
-            Typography({
-              children:
-                "Here you can manage settings related to your account. Keep in mind that certain actions require you to re-authenticate.",
-              color: "foregroundMuted",
-              size: "small",
-            }),
-          ]
-            .filter(Boolean)
-            .join(""),
-          webAuthnHandler: filterNodesByGroups({
-            nodes: flow.ui.nodes,
-            groups: "webauthn",
-            attributes: "button",
-            withoutDefaultAttributes: true,
-            withoutDefaultGroup: true,
-          })
-            .filter(({ attributes }) => isUiNodeInputAttributes(attributes))
-            .map(({ attributes }) => {
-              return (attributes as UiNodeInputAttributes).onclick
-            })
-            .filter((c) => c !== undefined),
-          settingsCard: (flowType: string) => {
-            const card = UserSettingsCard({
-              flow,
-              flowType: flowType as UserSettingsFlowType,
-            })
-            if (card) {
-              return (
-                `<div class="spacing-32" id="${flowType}">` +
-                card +
-                Divider({ className: "divider-left", fullWidth: false }) +
-                `</div>`
-              )
-            }
-            return ""
-          },
+          nav: settingsScreen.Nav,
+          settingsScreen: settingsScreen.Body,
         })
       })
       .catch(redirectOnSoftError(res, next, initFlowUrl))

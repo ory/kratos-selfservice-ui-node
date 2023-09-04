@@ -1,12 +1,12 @@
 // Copyright © 2022 Ory Corp
 // SPDX-License-Identifier: Apache-2.0
+import { defaultConfig, RouteRegistrator } from "../pkg"
+import sdk from "../pkg/sdk"
 import {
   defaultLightTheme,
   RegisterOryElementsExpress,
 } from "@ory/elements-markup"
 import express from "express"
-import { defaultConfig, RouteRegistrator } from "../pkg"
-import sdk from "../pkg/sdk"
 
 export const registerStaticRoutes: RouteRegistrator = (
   app,

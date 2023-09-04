@@ -1,0 +1,21 @@
+{{#each (onlyNodes nodes "webauthn" "text/javascript")}}
+<script
+        src="{{attributes.src}}"
+        type="{{attributes.type}}"
+        integrity="{{attributes.integrity}}"
+        referrerpolicy="{{attributes.referrerpolicy}}"
+        crossorigin="{{attributes.crossorigin}}"
+        {{#if attributes.async}}async{{/if}}
+        data-testid="node/script/{{attributes.id}}"
+></script>
+{{/each}}
+
+<script type="text/javascript">
+    document.getElementsByName("{{webauthnTriggerName}}").forEach((v) => {
+      console.log("attaching event listener")
+        v.addEventListener("click", () => {
+            console.log("clicked");
+            {{{webAuthnHandler}}}
+        })
+    })
+</script>

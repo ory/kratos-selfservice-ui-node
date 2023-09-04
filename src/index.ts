@@ -1,11 +1,11 @@
 // Copyright © 2022 Ory Corp
 // SPDX-License-Identifier: Apache-2.0
-import cookieParser from "cookie-parser"
-import express, { Request, Response } from "express"
-import { engine } from "express-handlebars"
-import * as fs from "fs"
-import * as https from "https"
-import { addFavicon, defaultConfig, handlebarsHelpers } from "./pkg"
+import {
+  addFavicon,
+  defaultConfig,
+  detectLanguage,
+  handlebarsHelpers,
+} from "./pkg"
 import { middleware as middlewareLogger } from "./pkg/logger"
 import {
   register404Route,
@@ -23,6 +23,11 @@ import {
   registerVerificationRoute,
   registerWelcomeRoute,
 } from "./routes"
+import cookieParser from "cookie-parser"
+import express, { Request, Response } from "express"
+import { engine } from "express-handlebars"
+import * as fs from "fs"
+import * as https from "https"
 
 const baseUrl = process.env.BASE_PATH || "/"
 
@@ -32,6 +37,7 @@ const router = express.Router()
 app.use(middlewareLogger)
 app.use(cookieParser())
 app.use(addFavicon(defaultConfig))
+app.use(detectLanguage)
 app.set("view engine", "hbs")
 
 app.engine(

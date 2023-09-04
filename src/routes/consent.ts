@@ -1,5 +1,8 @@
 // Copyright © 2023 Ory Corp
 // SPDX-License-Identifier: Apache-2.0
+import { defaultConfig, RouteCreator, RouteRegistrator } from "../pkg"
+import { register404Route } from "./404"
+import { oidcConformityMaybeFakeSession } from "./stub/oidc-cert"
 import {
   AcceptOAuth2ConsentRequestSession,
   IdentityApi,
@@ -8,9 +11,6 @@ import {
 import { UserConsentCard } from "@ory/elements-markup"
 import bodyParser from "body-parser"
 import csrf from "csurf"
-import { defaultConfig, RouteCreator, RouteRegistrator } from "../pkg"
-import { register404Route } from "./404"
-import { oidcConformityMaybeFakeSession } from "./stub/oidc-cert"
 
 async function createOAuth2ConsentRequestSession(
   grantScopes: string[],

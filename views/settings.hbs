@@ -1,29 +1,9 @@
 <div class="spacing-32">
 
-  <div class="spacing-32">
-    {{{typography "Account Settings" "headline37" "foregroundDefault"}}}
-    <div>
-      {{{sessionDescription}}}
+    <div class="spacing-32">
+        {{{settingsScreen}}}
     </div>
-    {{{errorMessages}}}
-    {{{divider false "divider-left"}}}
-  </div>
 
-    {{{settingsCard "profile"}}}
-    {{{settingsCard "password"}}}
-    {{{settingsCard "oidc"}}}
-    {{{settingsCard "lookupSecret"}}}  
-    {{{settingsCard "webauthn"}}}
-    {{{settingsCard "totp"}}}
-
-  {{> ui_nodes nodes=nodes groups="webauthn" attributes="text/javascript" withoutDefaultGroup=true}}
-
-  <script type="text/javascript">
-    document.getElementsByName("webauthn_register_trigger").forEach((v) => { 
-      v.addEventListener("click", () => {
-      {{{webAuthnHandler}}}
-      }) 
-    })
-  </script>
+  {{> webauthn_setup nodes=nodes webAuthnHandler=webAuthnHandler webauthnTriggerName="webauthn_settings_trigger"}}
 
 </div>

@@ -28,7 +28,7 @@
   "prettier": "ory-prettier-styles",
   "dependencies": {
     "@ory/client": "1.1.50",
-    "@ory/elements-markup": "0.1.0-beta.2",
+    "@ory/elements-markup": "0.1.0-beta.3",
     "@ory/integrations": "1.1.5",
     "accept-language-parser": "1.5.0",
     "axios": "1.2.6",

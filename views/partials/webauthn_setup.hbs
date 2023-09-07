@@ -12,9 +12,7 @@
 
 <script type="text/javascript">
     document.getElementsByName("{{webauthnTriggerName}}").forEach((v) => {
-      console.log("attaching event listener")
         v.addEventListener("click", () => {
-            console.log("clicked");
             {{{webAuthnHandler}}}
         })
     })

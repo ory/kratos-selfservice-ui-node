@@ -13,7 +13,6 @@ import bodyParser from "body-parser"
 import { doubleCsrf } from "csrf-csrf"
 import { Request, Response, NextFunction } from "express"
 
-
 // Sets up csrf protection
 const {
   generateToken, // Use this in your routes to provide a CSRF hash + token cookie and token.
@@ -23,21 +22,26 @@ const {
   getSecret: () => "VERY_SECRET_VALUE", // A function that optionally takes the request and returns a secret
   cookieName: "ax-x-csrf-token", // The name of the cookie to be used, recommend using Host prefix.
   cookieOptions: {
-    sameSite: "lax",  // Recommend you make this strict if posible
+    sameSite: "lax", // Recommend you make this strict if posible
     secure: true,
   },
   ignoredMethods: ["GET", "HEAD", "OPTIONS"], // A list of request methods that will not be protected.
   getTokenFromRequest: (req) => req.headers["x-csrf-token"], // A function that returns the token from the request
-});
+})
 
 // Error handling, validation error interception
-const csrfErrorHandler = (error: unknown, req: Request, res: Response, next: NextFunction) => {
+const csrfErrorHandler = (
+  error: unknown,
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
   if (error == invalidCsrfTokenError) {
     next(new Error("csrf validation error"))
   } else {
-    next();
+    next()
   }
-};
+}
 
 async function createOAuth2ConsentRequestSession(
   grantScopes: string[],
@@ -257,26 +261,21 @@ export const createConsentPostRoute: RouteCreator =
       .catch(next)
   }
 
-
-
 var parseForm = bodyParser.urlencoded({ extended: false })
 
-export const registerConsentRoute: RouteRegistrator = function(
+export const registerConsentRoute: RouteRegistrator = function (
   app,
   createHelpers = defaultConfig,
 ) {
   if (process.env.HYDRA_ADMIN_URL) {
     console.log("found HYDRA_ADMIN_URL")
-    return app.get(
-      "/consent",
-      createConsentRoute(createHelpers),
-    )
+    return app.get("/consent", createConsentRoute(createHelpers))
   } else {
     return register404Route
   }
 }
 
-export const registerConsentPostRoute: RouteRegistrator = function(
+export const registerConsentPostRoute: RouteRegistrator = function (
   app,
   createHelpers = defaultConfig,
 ) {

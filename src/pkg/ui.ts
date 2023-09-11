@@ -1,14 +1,7 @@
 // Copyright © 2022 Ory Corp
 // SPDX-License-Identifier: Apache-2.0
-import { UiNodeInputAttributes, UiNode, Session } from "@ory/client"
+import { Session } from "@ory/client"
 import { Nav } from "@ory/elements-markup"
-import {
-  isUiNodeAnchorAttributes,
-  isUiNodeImageAttributes,
-  isUiNodeInputAttributes,
-  isUiNodeScriptAttributes,
-  isUiNodeTextAttributes,
-} from "@ory/integrations/ui"
 
 type NavigationMenuProps = {
   navTitle: string

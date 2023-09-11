@@ -10,7 +10,34 @@ import {
 } from "@ory/client"
 import { UserConsentCard } from "@ory/elements-markup"
 import bodyParser from "body-parser"
-import csrf from "csurf"
+import { doubleCsrf } from "csrf-csrf"
+import { Request, Response, NextFunction } from "express"
+
+
+// Sets up csrf protection
+const {
+  generateToken, // Use this in your routes to provide a CSRF hash + token cookie and token.
+  invalidCsrfTokenError,
+  doubleCsrfProtection, // This is the default CSRF protection middleware.
+} = doubleCsrf({
+  getSecret: () => "VERY_SECRET_VALUE", // A function that optionally takes the request and returns a secret
+  cookieName: "ax-x-csrf-token", // The name of the cookie to be used, recommend using Host prefix.
+  cookieOptions: {
+    sameSite: "lax",  // Recommend you make this strict if posible
+    secure: true,
+  },
+  ignoredMethods: ["GET", "HEAD", "OPTIONS"], // A list of request methods that will not be protected.
+  getTokenFromRequest: (req) => req.headers["x-csrf-token"], // A function that returns the token from the request
+});
+
+// Error handling, validation error interception
+const csrfErrorHandler = (error: unknown, req: Request, res: Response, next: NextFunction) => {
+  if (error == invalidCsrfTokenError) {
+    next(new Error("csrf validation error"))
+  } else {
+    next();
+  }
+};
 
 async function createOAuth2ConsentRequestSession(
   grantScopes: string[],
@@ -126,7 +153,7 @@ export const createConsentRoute: RouteCreator =
         res.render("consent", {
           card: UserConsentCard({
             consent: body,
-            csrfToken: req.csrfToken(),
+            csrfToken: generateToken(req, res),
             cardImage: body.client?.logo_uri || "/ory-logo.svg",
             client_name: body.client?.client_name || "unknown client",
             requested_scope: body.requested_scope,
@@ -230,16 +257,11 @@ export const createConsentPostRoute: RouteCreator =
       .catch(next)
   }
 
-// Sets up csrf protection
-const csrfProtection = csrf({
-  cookie: {
-    sameSite: "lax",
-  },
-})
+
 
 var parseForm = bodyParser.urlencoded({ extended: false })
 
-export const registerConsentRoute: RouteRegistrator = function (
+export const registerConsentRoute: RouteRegistrator = function(
   app,
   createHelpers = defaultConfig,
 ) {
@@ -247,7 +269,6 @@ export const registerConsentRoute: RouteRegistrator = function (
     console.log("found HYDRA_ADMIN_URL")
     return app.get(
       "/consent",
-      csrfProtection,
       createConsentRoute(createHelpers),
     )
   } else {
@@ -255,7 +276,7 @@ export const registerConsentRoute: RouteRegistrator = function (
   }
 }
 
-export const registerConsentPostRoute: RouteRegistrator = function (
+export const registerConsentPostRoute: RouteRegistrator = function(
   app,
   createHelpers = defaultConfig,
 ) {
@@ -263,7 +284,8 @@ export const registerConsentPostRoute: RouteRegistrator = function (
     return app.post(
       "/consent",
       parseForm,
-      csrfProtection,
+      doubleCsrfProtection,
+      csrfErrorHandler,
       createConsentPostRoute(createHelpers),
     )
   } else {

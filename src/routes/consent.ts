@@ -10,8 +10,22 @@ import {
 } from "@ory/client"
 import { UserConsentCard } from "@ory/elements-markup"
 import bodyParser from "body-parser"
-import { doubleCsrf } from "csrf-csrf"
+import { doubleCsrf, DoubleCsrfCookieOptions } from "csrf-csrf"
 import { Request, Response, NextFunction } from "express"
+
+const cookieOptions: DoubleCsrfCookieOptions = {
+  sameSite: "lax",
+  signed: true,
+  // set secure cookies by default (recommended in production)
+  // can be disabled through DANGEROUSLY_DISABLE_SECURE_COOKIES=true env var
+  secure: true,
+  ...(process.env.DANGEROUSLY_DISABLE_SECURE_CSRF_COOKIES && {
+    secure: false,
+  }),
+}
+
+const cookieName = process.env.CSRF_COOKIE_NAME || "ax-x-csrf-token"
+const cookieSecret = process.env.CSRF_COOKIE_SECRET
 
 // Sets up csrf protection
 const {
@@ -19,15 +33,19 @@ const {
   invalidCsrfTokenError,
   doubleCsrfProtection, // This is the default CSRF protection middleware.
 } = doubleCsrf({
-  getSecret: () => "VERY_SECRET_VALUE", // A function that optionally takes the request and returns a secret
-  cookieName: "ax-x-csrf-token", // The name of the cookie to be used, recommend using Host prefix.
-  cookieOptions: {
-    sameSite: "lax", // Recommend you make this strict if posible
-    secure: true,
-  },
+  getSecret: () => cookieSecret || "", // A function that optionally takes the request and returns a secret
+  cookieName: cookieName, // The name of the cookie to be used, recommend using Host prefix.
+  cookieOptions,
   ignoredMethods: ["GET", "HEAD", "OPTIONS"], // A list of request methods that will not be protected.
   getTokenFromRequest: (req) => req.headers["x-csrf-token"], // A function that returns the token from the request
 })
+
+// Checks if OAuth2 consent is enabled
+// This is used to determine if the consent route should be registered
+// We need to check if the environment variables are set
+const isOAuthCosentEnabled = () =>
+  (process.env.HYDRA_ADMIN_URL || process.env.ORY_SDK_URL) &&
+  process.env.CSRF_COOKIE_SECRET
 
 // Error handling, validation error interception
 const csrfErrorHandler = (
@@ -37,7 +55,11 @@ const csrfErrorHandler = (
   next: NextFunction,
 ) => {
   if (error == invalidCsrfTokenError) {
-    next(new Error("csrf validation error"))
+    next(
+      new Error(
+        "A security violation was detected, please fill out the form again.",
+      ),
+    )
   } else {
     next()
   }
@@ -82,7 +104,6 @@ async function createOAuth2ConsentRequestSession(
 // A simple express handler that shows the Hydra consent screen.
 export const createConsentRoute: RouteCreator =
   (createHelpers) => (req, res, next) => {
-    console.log("createConsentRoute")
     res.locals.projectName = "An application requests access to your data!"
 
     const { oauth2, identity } = createHelpers(req, res)
@@ -102,7 +123,6 @@ export const createConsentRoute: RouteCreator =
       trustedClients = String(process.env.TRUSTED_CLIENT_IDS).split(",")
     }
 
-    console.log("getOAuth2ConsentRequest", challenge)
     // This section processes consent requests and either shows the consent UI or
     // accepts the consent request right away if the user has given consent to this
     // app before
@@ -267,8 +287,7 @@ export const registerConsentRoute: RouteRegistrator = function (
   app,
   createHelpers = defaultConfig,
 ) {
-  if (process.env.HYDRA_ADMIN_URL) {
-    console.log("found HYDRA_ADMIN_URL")
+  if (isOAuthCosentEnabled()) {
     return app.get("/consent", createConsentRoute(createHelpers))
   } else {
     return register404Route
@@ -279,7 +298,7 @@ export const registerConsentPostRoute: RouteRegistrator = function (
   app,
   createHelpers = defaultConfig,
 ) {
-  if (process.env.HYDRA_ADMIN_URL) {
+  if (isOAuthCosentEnabled()) {
     return app.post(
       "/consent",
       parseForm,

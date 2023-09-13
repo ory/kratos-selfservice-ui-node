@@ -35,7 +35,7 @@ const app = express()
 const router = express.Router()
 
 app.use(middlewareLogger)
-app.use(cookieParser())
+app.use(cookieParser(process.env.COOKIE_SECRET || ""))
 app.use(addFavicon(defaultConfig))
 app.use(detectLanguage)
 app.set("view engine", "hbs")
@@ -79,13 +79,32 @@ let listener = (proto: "http" | "https") => () => {
   console.log(`Listening on ${proto}://0.0.0.0:${port}`)
 }
 
-if (process.env.TLS_CERT_PATH?.length && process.env.TLS_KEY_PATH?.length) {
-  const options = {
-    cert: fs.readFileSync(process.env.TLS_CERT_PATH),
-    key: fs.readFileSync(process.env.TLS_KEY_PATH),
-  }
-
-  https.createServer(options, app).listen(port, listener("https"))
+// When using the Ory Admin API Token, we assume that this application is also
+// handling OAuth2 Consent requests. In that case we need to ensure that the
+// COOKIE_SECRET and CSRF_COOKIE_SECRET environment variables are set.
+if (
+  (process.env.ORY_ADMIN_API_TOKEN &&
+    String(process.env.COOKIE_SECRET || "").length < 8) ||
+  String(process.env.CSRF_COOKIE_SECRET || "").length < 8
+) {
+  console.error(
+    "Cannot start the server without the required environment variables!",
+  )
+  console.error(
+    "COOKIE_SECRET must be set and be at least 8 alphanumerical character `export COOKIE_SECRET=...`",
+  )
+  console.error(
+    "CSRF_COOKIE_SECRET must be set and be at least 8 alphanumerical character `export CSRF_COOKIE_SECRET=...`",
+  )
 } else {
-  app.listen(port, listener("http"))
+  if (process.env.TLS_CERT_PATH?.length && process.env.TLS_KEY_PATH?.length) {
+    const options = {
+      cert: fs.readFileSync(process.env.TLS_CERT_PATH),
+      key: fs.readFileSync(process.env.TLS_KEY_PATH),
+    }
+
+    https.createServer(options, app).listen(port, listener("https"))
+  } else {
+    app.listen(port, listener("http"))
+  }
 }

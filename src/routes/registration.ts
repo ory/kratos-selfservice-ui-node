@@ -22,12 +22,18 @@ export const createRegistrationRoute: RouteCreator =
   (createHelpers) => (req, res, next) => {
     res.locals.projectName = "Create account"
 
-    const { flow, return_to, after_verification_return_to, login_challenge } =
-      req.query
+    const {
+      flow,
+      return_to,
+      after_verification_return_to,
+      login_challenge,
+      organization,
+    } = req.query
     const { frontend, kratosBrowserUrl, logoUrl } = createHelpers(req, res)
 
     const initFlowQuery = new URLSearchParams({
       ...(return_to && { return_to: return_to.toString() }),
+      ...(organization && { organization: organization.toString() }),
       ...(after_verification_return_to && {
         after_verification_return_to: after_verification_return_to.toString(),
       }),

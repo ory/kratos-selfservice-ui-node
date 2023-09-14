@@ -1,0 +1,49 @@
+<script type="text/javascript">
+  function hash(string) {
+    const utf8 = new TextEncoder().encode(string);
+    return crypto.subtle.digest('SHA-256', utf8).then((hashBuffer) => {
+      const hashArray = Array.from(new Uint8Array(hashBuffer));
+      const hashHex = hashArray
+        .map((bytes) => bytes.toString(16).padStart(2, '0'))
+        .join('');
+      return hashHex;
+    });
+  }
+
+  function toggleSSO(ssoEnabled, orgId) {
+    var passwordInput = document.querySelector('div[data-testid="node/input/password"]')
+    var passwordSubmit = document.querySelector('button[type="submit"][value="password"]')
+    var forgotPassword = document.querySelector('[data-testid="forgot-password-link"]')
+    if (ssoEnabled) {
+      passwordInput.style.display = "none";
+      forgotPassword.style.display = "none";
+      passwordSubmit.textContent = "Sign in with SSO"
+      passwordSubmit.onclick = function (e) {
+        e.preventDefault();
+        location.replace("/ui/login?organization=" + orgId)
+      }
+    } else {
+      passwordInput.style.display = "";
+      forgotPassword.style.display = "";
+      passwordSubmit.textContent = "Sign in"
+    }
+  }
+
+  var organizations = {{{organizations}}}
+
+  document.querySelector('input[name="identifier"]').addEventListener('input', function(e) {
+    var v = e.target.value;
+    if (!v.includes("@")) {
+      return
+    }
+    var parts = v.split("@");
+    var domain = parts[1];
+
+    hash(domain).then((h) => {
+      toggleSSO(h in organizations, organizations[h]);
+    }).catch((e) => {
+      console.log(e)
+    })
+  });
+
+</script>

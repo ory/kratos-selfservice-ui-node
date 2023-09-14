@@ -82,7 +82,7 @@ export const createLoginRoute: RouteCreator =
         })
         .then(({ headers, data: verificationFlow }) => {
           // we need the csrf cookie from the verification flow
-          res.setHeader("set-cookie", headers["set-cookie"])
+          res.setHeader("set-cookie", headers["set-cookie"] || "")
           // encode the verification flow id in the query parameters
           const verificationParameters = new URLSearchParams({
             flow: verificationFlow.id,
@@ -168,6 +168,7 @@ export const createLoginRoute: RouteCreator =
 
         res.render("login", {
           nodes: flow.ui.nodes,
+          organizations: JSON.stringify(res.locals.organizations),
           webAuthnHandler: filterNodesByGroups({
             nodes: flow.ui.nodes,
             groups: ["webauthn"],

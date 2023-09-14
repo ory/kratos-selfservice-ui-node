@@ -24,7 +24,7 @@ const cookieOptions: DoubleCsrfCookieOptions = {
   }),
 }
 
-const cookieName = process.env.CSRF_COOKIE_NAME || "ax-x-csrf-token"
+const cookieName = process.env.CSRF_COOKIE_NAME || "__Host-ax-x-csrf-token"
 const cookieSecret = process.env.CSRF_COOKIE_SECRET
 
 // Sets up csrf protection

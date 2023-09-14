@@ -38,6 +38,8 @@ Ory OAuth2 requires more setup to get CSRF cookies on the `/consent` endpoint.
   `hydra-admin.svc.cluster.local`)
 - `COOKIE_SECRET` (required): Required for signing cookies. Must be a string
   with at least 8 alphanumerical characters.
+- `CSRF_COOKIE_NAME` (required): Change the cookie name to match your domain
+  using the `__HOST-example.com-x-csrf-token` format.
 - `CSRF_COOKIE_SECRET` (optional): Required for the Consent route to set a CSRF
   cookie with a hashed value. The value must be a string with at least 8
   alphanumerical characters.
@@ -45,8 +47,6 @@ Ory OAuth2 requires more setup to get CSRF cookies on the `/consent` endpoint.
   value of the accept consent request in seconds. The default is 3600 seconds.
 - `ORY_ADMIN_API_TOKEN` (optional): When using with an Ory Network project, you
   should add the `ORY_ADMIN_API_TOKEN` for OAuth2 Consent flows.
-- `CSRF_COOKIE_NAME` (optional): By default the CSRF cookie will be set to
-  `__Host-ax-x-csrf-token`.
 - `DANGEROUSLY_DISABLE_SECURE_CSRF_COOKIES` (optional) This environment
   variables should only be used in local development when you do not have HTTPS
   setup. This sets the CSRF cookies to `secure: false`, required for running

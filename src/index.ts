@@ -85,6 +85,7 @@ let listener = (proto: "http" | "https") => () => {
 if (
   (process.env.ORY_ADMIN_API_TOKEN &&
     String(process.env.COOKIE_SECRET || "").length < 8) ||
+  String(process.env.CSRF_COOKIE_NAME || "").length === 0 ||
   String(process.env.CSRF_COOKIE_SECRET || "").length < 8
 ) {
   console.error(
@@ -92,6 +93,9 @@ if (
   )
   console.error(
     "COOKIE_SECRET must be set and be at least 8 alphanumerical character `export COOKIE_SECRET=...`",
+  )
+  console.error(
+    "CSRF_COOKIE_NAME must be set! Prefix the name to scope it to your domain `__HOST-` `export CSRF_COOKIE_NAME=...`",
   )
   console.error(
     "CSRF_COOKIE_SECRET must be set and be at least 8 alphanumerical character `export CSRF_COOKIE_SECRET=...`",

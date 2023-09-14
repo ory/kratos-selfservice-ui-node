@@ -39,6 +39,9 @@ const sdk = {
   identity: new IdentityApi(
     new Configuration({
       basePath: apiBaseIdentityUrl,
+      ...(process.env.ORY_ADMIN_API_TOKEN && {
+        accessToken: process.env.ORY_ADMIN_API_TOKEN,
+      }),
     }),
   ),
 }

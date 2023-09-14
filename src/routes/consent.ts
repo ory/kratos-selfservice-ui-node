@@ -37,7 +37,7 @@ const {
   cookieName: cookieName, // The name of the cookie to be used, recommend using Host prefix.
   cookieOptions,
   ignoredMethods: ["GET", "HEAD", "OPTIONS"], // A list of request methods that will not be protected.
-  getTokenFromRequest: (req) => req.headers["x-csrf-token"], // A function that returns the token from the request
+  getTokenFromRequest: (req: Request) => req.headers["x-csrf-token"], // A function that returns the token from the request
 })
 
 // Checks if OAuth2 consent is enabled
@@ -268,7 +268,7 @@ export const createConsentPostRoute: RouteCreator =
               remember: Boolean(req.body.remember),
 
               // When this "remember" sesion expires, in seconds. Set this to 0 so it will never expire.
-              remember_for: process.env.REMEMBER_CONSENT_FOR_SECONDS
+              remember_for: process.env.REMEMBER_CONSENT_SESSION_FOR_SECONDS
                 ? Number(process.env.REMEMBER_CONSENT_SESSION_FOR_SECONDS)
                 : 3600,
             },

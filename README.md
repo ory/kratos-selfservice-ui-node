@@ -41,14 +41,17 @@ Ory OAuth2 requires more setup to get CSRF cookies on the `/consent` endpoint.
 - `CSRF_COOKIE_SECRET` (optional): Required for the Consent route to set a CSRF
   cookie with a hashed value. The value must be a string with at least 8
   alphanumerical characters.
+- `REMEMBER_CONSENT_SESSION_FOR_SECONDS` (optional): Sets the `remember_for`
+  value of the accept consent request in seconds. The default is 3600 seconds.
 - `ORY_ADMIN_API_TOKEN` (optional): When using with an Ory Network project, you
   should add the `ORY_ADMIN_API_TOKEN` for OAuth2 Consent flows.
 - `CSRF_COOKIE_NAME` (optional): By default the CSRF cookie will be set to
-  `ax-x-csrf-token`.
+  `__Host-ax-x-csrf-token`.
 - `DANGEROUSLY_DISABLE_SECURE_CSRF_COOKIES` (optional) This environment
   variables should only be used in local development when you do not have HTTPS
   setup. This sets the CSRF cookies to `secure: false`, required for running
-  locally. When using this setting, you must also set `CSRF_COOKIE_NAME` to a name without the `__Host-` prefix.
+  locally. When using this setting, you must also set `CSRF_COOKIE_NAME` to a
+  name without the `__Host-` prefix.
 
 Getting TLS working:
 
@@ -88,6 +91,9 @@ To run this app with dummy data and no real connection to ORY Kratos, use:
 ```shell script
 NODE_ENV=stub npm start
 ```
+
+If you would like to also generate fake data for the `id_token`, please set the
+environment varialbe `export CONFORMITY_FAKE_CLAIMS=1`
 
 ### Test with ORY Kratos
 

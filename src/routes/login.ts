@@ -27,6 +27,7 @@ export const createLoginRoute: RouteCreator =
       aal = "",
       refresh = "",
       return_to = "",
+      organization = "",
       login_challenge,
     } = req.query
     const { frontend, kratosBrowserUrl, logoUrl } = createHelpers(req, res)
@@ -35,6 +36,7 @@ export const createLoginRoute: RouteCreator =
       aal: aal.toString(),
       refresh: refresh.toString(),
       return_to: return_to.toString(),
+      organization: organization.toString(),
     })
 
     if (isQuerySet(login_challenge)) {

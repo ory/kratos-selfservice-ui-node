@@ -10,6 +10,12 @@ export interface RouteOptions {
   identity: IdentityApi
   apiBaseUrl: string
   kratosBrowserUrl: string
+
+  // Checks if OAuth2 consent route is enabled
+  // This is used to determine if the consent route should be registered
+  // We need to check if the required environment variables are set
+  isOAuthConsentRouteEnabled: () => boolean
+
   logoUrl?: string
   faviconUrl?: string
   faviconType?: string

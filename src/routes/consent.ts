@@ -1,7 +1,6 @@
 // Copyright © 2023 Ory Corp
 // SPDX-License-Identifier: Apache-2.0
 import { defaultConfig, logger, RouteCreator, RouteRegistrator } from "../pkg"
-import { register404Route } from "./404"
 import { oidcConformityMaybeFakeSession } from "./stub/oidc-cert"
 import { AcceptOAuth2ConsentRequestSession } from "@ory/client"
 import { UserConsentCard } from "@ory/elements-markup"
@@ -37,13 +36,6 @@ const {
     return req.body._csrf
   }, // A function that returns the token from the request
 })
-
-// Checks if OAuth2 consent is enabled
-// This is used to determine if the consent route should be registered
-// We need to check if the environment variables are set
-const isOAuthCosentEnabled = () =>
-  (process.env.HYDRA_ADMIN_URL || process.env.ORY_SDK_URL) &&
-  process.env.CSRF_COOKIE_SECRET
 
 // Error handling, validation error interception
 const csrfErrorHandler = (
@@ -123,7 +115,13 @@ export const createConsentRoute: RouteCreator =
   (createHelpers) => (req: Request, res: Response, next: NextFunction) => {
     res.locals.projectName = "An application requests access to your data!"
 
-    const { oauth2 } = createHelpers(req, res)
+    const { oauth2, isOAuthConsentRouteEnabled } = createHelpers(req, res)
+
+    if (!isOAuthConsentRouteEnabled()) {
+      res.redirect("404")
+      return
+    }
+
     const { consent_challenge } = req.query
 
     // The challenge is used to fetch information about the consent request from ORY hydraAdmin.
@@ -217,7 +215,12 @@ export const createConsentRoute: RouteCreator =
 export const createConsentPostRoute: RouteCreator =
   (createHelpers) => async (req, res, next) => {
     // The challenge is a hidden input field, so we have to retrieve it from the request body
-    const { oauth2 } = createHelpers(req, res)
+    const { oauth2, isOAuthConsentRouteEnabled } = createHelpers(req, res)
+
+    if (!isOAuthConsentRouteEnabled()) {
+      res.redirect("404")
+      return
+    }
 
     const { consent_challenge: challenge, consent_action, remember } = req.body
 
@@ -305,30 +308,22 @@ export const registerConsentRoute: RouteRegistrator = function (
   app,
   createHelpers = defaultConfig,
 ) {
-  if (isOAuthCosentEnabled()) {
-    return app.get(
-      "/consent",
-      doubleCsrfProtection,
-      createConsentRoute(createHelpers),
-    )
-  } else {
-    return register404Route
-  }
+  return app.get(
+    "/consent",
+    doubleCsrfProtection,
+    createConsentRoute(createHelpers),
+  )
 }
 
 export const registerConsentPostRoute: RouteRegistrator = function (
   app,
   createHelpers = defaultConfig,
 ) {
-  if (isOAuthCosentEnabled()) {
-    return app.post(
-      "/consent",
-      parseForm,
-      doubleCsrfProtection,
-      csrfErrorHandler,
-      createConsentPostRoute(createHelpers),
-    )
-  } else {
-    return register404Route
-  }
+  return app.post(
+    "/consent",
+    parseForm,
+    doubleCsrfProtection,
+    csrfErrorHandler,
+    createConsentPostRoute(createHelpers),
+  )
 }

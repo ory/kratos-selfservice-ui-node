@@ -32,6 +32,12 @@ export const defaultConfig: RouteOptionsCreator = () => {
     kratosBrowserUrl: apiBaseUrl,
     faviconUrl: "favico.png",
     faviconType: "image/png",
+    isOAuthConsentRouteEnabled: () =>
+      (process.env.HYDRA_ADMIN_URL || process.env.ORY_SDK_URL) &&
+      process.env.CSRF_COOKIE_SECRET &&
+      process.env.CSRF_COOKIE_NAME
+        ? true
+        : false,
     ...sdk,
   }
 }

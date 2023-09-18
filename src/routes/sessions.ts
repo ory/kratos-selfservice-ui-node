@@ -24,7 +24,9 @@ export const createSessionsRoute: RouteCreator =
       ).data.logout_url || ""
 
     const identityCredentialTrait =
-      session?.identity.traits.email || session?.identity.traits.username || ""
+      session?.identity?.traits.email ||
+      session?.identity?.traits.username ||
+      ""
 
     const sessionText =
       identityCredentialTrait !== ""
@@ -41,18 +43,17 @@ export const createSessionsRoute: RouteCreator =
         color: "foregroundMuted",
       }),
       traits: {
-        id: session?.identity.id,
+        id: session?.identity?.id,
         // sometimes the identity schema could contain recursive objects
         // for this use case we will just stringify the object instead of recursively flatten the object
-        ...Object.entries(session?.identity.traits).reduce<Record<string, any>>(
-          (traits, [key, value]) => {
-            traits[key] =
-              typeof value === "object" ? JSON.stringify(value) : value
-            return traits
-          },
-          {},
-        ),
-        "signup date": session?.identity.created_at || "",
+        ...Object.entries(session?.identity?.traits).reduce<
+          Record<string, any>
+        >((traits, [key, value]) => {
+          traits[key] =
+            typeof value === "object" ? JSON.stringify(value) : value
+          return traits
+        }, {}),
+        "signup date": session?.identity?.created_at || "",
         "authentication level":
           session?.authenticator_assurance_level === "aal2"
             ? "two-factor used (aal2)"

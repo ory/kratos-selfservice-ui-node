@@ -10,6 +10,7 @@ import { ButtonLink, Divider, MenuLink, Typography } from "@ory/elements-markup"
 import { filterNodesByGroups } from "@ory/integrations/ui"
 import { AxiosError } from "axios"
 import { NextFunction, Response } from "express"
+import { UnknownObject } from "express-handlebars/types"
 
 export * from "./logger"
 export * from "./middleware"
@@ -31,6 +32,12 @@ export const defaultConfig: RouteOptionsCreator = () => {
     kratosBrowserUrl: apiBaseUrl,
     faviconUrl: "favico.png",
     faviconType: "image/png",
+    isOAuthConsentRouteEnabled: () =>
+      (process.env.HYDRA_ADMIN_URL || process.env.ORY_SDK_URL) &&
+      process.env.CSRF_COOKIE_SECRET &&
+      process.env.CSRF_COOKIE_NAME
+        ? true
+        : false,
     ...sdk,
   }
 }
@@ -84,7 +91,7 @@ export const redirectOnSoftError =
     next(err)
   }
 
-export const handlebarsHelpers = {
+export const handlebarsHelpers: UnknownObject = {
   jsonPretty: (context: any) => JSON.stringify(context, null, 2),
   onlyNodes: (
     nodes: Array<UiNode>,

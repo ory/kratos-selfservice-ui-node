@@ -12,18 +12,53 @@ registration, account recovery, ... screens, please check out the
 
 ## Configuration
 
-This application can be configured using two environment variables:
+Below is a list of environment variables required by the Express.js service to
+function properly.
 
-- `KRATOS_PUBLIC_URL` (required): The URL where ORY Kratos's Public API is
-  located at. If this app and ORY Kratos are running in the same private
-  network, this should be the private network address (e.g.
+In a local development run of the service using `npm run start`, some of these
+values will be set by nodemon and is configured by the `nodemon.json` file.
+
+When using this UI with an Ory Network project, you can use `ORY_SDK_URL`
+instead of `KRATOS_PUBLIC_URL` and `HYDRA_ADMIN_URL`.
+
+Ory Identities requires the following variables to be set:
+
+- `ORY_SDK_URL` or `KRATOS_PUBLIC_URL` (required): The URL where ORY Kratos's
+  Public API is located at. If this app and ORY Kratos are running in the same
+  private network, this should be the private network address (e.g.
   `kratos-public.svc.cluster.local`).
+- `KRATOS_BROWSER_URL` (optional) The browser accessible URL where ORY Kratos's
+  public API is located, only needed if it differs from `KRATOS_PUBLIC_URL`
+
+Ory OAuth2 requires more setup to get CSRF cookies on the `/consent` endpoint.
+
+- `ORY_SDK_URL` or `HYDRA_ADMIN_URL` (optional): The URL where Ory Hydra's
+  Public API is located at. If this app and Ory Hydra are running in the same
+  private network, this should be the private network address (e.g.
+  `hydra-admin.svc.cluster.local`)
+- `COOKIE_SECRET` (required): Required for signing cookies. Must be a string
+  with at least 8 alphanumerical characters.
+- `CSRF_COOKIE_NAME` (required): Change the cookie name to match your domain
+  using the `__HOST-example.com-x-csrf-token` format.
+- `CSRF_COOKIE_SECRET` (optional): Required for the Consent route to set a CSRF
+  cookie with a hashed value. The value must be a string with at least 8
+  alphanumerical characters.
+- `REMEMBER_CONSENT_SESSION_FOR_SECONDS` (optional): Sets the `remember_for`
+  value of the accept consent request in seconds. The default is 3600 seconds.
+- `ORY_ADMIN_API_TOKEN` (optional): When using with an Ory Network project, you
+  should add the `ORY_ADMIN_API_TOKEN` for OAuth2 Consent flows.
+- `DANGEROUSLY_DISABLE_SECURE_CSRF_COOKIES` (optional) This environment
+  variables should only be used in local development when you do not have HTTPS
+  setup. This sets the CSRF cookies to `secure: false`, required for running
+  locally. When using this setting, you must also set `CSRF_COOKIE_NAME` to a
+  name without the `__Host-` prefix.
+
+Getting TLS working:
+
 - `TLS_CERT_PATH` (optional): Path to certificate file. Should be set up
   together with `TLS_KEY_PATH` to enable HTTPS.
 - `TLS_KEY_PATH` (optional): Path to key file Should be set up together with
   `TLS_CERT_PATH` to enable HTTPS.
-- `KRATOS_BROWSER_URL` (optional) The browser accessible URL where ORY Kratos's
-  public API is located, only needed if it differs from `KRATOS_PUBLIC_URL`
 
 This is the easiest mode as it requires no additional set up. This app runs on
 port `:4455` and ORY Kratos `KRATOS_PUBLIC_URL` URL.
@@ -54,8 +89,11 @@ recommended.
 To run this app with dummy data and no real connection to ORY Kratos, use:
 
 ```shell script
-$ NODE_ENV=stub npm start
+NODE_ENV=stub npm start
 ```
+
+If you would like to also generate fake data for the `id_token`, please set the
+environment varialbe `export CONFORMITY_FAKE_CLAIMS=1`
 
 ### Test with ORY Kratos
 

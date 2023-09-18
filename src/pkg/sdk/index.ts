@@ -15,12 +15,6 @@ const apiBaseIdentityUrl = process.env.KRATOS_ADMIN_URL || baseUrlInternal
 export const apiBaseUrl =
   process.env.KRATOS_BROWSER_URL || apiBaseFrontendUrlInternal
 
-const hydraBaseOptions: any = {}
-
-if (process.env.MOCK_TLS_TERMINATION) {
-  hydraBaseOptions.headers = { "X-Forwarded-Proto": "https" }
-}
-
 // Sets up the SDK
 const sdk = {
   basePath: apiBaseFrontendUrlInternal,
@@ -32,12 +26,22 @@ const sdk = {
   oauth2: new OAuth2Api(
     new Configuration({
       basePath: apiBaseOauth2UrlInternal,
-      baseOptions: hydraBaseOptions,
+      ...(process.env.ORY_ADMIN_API_TOKEN && {
+        accessToken: process.env.ORY_ADMIN_API_TOKEN,
+      }),
+      ...(process.env.MOCK_TLS_TERMINATION && {
+        baseOptions: {
+          "X-Forwarded-Proto": "https",
+        },
+      }),
     }),
   ),
   identity: new IdentityApi(
     new Configuration({
       basePath: apiBaseIdentityUrl,
+      ...(process.env.ORY_ADMIN_API_TOKEN && {
+        accessToken: process.env.ORY_ADMIN_API_TOKEN,
+      }),
     }),
   ),
 }

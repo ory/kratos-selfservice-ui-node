@@ -52,6 +52,8 @@ Ory OAuth2 requires more setup to get CSRF cookies on the `/consent` endpoint.
   setup. This sets the CSRF cookies to `secure: false`, required for running
   locally. When using this setting, you must also set `CSRF_COOKIE_NAME` to a
   name without the `__Host-` prefix.
+- `TRUSTED_CLIENT_IDS` (optional): A list of trusted client ids. They can be set
+  to skip the consent screen.
 
 Getting TLS working:
 

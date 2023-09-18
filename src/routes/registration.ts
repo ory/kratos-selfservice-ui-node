@@ -109,6 +109,7 @@ export const createRegistrationRoute: RouteCreator =
             { locale: res.locals.lang },
           ),
           extraPartial: extraPartials?.registration,
+          extraContext: res.locals.extraContext,
         })
       })
       .catch(redirectOnSoftError(res, next, initFlowUrl))

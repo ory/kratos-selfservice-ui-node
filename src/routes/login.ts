@@ -197,6 +197,7 @@ export const createLoginRoute: RouteCreator =
             { locale: res.locals.lang },
           ),
           extraPartial: extraPartials?.login,
+          extraContext: res.locals.extraContext,
         })
       })
       .catch(redirectOnSoftError(res, next, initFlowUrl))

@@ -29,7 +29,8 @@ export const createRegistrationRoute: RouteCreator =
       login_challenge,
       organization,
     } = req.query
-    const { frontend, kratosBrowserUrl, logoUrl } = createHelpers(req, res)
+    const { frontend, kratosBrowserUrl, logoUrl, extraPartials } =
+      createHelpers(req, res)
 
     const initFlowQuery = new URLSearchParams({
       ...(return_to && { return_to: return_to.toString() }),
@@ -107,6 +108,8 @@ export const createRegistrationRoute: RouteCreator =
             },
             { locale: res.locals.lang },
           ),
+          extraPartial: extraPartials?.registration,
+          extraContext: res.locals.extraContext,
         })
       })
       .catch(redirectOnSoftError(res, next, initFlowUrl))

@@ -30,7 +30,8 @@ export const createLoginRoute: RouteCreator =
       organization = "",
       login_challenge,
     } = req.query
-    const { frontend, kratosBrowserUrl, logoUrl } = createHelpers(req, res)
+    const { frontend, kratosBrowserUrl, logoUrl, extraPartials } =
+      createHelpers(req, res)
 
     const initFlowQuery = new URLSearchParams({
       aal: aal.toString(),
@@ -195,6 +196,8 @@ export const createLoginRoute: RouteCreator =
             },
             { locale: res.locals.lang },
           ),
+          extraPartial: extraPartials?.login,
+          extraContext: res.locals.extraContext,
         })
       })
       .catch(redirectOnSoftError(res, next, initFlowUrl))

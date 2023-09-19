@@ -20,6 +20,10 @@ export interface RouteOptions {
   faviconUrl?: string
   faviconType?: string
   theme?: Theme
+  extraPartials?: {
+    login: () => string
+    registration: () => string
+  }
 }
 
 export type RouteOptionsCreator = (req: Request, res: Response) => RouteOptions

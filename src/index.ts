@@ -95,12 +95,12 @@ registerSessionsRoute(router)
 registerWelcomeRoute(router)
 registerErrorRoute(router)
 
-// all routes registered after this point are protected by CSRF
-app.use(doubleCsrfProtection)
-app.use(csrfErrorHandler(invalidCsrfTokenError))
+// all routes registered under the /consent path are protected by CSRF
+router.use("/consent", doubleCsrfProtection)
+router.use("/consent", csrfErrorHandler(invalidCsrfTokenError))
 
-registerConsentRoute(app)
-registerLogoutRoute(app)
+registerConsentRoute(router)
+registerLogoutRoute(router)
 
 router.get("/", (req: Request, res: Response) => {
   res.redirect(303, "welcome")

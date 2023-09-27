@@ -38,6 +38,18 @@ export const defaultConfig: RouteOptionsCreator = () => {
       process.env.CSRF_COOKIE_NAME
         ? true
         : false,
+    shouldSkipConsent: (challenge) => {
+      let trustedClients: string[] = []
+      if (process.env.TRUSTED_CLIENT_IDS) {
+        trustedClients = String(process.env.TRUSTED_CLIENT_IDS).split(",")
+      }
+      return challenge.skip ||
+        challenge.client?.skip_consent ||
+        (challenge.client?.client_id &&
+          trustedClients.indexOf(challenge.client?.client_id) > -1)
+        ? true
+        : false
+    },
     ...sdk,
   }
 }

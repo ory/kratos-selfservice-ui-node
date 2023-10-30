@@ -119,9 +119,5 @@ export const registerRegistrationRoute: RouteRegistrator = (
   app,
   createHelpers = defaultConfig,
 ) => {
-  app.get(
-    "/registration",
-    requireNoAuth(createHelpers),
-    createRegistrationRoute(createHelpers),
-  )
+  app.get("/registration", createRegistrationRoute(createHelpers))
 }

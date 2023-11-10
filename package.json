@@ -31,7 +31,7 @@
     "@ory/elements-markup": "0.1.0-beta.11",
     "@ory/integrations": "1.1.5",
     "accept-language-parser": "1.5.0",
-    "axios": "1.2.6",
+    "axios": "1.6.0",
     "body-parser": "1.20.2",
     "cookie-parser": "1.4.6",
     "csrf-csrf": "3.0.1",

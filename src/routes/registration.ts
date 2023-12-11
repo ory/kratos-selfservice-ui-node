@@ -79,20 +79,21 @@ export const createRegistrationRoute: RouteCreator =
             flow.oauth2_login_request.challenge,
           )
         }
+        const webAuthnHandler = filterNodesByGroups({
+          nodes: flow.ui.nodes,
+          groups: ["webauthn", "passkey"],
+          attributes: ["button"],
+          withoutDefaultAttributes: true,
+          withoutDefaultGroup: true,
+        })
+          .filter(({ attributes }) => isUiNodeInputAttributes(attributes))
+          .map(({ attributes }) => {
+            return (attributes as UiNodeInputAttributes).onclick
+          })
+          .filter((onClickAction) => !!onClickAction)
         res.render("registration", {
           nodes: flow.ui.nodes,
-          webAuthnHandler: filterNodesByGroups({
-            nodes: flow.ui.nodes,
-            groups: ["webauthn"],
-            attributes: ["button"],
-            withoutDefaultAttributes: true,
-            withoutDefaultGroup: true,
-          })
-            .filter(({ attributes }) => isUiNodeInputAttributes(attributes))
-            .map(({ attributes }) => {
-              return (attributes as UiNodeInputAttributes).onclick
-            })
-            .filter((onClickAction) => !!onClickAction),
+          webAuthnHandler: webAuthnHandler,
           card: UserAuthCard(
             {
               flow,

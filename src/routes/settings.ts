@@ -74,7 +74,7 @@ export const createSettingsRoute: RouteCreator =
           settingsScreen: settingsScreen.Body,
           webAuthnHandler: filterNodesByGroups({
             nodes: flow.ui.nodes,
-            groups: ["webauthn"],
+            groups: ["webauthn", "passkey"],
             attributes: ["button"],
             withoutDefaultAttributes: true,
             withoutDefaultGroup: true,

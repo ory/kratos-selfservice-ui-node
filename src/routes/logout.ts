@@ -61,14 +61,14 @@ export const createSubmitLogoutRoute: RouteCreator =
       return oauth2
         .rejectOAuth2LogoutRequest({ logoutChallenge })
         .then(() => res.redirect("welcome"))
-        .catch(next)
+        .catch(() => res.redirect("welcome"))
     } else {
       logger.debug("User agreed to log out.")
       // The user agreed to log out, let's accept the logout request.
       return oauth2
         .acceptOAuth2LogoutRequest({ logoutChallenge })
         .then(({ data: body }) => res.redirect(body.redirect_to))
-        .catch(next)
+        .catch(() => res.redirect("welcome"))
     }
   }
 

@@ -1,0 +1,29 @@
+name: Publish
+on:
+  push:
+    branches:
+      - main
+      - master
+      - hperl/gh-npm-publish
+    tags:
+      - v*
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    permissions:
+      packages: write
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "18"
+      - run: npm ci --legacy-peer-deps
+      - run: npm run build
+      - run: |
+          echo @ory:https://npm.pkg.github.com/ > .npmrc
+          echo '//npm.pkg.github.com/:_authToken=${NPM_TOKEN}' >> .npmrc
+      - run: npm publish
+        env:
+          NPM_TOKEN: ${{ secrets.GITHUB_TOKEN }}

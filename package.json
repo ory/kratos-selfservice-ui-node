@@ -10,6 +10,9 @@
     "type": "git",
     "url": "git+https://github.com/ory/kratos-selfservice-ui-node.git"
   },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com"
+  },
   "license": "Apache-2.0",
   "author": "Aeneas Rekkas",
   "main": "src/index.ts",

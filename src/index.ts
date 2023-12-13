@@ -99,6 +99,10 @@ registerErrorRoute(router)
 router.use("/consent", doubleCsrfProtection)
 router.use("/consent", csrfErrorHandler(invalidCsrfTokenError))
 
+// all routes registered under the /logout path are protected by CSRF
+router.use("/logout", doubleCsrfProtection)
+router.use("/logout", csrfErrorHandler(invalidCsrfTokenError))
+
 registerConsentRoute(router)
 registerLogoutRoute(router)
 

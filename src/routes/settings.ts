@@ -63,6 +63,11 @@ export const createSettingsRoute: RouteCreator =
             settingsCardContainerClassName: "spacing-32",
           },
           {
+            backUrl: flow.return_to || getUrlForFlow(kratosBrowserUrl, "login"),
+            flow,
+            logoutUrl,
+          },
+          {
             locale: res.locals.lang,
           },
         )

@@ -173,7 +173,7 @@ export const createLoginRoute: RouteCreator =
           nodes: flow.ui.nodes,
           webAuthnHandler: filterNodesByGroups({
             nodes: flow.ui.nodes,
-            groups: ["webauthn"],
+            groups: ["webauthn", "passkey"],
             attributes: ["button"],
             withoutDefaultAttributes: true,
             withoutDefaultGroup: true,

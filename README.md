@@ -29,12 +29,14 @@ Ory Identities requires the following variables to be set:
   `kratos-public.svc.cluster.local`).
 - `KRATOS_BROWSER_URL` (optional) The browser accessible URL where ORY Kratos's
   public API is located, only needed if it differs from `KRATOS_PUBLIC_URL`
+- `KRATOS_ADMIN_URL` (optional) The URL where Ory Kratos' Admin API is located
+  at (e.g. `http://kratos:4434`).
 
 Ory OAuth2 requires more setup to get CSRF cookies on the `/consent` endpoint.
 
-- `ORY_SDK_URL` or `HYDRA_ADMIN_URL` (optional): The URL where Ory Hydra's
-  Public API is located at. If this app and Ory Hydra are running in the same
-  private network, this should be the private network address (e.g.
+- `ORY_SDK_URL` or `HYDRA_ADMIN_URL` (optional): The URL where Ory Hydra's Admin
+  API is located at. If this app and Ory Hydra are running in the same private
+  network, this should be the private network address (e.g.
   `hydra-admin.svc.cluster.local`)
 - `COOKIE_SECRET` (required): Required for signing cookies. Must be a string
   with at least 8 alphanumerical characters.

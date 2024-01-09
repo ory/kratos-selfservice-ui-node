@@ -1,0 +1,18 @@
+{{! This partial sets up the onclick and onload event handlers for each passkey node.}}
+<script type="text/javascript">
+    // register onclick and onload event handlers for each passkey node.
+    window.addEventListener("load", () => {
+    {{#each (onlyNodes nodes "passkey" "")}}
+        {{#if attributes.onclick}}
+            // onclick for {{attributes.name}}
+            document.getElementsByName("{{attributes.name}}").forEach((el) => {
+                el.addEventListener("click", () => { {{{attributes.onclick}}} })
+            })
+        {{/if}}
+        {{#if attributes.onload}}
+            // onload for {{attributes.name}}
+            {{{attributes.onload}}}
+        {{/if}}
+    {{/each}}
+    })
+</script>

@@ -28,6 +28,7 @@ export const createLoginRoute: RouteCreator =
       refresh = "",
       return_to = "",
       organization = "",
+      via = "",
       login_challenge,
     } = req.query
     const { frontend, kratosBrowserUrl, logoUrl, extraPartials } =
@@ -38,6 +39,7 @@ export const createLoginRoute: RouteCreator =
       refresh: refresh.toString(),
       return_to: return_to.toString(),
       organization: organization.toString(),
+      via: via.toString(),
     })
 
     if (isQuerySet(login_challenge)) {

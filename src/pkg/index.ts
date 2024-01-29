@@ -5,6 +5,7 @@ import sdk, { apiBaseUrl } from "./sdk"
 import {
   UiNode,
   ErrorAuthenticatorAssuranceLevelNotSatisfied,
+  OAuth2LogoutRequest,
 } from "@ory/client"
 import { ButtonLink, Divider, MenuLink, Typography } from "@ory/elements-markup"
 import { filterNodesByGroups } from "@ory/integrations/ui"
@@ -49,6 +50,13 @@ export const defaultConfig: RouteOptionsCreator = () => {
           trustedClients.indexOf(challenge.client?.client_id) > -1)
         ? true
         : false
+    },
+    shouldSkipLogoutConsent: (challenge) => {
+      return (
+        challenge.client as OAuth2LogoutRequest & {
+          skip_logout_consent: boolean
+        }
+      )?.skip_logout_consent
     },
     ...sdk,
   }

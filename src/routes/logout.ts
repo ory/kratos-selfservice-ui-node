@@ -19,30 +19,42 @@ export const createShowLogoutRoute: RouteCreator =
 
     if (typeof logoutChallenge !== "string") {
       logger.debug("Expected a logout challenge to be set but received none.")
-      next(
-        new Error("Expected a logout challenge to be set but received none."),
-      )
+      res.redirect("login")
       return
     }
 
-    // this should never happen
-    if (!req.csrfToken) {
-      logger.warn("Expected CSRF token middleware to be set but received none.")
-      next(
-        new Error(
-          "Expected CSRF token middleware to be set but received none.",
-        ),
-      )
-      return
-    }
+    const { oauth2, shouldSkipLogoutConsent } = createHelpers(req, res)
+    oauth2
+      .getOAuth2LogoutRequest({ logoutChallenge })
+      .then(({ data: body }) => {
+        if (shouldSkipLogoutConsent(body)) {
+          return oauth2
+            .acceptOAuth2LogoutRequest({ logoutChallenge })
+            .then(({ data: body }) => res.redirect(body.redirect_to))
+        }
 
-    res.render("logout", {
-      card: UserLogoutCard({
-        csrfToken: req.csrfToken(true),
-        challenge: logoutChallenge,
-        action: "logout",
-      }),
-    })
+        // this should never happen
+        if (!req.csrfToken) {
+          logger.warn(
+            "Expected CSRF token middleware to be set but received none.",
+          )
+          next(
+            new Error(
+              "Expected CSRF token middleware to be set but received none.",
+            ),
+          )
+          return
+        }
+
+        res.render("logout", {
+          card: UserLogoutCard({
+            csrfToken: req.csrfToken(true),
+            challenge: logoutChallenge,
+            action: "logout",
+          }),
+        })
+      })
+      .catch(() => res.redirect("login"))
   }
 
 export const createSubmitLogoutRoute: RouteCreator =
@@ -60,15 +72,15 @@ export const createSubmitLogoutRoute: RouteCreator =
       // The user rejected to log out, so we'll redirect to /ui/welcome
       return oauth2
         .rejectOAuth2LogoutRequest({ logoutChallenge })
-        .then(() => res.redirect("welcome"))
-        .catch(() => res.redirect("welcome"))
+        .then(() => res.redirect("login"))
+        .catch(() => res.redirect("login"))
     } else {
       logger.debug("User agreed to log out.")
       // The user agreed to log out, let's accept the logout request.
       return oauth2
         .acceptOAuth2LogoutRequest({ logoutChallenge })
         .then(({ data: body }) => res.redirect(body.redirect_to))
-        .catch(() => res.redirect("welcome"))
+        .catch(() => res.redirect("login"))
     }
   }
 

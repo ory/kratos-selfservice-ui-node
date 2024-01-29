@@ -5,6 +5,7 @@ import {
   IdentityApi,
   OAuth2Api,
   OAuth2ConsentRequest,
+  OAuth2LogoutRequest,
 } from "@ory/client"
 import { Theme } from "@ory/elements-markup"
 import { NextFunction, Request, Response, Router } from "express"
@@ -20,10 +21,14 @@ export interface RouteOptions {
   // This is used to determine if the consent route should be registered
   // We need to check if the required environment variables are set
   isOAuthConsentRouteEnabled: () => boolean
+
   // Checks if the OAuth2 consent request should be skipped
   // In some cases Hydra will let us skip the consent request
   // Setting `TRUSTED_CLIENT_IDS` will skip the consent request for the given client ids
   shouldSkipConsent: (challenge: OAuth2ConsentRequest) => boolean
+
+  // When this returns true, the logout screen will not be shown.
+  shouldSkipLogoutConsent: (challenge: OAuth2LogoutRequest) => boolean
 
   logoUrl?: string
   faviconUrl?: string

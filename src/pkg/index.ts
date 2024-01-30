@@ -52,11 +52,13 @@ export const defaultConfig: RouteOptionsCreator = () => {
         : false
     },
     shouldSkipLogoutConsent: (challenge) => {
-      return (
-        challenge.client as OAuth2LogoutRequest & {
-          skip_logout_consent: boolean
-        }
-      )?.skip_logout_consent
+      return Boolean(
+        (
+          challenge.client as OAuth2LogoutRequest & {
+            skip_logout_consent: boolean
+          }
+        )?.skip_logout_consent,
+      )
     },
     ...sdk,
   }

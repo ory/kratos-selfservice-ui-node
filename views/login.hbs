@@ -1,7 +1,6 @@
 <div id="login">
   {{{card}}}
 
-  {{> webauthn_setup nodes=nodes webAuthnHandler=webAuthnHandler webauthnTriggerName="webauthn_login_trigger"}}
   {{> js_setup nodes=nodes}}
   {{#if extraPartial }}
     {{> (extraPartial) }}

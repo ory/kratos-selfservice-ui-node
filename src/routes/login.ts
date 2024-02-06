@@ -173,18 +173,6 @@ export const createLoginRoute: RouteCreator =
 
         res.render("login", {
           nodes: flow.ui.nodes,
-          webAuthnHandler: filterNodesByGroups({
-            nodes: flow.ui.nodes,
-            groups: ["webauthn", "passkey"],
-            attributes: ["button"],
-            withoutDefaultAttributes: true,
-            withoutDefaultGroup: true,
-          })
-            .filter(({ attributes }) => isUiNodeInputAttributes(attributes))
-            .map(({ attributes }) => {
-              return (attributes as UiNodeInputAttributes).onclick
-            })
-            .filter((c) => c !== undefined),
           card: UserAuthCard(
             {
               flow,

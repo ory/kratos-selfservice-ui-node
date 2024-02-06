@@ -1,8 +1,20 @@
+{{! This inserts the webauthn.js script tag}}
+{{#each (onlyNodes nodes "webauthn" "text/javascript")}}
+    <script
+            src="{{attributes.src}}"
+            type="{{attributes.type}}"
+            integrity="{{attributes.integrity}}"
+            referrerpolicy="{{attributes.referrerpolicy}}"
+            crossorigin="{{attributes.crossorigin}}"
+            {{#if attributes.async}}async{{/if}}
+            data-testid="node/script/{{attributes.id}}"
+    ></script>
+{{/each}}
 {{! This partial sets up the onclick and onload event handlers for each passkey node.}}
 <script type="text/javascript">
     // register onclick and onload event handlers for each passkey node.
     window.addEventListener("load", () => {
-    {{#each (onlyNodes nodes "passkey" "")}}
+    {{#each (onlyNodes nodes "passkey,webauthn" "")}}
         {{#if attributes.onclick}}
             // onclick for {{attributes.name}}
             document.getElementsByName("{{attributes.name}}").forEach((el) => {

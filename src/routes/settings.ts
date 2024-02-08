@@ -77,18 +77,6 @@ export const createSettingsRoute: RouteCreator =
           nodes: flow.ui.nodes,
           nav: settingsScreen.Nav,
           settingsScreen: settingsScreen.Body,
-          webAuthnHandler: filterNodesByGroups({
-            nodes: flow.ui.nodes,
-            groups: ["webauthn", "passkey"],
-            attributes: ["button"],
-            withoutDefaultAttributes: true,
-            withoutDefaultGroup: true,
-          })
-            .filter(({ attributes }) => isUiNodeInputAttributes(attributes))
-            .map(({ attributes }) => {
-              return (attributes as UiNodeInputAttributes).onclick
-            })
-            .filter((c) => c !== undefined),
         })
       })
       .catch(redirectOnSoftError(res, next, initFlowUrl))

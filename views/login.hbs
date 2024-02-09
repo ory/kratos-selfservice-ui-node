@@ -1,15 +1,17 @@
 <div id="login">
   <div class="mh-100vh d-flex">
-    <div class="min-40 py-5 mt-4">
+    <div class="min-40">
       <div class="d-flex login-alignment-wrapper">
       <div>
-      <div class="text-center pt-4 mb-5">{{> ory_branding}}</div>
+      <div class="d-flex text-center pt-4 mb-5 logo-beta-alignment">{{> ory_branding}} <span class="beta-bedge">Beta</span></div>
       <h1 class="text-center login-heading my-3">Login</h1>
       <p class="text-center login-text">Please use your credentials to access Obsidian and login</p>
       {{{card}}}
       <div class="text-center copywrite-text">47Billion &copy; 2024</div></div></div>
     </div>
-    <div class="login-bg"/>
+    <div class="login-bg pb-5">
+      <div class="login-img-position pb-5"><img src="HomePageImage.c698ea0f.png" class="img-fluid"/></div>
+    </div>
   </div>
 
   {{> webauthn_setup nodes=nodes webAuthnHandler=webAuthnHandler webauthnTriggerName="webauthn_login_trigger"}}

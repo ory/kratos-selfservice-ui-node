@@ -22,8 +22,32 @@
 .text-center {
   text-align: center;
 }
+.login-img-position{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+}
+.img-fluid {
+  max-width: 100%;
+  max-height: 450px;
+}
+.logo-beta-alignment{
+  align-items: center;
+  justify-content: center;
+}
+.beta-bedge{
+  background:  rgb(220, 53, 69);
+  border-radius: 20px;
+  color: #fff;
+  opacity: 0.75;
+  font-size: 15px;
+font-weight: 700;
+padding: 5.25px 9.75px
+}
 .login-bg {
-  background: url(./login-bg.png) no-repeat center;
+  /* background: url(./login-bg.png) no-repeat center; */
+  background:  linear-gradient(102.6deg, #f9f3f5 0%, #f8e4e9 116.37%);;
   background-size: cover;
   padding: 10px;
   min-height: 100%;
@@ -39,12 +63,13 @@
   bottom: 0;
   left: 0;
   /* background-color: #0a6bc7; */ 
-  background: linear-gradient(102.6deg, #bc264b 0%, #e14c71 116.37%);
+  /* background: linear-gradient(102.6deg, #bc264b 0%, #e14c71 116.37%); */
   opacity: 0.2;
 }
 .login-alignment-wrapper {
   height: 100%;
   justify-content: center;
+  align-items: center;
 }
 #login .ory_elements__card__1t5ly150,
 #login .ory_elements__divider__1312gjt1 {

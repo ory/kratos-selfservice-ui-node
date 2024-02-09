@@ -23,7 +23,7 @@
   text-align: center;
 }
 .login-bg {
-  background: #0a6bc7 url(./login-bg.png) no-repeat center;
+  background: url(./login-bg.png) no-repeat center;
   background-size: cover;
   padding: 10px;
   min-height: 100%;
@@ -38,7 +38,8 @@
   right: 0;
   bottom: 0;
   left: 0;
-  background-color: #0a6bc7;
+  /* background-color: #0a6bc7; */ 
+  background: linear-gradient(102.6deg, #bc264b 0%, #e14c71 116.37%);
   opacity: 0.2;
 }
 .login-alignment-wrapper {

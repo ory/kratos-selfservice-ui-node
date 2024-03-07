@@ -9,12 +9,8 @@ import {
   RouteCreator,
   RouteRegistrator,
 } from "../pkg"
-import { LoginFlow, UiNodeInputAttributes } from "@ory/client"
+import { LoginFlow } from "@ory/client"
 import { UserAuthCard } from "@ory/elements-markup"
-import {
-  filterNodesByGroups,
-  isUiNodeInputAttributes,
-} from "@ory/integrations/ui"
 import path from "path"
 import { URLSearchParams } from "url"
 
@@ -87,7 +83,9 @@ export const createLoginRoute: RouteCreator =
         })
         .then(({ headers, data: verificationFlow }) => {
           // we need the csrf cookie from the verification flow
-          res.setHeader("set-cookie", headers["set-cookie"])
+          if (headers["set-cookie"]) {
+            res.setHeader("set-cookie", headers["set-cookie"])
+          }
           // encode the verification flow id in the query parameters
           const verificationParameters = new URLSearchParams({
             flow: verificationFlow.id,

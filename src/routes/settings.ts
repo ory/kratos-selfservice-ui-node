@@ -10,12 +10,7 @@ import {
   RouteCreator,
   RouteRegistrator,
 } from "../pkg"
-import { UiNodeInputAttributes } from "@ory/client"
 import { UserSettingsScreen } from "@ory/elements-markup"
-import {
-  filterNodesByGroups,
-  isUiNodeInputAttributes,
-} from "@ory/integrations/ui"
 
 export const createSettingsRoute: RouteCreator =
   (createHelpers) => async (req, res, next) => {

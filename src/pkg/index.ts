@@ -7,8 +7,13 @@ import {
   ErrorAuthenticatorAssuranceLevelNotSatisfied,
   OAuth2LogoutRequest,
 } from "@ory/client"
-import { ButtonLink, Divider, MenuLink, Typography } from "@ory/elements-markup"
-import { filterNodesByGroups } from "@ory/integrations/ui"
+import {
+  ButtonLink,
+  Divider,
+  MenuLink,
+  Typography,
+  filterNodesByGroups,
+} from "@ory/elements-markup"
 import { AxiosError } from "axios"
 import { NextFunction, Response } from "express"
 import { UnknownObject } from "express-handlebars/types"

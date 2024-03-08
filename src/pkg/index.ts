@@ -2,18 +2,13 @@
 // SPDX-License-Identifier: Apache-2.0
 import { RouteOptionsCreator } from "./route"
 import sdk, { apiBaseUrl } from "./sdk"
+import { filterNodesByGroups } from "./ui_nodes"
 import {
   UiNode,
   ErrorAuthenticatorAssuranceLevelNotSatisfied,
   OAuth2LogoutRequest,
 } from "@ory/client"
-import {
-  ButtonLink,
-  Divider,
-  MenuLink,
-  Typography,
-  filterNodesByGroups,
-} from "@ory/elements-markup"
+import { ButtonLink, Divider, MenuLink, Typography } from "@ory/elements-markup"
 import { AxiosError } from "axios"
 import { NextFunction, Response } from "express"
 import { UnknownObject } from "express-handlebars/types"

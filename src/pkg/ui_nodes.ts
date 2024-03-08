@@ -1,6 +1,5 @@
 // Copyright © 2024 Ory Corp
 // SPDX-License-Identifier: Apache-2.0
-// @ts-nocheck
 import {
   UiNode,
   UiNodeAnchorAttributes,
@@ -45,7 +44,7 @@ export const getNodeLabel = (node: UiNode): string => {
  */
 export function isUiNodeAnchorAttributes(
   attrs: UiNodeAttributes,
-): attrs is UiNodeAnchorAttributes {
+): attrs is UiNodeAnchorAttributes & { node_type: "a" } {
   return attrs.node_type === "a"
 }
 
@@ -56,7 +55,7 @@ export function isUiNodeAnchorAttributes(
  */
 export function isUiNodeImageAttributes(
   attrs: UiNodeAttributes,
-): attrs is UiNodeImageAttributes {
+): attrs is UiNodeImageAttributes & { node_type: "img" } {
   return attrs.node_type === "img"
 }
 
@@ -67,7 +66,7 @@ export function isUiNodeImageAttributes(
  */
 export function isUiNodeInputAttributes(
   attrs: UiNodeAttributes,
-): attrs is UiNodeInputAttributes {
+): attrs is UiNodeInputAttributes & { node_type: "input" } {
   return attrs.node_type === "input"
 }
 
@@ -78,7 +77,7 @@ export function isUiNodeInputAttributes(
  */
 export function isUiNodeTextAttributes(
   attrs: UiNodeAttributes,
-): attrs is UiNodeTextAttributes {
+): attrs is UiNodeTextAttributes & { node_type: "text" } {
   return attrs.node_type === "text"
 }
 
@@ -89,7 +88,7 @@ export function isUiNodeTextAttributes(
  */
 export function isUiNodeScriptAttributes(
   attrs: UiNodeAttributes,
-): attrs is UiNodeScriptAttributes {
+): attrs is UiNodeScriptAttributes & { node_type: "script" } {
   return attrs.node_type === "script"
 }
 
@@ -150,8 +149,10 @@ export const filterNodesByGroups = ({
   withoutDefaultAttributes,
   excludeAttributes,
 }: FilterNodesByGroups) => {
-  const search = (s: Array<string> | string) =>
-    typeof s === "string" ? s.split(",") : s
+  const search = (s: Array<string> | string | undefined) => {
+    if (!s) return []
+    return typeof s === "string" ? s.split(",") : s
+  }
 
   return nodes.filter(({ group, attributes: attr }) => {
     // if we have not specified any group or attribute filters, return all nodes

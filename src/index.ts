@@ -103,7 +103,7 @@ registerConsentRoute(router)
 registerLogoutRoute(router)
 
 router.get("/", (req: Request, res: Response) => {
-  res.redirect(303, "welcome")
+  res.redirect(303, `${baseUrl}/welcome`)
 })
 
 register404Route(router)

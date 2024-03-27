@@ -21,11 +21,15 @@ const maybeInitiate2FA =
   (req: Request, res: Response, apiBaseUrl: string) => (err: AxiosError) => {
     // 403 on toSession means that we need to request 2FA
     if (err.response && err.response.status === 403) {
+      const return_to = req.header("x-original-uri") ?? req.url.toString()
       res.redirect(
         getUrlForFlow(
           apiBaseUrl,
           "login",
-          new URLSearchParams({ aal: "aal2", return_to: req.url.toString() }),
+          new URLSearchParams({
+            aal: "aal2",
+            return_to,
+          }),
         ),
       )
       return true

@@ -1,9 +1,11 @@
-FROM node:18.12.1-alpine
+FROM node:22-alpine3.19
 
 RUN mkdir -p /usr/src/app
 WORKDIR /usr/src/app
 
 ARG LINK=no
+
+RUN apk update && apk upgrade
 
 RUN adduser -S ory -D -u 10000 -s /bin/nologin
 

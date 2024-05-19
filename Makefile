@@ -1,12 +1,14 @@
 rand := $(shell openssl rand -hex 6)
 
+export IMAGE_TAG          := $(if $(IMAGE_TAG),$(IMAGE_TAG),latest)
+
 .PHONY: docker-dev-build
 docker-dev-build:
-		docker build -f ./Dockerfile-dev -t oryd/kratos-selfservice-ui-node:latest .
+		docker build -f ./Dockerfile-dev -t oryd/kratos-selfservice-ui-node:${IMAGE_TAG} .
 
 .PHONY: docker
 docker:
-	docker build -t oryd/kratos-selfservice-ui-node:latest .
+	docker build -t oryd/kratos-selfservice-ui-node:${IMAGE_TAG} .
 
 .PHONY: build-sdk
 build-sdk:
@@ -34,7 +36,7 @@ publish-sdk: build-sdk
 
 .PHONY: build-sdk-docker
 build-sdk-docker: build-sdk
-	docker build -t oryd/kratos-selfservice-ui-node:latest . --build-arg LINK=true
+	docker build -t oryd/kratos-selfservice-ui-node:${IMAGE_TAG} . --build-arg LINK=true
 
 .PHONY: clean-sdk
 clean-sdk:

@@ -56,7 +56,8 @@ Ory OAuth2 requires more setup to get CSRF cookies on the `/consent` endpoint.
   name without the `__Host-` prefix.
 - `TRUSTED_CLIENT_IDS` (optional): A list of trusted client ids. They can be set
   to skip the consent screen.
-- `ID_TOKEN_TRAITS` (optional): A comma separated list of identity traits to be mapped to id_token.
+- `ID_TOKEN_TRAITS` (optional): A comma separated list of identity traits to be 
+  mapped to id_token.
 
 Getting TLS working:
 

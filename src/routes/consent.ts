@@ -57,6 +57,16 @@ const extractSession = (
       session.id_token.name = identity.traits.name
     }
 
+    const traitsToMap = process.env.ID_TOKEN_TRAITS
+    if (traitsToMap) {
+      const traits = traitsToMap.split(",")
+      for (const trait of traits) {
+        if (identity.traits[trait]) {
+          session.id_token[trait] = identity.traits[trait]
+        }
+      }
+    }
+
     if (identity.updated_at) {
       session.id_token.updated_at = Date.parse(identity.updated_at)
     }

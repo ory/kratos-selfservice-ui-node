@@ -58,7 +58,9 @@ const extractSession = (
     }
 
     if (identity.updated_at) {
-      session.id_token.updated_at = Date.parse(identity.updated_at)
+      session.id_token.updated_at = parseInt(
+        (Date.parse(identity.updated_at) / 1000).toFixed(0),
+      )
     }
   }
   return session

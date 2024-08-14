@@ -27,10 +27,10 @@
   },
   "prettier": "ory-prettier-styles",
   "dependencies": {
-    "@ory/client": "1.6.2",
+    "@ory/client": "1.14.3",
     "@ory/elements-markup": "0.3.0-rc.1",
     "accept-language-parser": "1.5.0",
-    "axios": "1.6.7",
+    "axios": "1.7.4",
     "body-parser": "1.20.2",
     "cookie-parser": "1.4.6",
     "csrf-csrf": "3.0.1",

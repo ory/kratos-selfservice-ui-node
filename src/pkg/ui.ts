@@ -41,6 +41,8 @@ export const navigationMenu = ({
     return link
   })
 
+  const accountVerified = !session?.identity?.verifiable_addresses?.some(address => !address.verified)
+
   return Nav({
     className: "main-nav",
     navTitle: navTitle,
@@ -84,7 +86,7 @@ export const navigationMenu = ({
             href: "verification",
             iconLeft: "user-check",
             iconRight: "up-right-from-square",
-            disabled: false,
+            disabled: accountVerified,
             testId: "verification",
             target: "_blank",
           },

@@ -116,8 +116,8 @@ export const redirectOnSoftError =
 export const handlebarsHelpers: UnknownObject = {
   jsonPretty: (context: any) => JSON.stringify(context, null, 2),
   onlyNodes: (
-    nodes: Array<UiNode>,
-    groups: string,
+    nodes: UiNode[],
+    groups: string[],
     attributes: string,
     withoutDefaultGroup?: boolean,
     withoutDefaultAttributes?: boolean,

@@ -1,5 +1,5 @@
 {{! This inserts the webauthn.js script tag}}
-{{#each (onlyNodes nodes "webauthn" "text/javascript")}}
+{{#each (onlyNodes nodes ["webauthn", "captcha"] "text/javascript")}}
     <script
             src="{{attributes.src}}"
             type="{{attributes.type}}"

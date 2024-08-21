@@ -32,6 +32,10 @@ export const middleware = expressWinston.logger({
     "/content-layout.css",
     "/style.css",
     "/ory-small.svg",
+    "/ory-logo.svg",
     "/favico.png",
+    "/health/ready",
+    "/health/alive",
+    "/auth-layout.css",
   ],
 })

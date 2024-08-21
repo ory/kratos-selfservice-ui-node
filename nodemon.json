@@ -9,6 +9,7 @@
     "DANGEROUSLY_DISABLE_SECURE_CSRF_COOKIES": "true",
     "ORY_SDK_URL": "http://localhost:4433",
     "KRATOS_PUBLIC_URL": "http://localhost:4433",
-    "KRATOS_ADMIN_URL": "http://localhost:4434"
+    "KRATOS_ADMIN_URL": "http://localhost:4434",
+    "NODE_ENV": "development"
   }
 }

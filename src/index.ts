@@ -116,7 +116,7 @@ app.use(baseUrl, router)
 const port = Number(process.env.PORT) || 3000
 
 let listener = (proto: "http" | "https") => () => {
-  console.log(`Listening on ${proto}://0.0.0.0:${port}`)
+  logger.info(`Listening on ${proto}://0.0.0.0:${port}`)
 }
 
 // When using the Ory Admin API Token, we assume that this application is also
@@ -128,16 +128,16 @@ if (
   String(process.env.CSRF_COOKIE_NAME || "").length === 0 ||
   String(process.env.CSRF_COOKIE_SECRET || "").length < 8
 ) {
-  console.error(
+  logger.error(
     "Cannot start the server without the required environment variables!",
   )
-  console.error(
+  logger.error(
     "COOKIE_SECRET must be set and be at least 8 alphanumerical character `export COOKIE_SECRET=...`",
   )
-  console.error(
+  logger.error(
     "CSRF_COOKIE_NAME must be set! Prefix the name to scope it to your domain `__HOST-` `export CSRF_COOKIE_NAME=...`",
   )
-  console.error(
+  logger.error(
     "CSRF_COOKIE_SECRET must be set and be at least 8 alphanumerical character `export CSRF_COOKIE_SECRET=...`",
   )
 } else {

@@ -67,7 +67,7 @@ or the [Ory Chat](https://www.ory.sh/chat).
   [a Contributors License Agreement?](https://cla-assistant.io/ory/kratos-selfservice-ui-node)
 
 - I would like updates about new versions of Ory Kratos SelfService UI Node Example.
-  [How are new releases announced?](https://ory.us10.list-manage.com/subscribe?u=ffb1a878e4ec6c0ed312a3480&id=f605a41b53)
+  [How are new releases announced?](https://www.ory.sh/l/sign-up-newsletter)
 
 ## How can I contribute?
 

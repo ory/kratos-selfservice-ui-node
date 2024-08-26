@@ -12,7 +12,7 @@ function formatRequest(req: Request) {
     url: req.url,
     httpVersion: req.httpVersion,
     body: req.body,
-    cookies: req.cookies,
+    cookies: "[Redacted]",
     path: req.path,
     protocol: req.protocol,
     query: req.query,

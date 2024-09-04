@@ -180,6 +180,7 @@ export const createLoginRoute: RouteCreator =
                 forgotPasswordURL: initRecoveryUrl,
                 signupURL: initRegistrationUrl,
                 logoutURL: logoutUrl,
+                loginURL: initFlowUrl,
               },
             },
             { locale: res.locals.lang },

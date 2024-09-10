@@ -1,6 +1,6 @@
 {
   "name": "@ory/kratos-selfservice-ui-node",
-  "version": "0.20.1",
+  "version": "0.20.2",
   "description": "A reference implementation of a selfservice UI for ORY Kratos in node.js",
   "homepage": "https://github.com/ory/kratos-selfservice-ui-node#readme",
   "bugs": {
@@ -35,7 +35,7 @@
     "body-parser": "1.20.2",
     "cookie-parser": "1.4.6",
     "csrf-csrf": "3.0.1",
-    "express": "4.19.2",
+    "express": "4.20.0",
     "express-handlebars": "6.0.7",
     "express-jwt": "8.4.1",
     "express-winston": "4.2.0",

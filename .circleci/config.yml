@@ -58,10 +58,9 @@ jobs:
           docker login --username "$DOCKER_USERNAME" --password
           "$DOCKER_PASSWORD"
       - run:
-          docker buildx build --platform $BUILDX_PLATFORMS
-            -t oryd/kratos-selfservice-ui-node:latest
-            -t oryd/kratos-selfservice-ui-node:$DOCKER_SHORT_TAG
-            --push .
+          docker buildx build --platform $BUILDX_PLATFORMS -t
+          oryd/kratos-selfservice-ui-node:latest -t
+          oryd/kratos-selfservice-ui-node:$DOCKER_SHORT_TAG --push .
 
 workflows:
   tbr:

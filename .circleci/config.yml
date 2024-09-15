@@ -50,6 +50,11 @@ jobs:
             source $BASH_ENV
       - setup_remote_docker
       - run:
+          name: Set up Docker Buildx
+          command: |
+            docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
+            docker buildx create --name multiarch-builder --use
+      - run:
           docker login --username "$DOCKER_USERNAME" --password
           "$DOCKER_PASSWORD"
       - run:

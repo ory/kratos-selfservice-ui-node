@@ -59,8 +59,8 @@ jobs:
           "$DOCKER_PASSWORD"
       - run:
           docker buildx build --platform $BUILDX_PLATFORMS
-            -t oryd/kratos-selfservice-ui-node:latest
-            -t oryd/kratos-selfservice-ui-node:$DOCKER_SHORT_TAG
+            -t meysam81/kratos-selfservice-ui-node:latest
+            -t meysam81/kratos-selfservice-ui-node:$DOCKER_SHORT_TAG
             --push .
 
 workflows:

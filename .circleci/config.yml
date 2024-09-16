@@ -34,7 +34,11 @@ jobs:
 
   release:
     docker:
-      - image: circleci/node:16.13.1
+      - image: cimg/base:stable
+    environment:
+      DOCKER_BUILDKIT: 1
+      DOCKER_CLI_EXPERIMENTAL: enabled
+      BUILDX_PLATFORMS: linux/amd64,linux/arm64,linux/arm/v7,linux/arm/v6
     working_directory: ~/app
     steps:
       - checkout
@@ -45,15 +49,18 @@ jobs:
             ./.circleci/release_name.bash
             source $BASH_ENV
       - setup_remote_docker
-      - run: docker build -t oryd/kratos-selfservice-ui-node:latest .
       - run:
-          docker tag oryd/kratos-selfservice-ui-node:latest
-          oryd/kratos-selfservice-ui-node:$DOCKER_SHORT_TAG
+          name: Set up Docker Buildx
+          command: |
+            docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
+            docker buildx create --name multiarch-builder --use
       - run:
           docker login --username "$DOCKER_USERNAME" --password
           "$DOCKER_PASSWORD"
-      - run: docker push oryd/kratos-selfservice-ui-node:latest
-      - run: docker push oryd/kratos-selfservice-ui-node:$DOCKER_SHORT_TAG
+      - run:
+          docker buildx build --platform $BUILDX_PLATFORMS -t
+          oryd/kratos-selfservice-ui-node:latest -t
+          oryd/kratos-selfservice-ui-node:$DOCKER_SHORT_TAG --push .
 
 workflows:
   tbr:

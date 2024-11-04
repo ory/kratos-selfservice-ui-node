@@ -1,4 +1,5 @@
 .circleci
+.dockerignore
 .git*
 .prettier*
 .reference-ignore

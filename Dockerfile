@@ -1,4 +1,4 @@
-FROM node:18-alpine as builder
+FROM node:22-alpine as builder
 
 WORKDIR /usr/src/app
 
@@ -21,9 +21,7 @@ FROM gcr.io/distroless/nodejs22-debian12:nonroot
 
 WORKDIR /usr/src/app
 
-COPY --from=builder /usr/src/app/package.json /usr/src/app/package-lock.json ./
-COPY --from=builder /usr/src/app/node_modules ./node_modules
-COPY --from=builder /usr/src/app/lib ./lib
+COPY --from=builder /usr/src/app/ ./
 
 ENV PORT=3000
 EXPOSE ${PORT}

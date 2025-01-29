@@ -17,10 +17,12 @@ export * from "./logger"
 export * from "./middleware"
 export * from "./route"
 
+export type BrowserFlow = "login" | "registration" | "settings" | "recovery" | "verification";
+
 export const removeTrailingSlash = (s: string) => s.replace(/\/$/, "")
 export const getUrlForFlow = (
   base: string,
-  flow: string,
+  flow: BrowserFlow,
   query?: URLSearchParams,
 ) =>
   `${removeTrailingSlash(base)}/self-service/${flow}/browser${

@@ -1,6 +1,6 @@
 {
   "name": "@ory/kratos-selfservice-ui-node",
-  "version": "0.22.0",
+  "version": "0.22.1",
   "description": "A reference implementation of a selfservice UI for ORY Kratos in node.js",
   "homepage": "https://github.com/ory/kratos-selfservice-ui-node#readme",
   "bugs": {
@@ -28,7 +28,7 @@
   "prettier": "ory-prettier-styles",
   "dependencies": {
     "@ory/client": "1.14.3",
-    "@ory/elements-markup": "0.5.0",
+    "@ory/elements-markup": "0.5.1",
     "@redtea/format-axios-error": "2.1.1",
     "accept-language-parser": "1.5.0",
     "axios": "1.7.4",

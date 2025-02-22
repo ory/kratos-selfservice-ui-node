@@ -89,6 +89,13 @@ export const redirectOnSoftError =
       return
     }
 
+    if (err.response.status === 401) {
+      // redirect to login
+      const query = new URLSearchParams()
+      query.set("return_to", redirectTo)
+      res.redirect(getUrlForFlow(apiBaseUrl, "login", query))
+      return
+    }
     if (
       err.response.status === 404 ||
       err.response.status === 410 ||

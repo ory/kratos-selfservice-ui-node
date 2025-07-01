@@ -35,6 +35,12 @@ const extractSession = (
         session.id_token.email_verified = address.verified
       }
     }
+    // Fallback: if no email was found above, use the one from traits if available
+    if (!session.id_token.email && identity.traits.email) {
+      session.id_token.email = identity.traits.email
+      // We can't guarantee that it is verified, so either omit email_verified or set it to false
+      session.id_token.email_verified = false
+    }
   }
 
   if (grantScope.includes("profile")) {

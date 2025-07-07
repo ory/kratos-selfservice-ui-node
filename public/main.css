@@ -1,4 +1,50 @@
 body {
+  --ory-theme-font-family: Poppins, sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+  --ory-theme-font-style: normal;
+
+  /* Accent (Primary Button Color) */
+  --ory-theme-accent-def: #506c8c;             /* slate blue */
+  --ory-theme-accent-muted: #3f5671;           /* hover */
+  --ory-theme-accent-emphasis: #6481a1;        /* focused or strong state */
+  --ory-theme-accent-disabled: #2c3e50;        /* when disabled */
+  --ory-theme-accent-subtle: rgba(80, 108, 140, 0.1); /* background with accent */
+
+  /* Foreground (Text) */
+  --ory-theme-foreground-def: #e5e7eb;
+  --ory-theme-foreground-muted: #9ca3af;
+  --ory-theme-foreground-subtle: #6b7280;
+  --ory-theme-foreground-disabled: #4b5563;
+  --ory-theme-foreground-on-dark: #ffffff;
+  --ory-theme-foreground-on-accent: #ffffff;
+  --ory-theme-foreground-on-disabled: #9ca3af;
+
+  /* Background */
+  --ory-theme-background-surface: #1e293b;
+  --ory-theme-background-canvas: #17202b;
+  --ory-theme-background-subtle: #0f172a;
+
+  /* Errors & Success */
+  --ory-theme-error-def: #ff4d4f;
+  --ory-theme-error-subtle: rgba(255, 77, 79, 0.1);
+  --ory-theme-error-muted: #cc2b2b;
+  --ory-theme-error-emphasis: #f44336;
+  --ory-theme-success-emphasis: #40a829;
+
+  /* Border & Inputs */
+  --ory-theme-border-def: #2c3e50;
+  --ory-theme-input-background: #17202b;
+  --ory-theme-input-disabled: #1f2b37;
+  --ory-theme-input-placeholder: #6b7280;
+  --ory-theme-input-text: #e5e7eb;
+
+  /* General Text */
+  --ory-theme-text-def: #ffffff;
+  --ory-theme-text-disabled: #6b7280;
+}
+
+
+
+body {
   margin: auto;
   min-height: 100vh;
   min-width: 100%;

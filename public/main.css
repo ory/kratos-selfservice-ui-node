@@ -111,7 +111,7 @@ main {
 }
 
 .ory-branding {
-  display: flex;
+  display: none;
   flex-direction: row;
   gap: 0.375rem;
   align-items: center;

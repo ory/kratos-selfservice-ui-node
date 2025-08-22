@@ -26,6 +26,7 @@ export const createLoginRoute: RouteCreator =
       organization = "",
       via = "",
       login_challenge,
+      identity_schema,
     } = req.query
     const { frontend, kratosBrowserUrl, logoUrl, extraPartials } =
       createHelpers(req, res)
@@ -41,6 +42,9 @@ export const createLoginRoute: RouteCreator =
     if (isQuerySet(login_challenge)) {
       logger.debug("login_challenge found in URL query: ", { query: req.query })
       initFlowQuery.append("login_challenge", login_challenge)
+    }
+    if (isQuerySet(identity_schema)) {
+      initFlowQuery.append("identity_schema", identity_schema)
     }
 
     const initFlowUrl = getUrlForFlow(kratosBrowserUrl, "login", initFlowQuery)
@@ -118,6 +122,9 @@ export const createLoginRoute: RouteCreator =
                   (return_to && return_to.toString()) ||
                   loginFlow.return_to ||
                   "",
+                ...(loginFlow.identity_schema && {
+                  identity_schema: loginFlow.identity_schema,
+                }),
               }),
             ),
           ),
@@ -139,13 +146,13 @@ export const createLoginRoute: RouteCreator =
         const initRegistrationQuery = new URLSearchParams({
           return_to:
             (return_to && return_to.toString()) || flow.return_to || "",
+          ...(flow.identity_schema && {
+            identity_schema: flow.identity_schema.toString(),
+          }),
+          ...(flow.oauth2_login_request?.challenge && {
+            login_challenge: flow.oauth2_login_request.challenge,
+          }),
         })
-        if (flow.oauth2_login_request?.challenge) {
-          initRegistrationQuery.set(
-            "login_challenge",
-            flow.oauth2_login_request.challenge,
-          )
-        }
 
         let initRecoveryUrl = ""
         const initRegistrationUrl = getUrlForFlow(

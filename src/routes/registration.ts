@@ -10,6 +10,7 @@ import {
   RouteRegistrator,
 } from "../pkg"
 import { UserAuthCard } from "@ory/elements-markup"
+import { URLSearchParams } from "url"
 
 // A simple express handler that shows the registration screen.
 export const createRegistrationRoute: RouteCreator =
@@ -22,6 +23,7 @@ export const createRegistrationRoute: RouteCreator =
       after_verification_return_to,
       login_challenge,
       organization,
+      identity_schema = "",
     } = req.query
     const { frontend, kratosBrowserUrl, logoUrl, extraPartials } =
       createHelpers(req, res)
@@ -29,6 +31,7 @@ export const createRegistrationRoute: RouteCreator =
     const initFlowQuery = new URLSearchParams({
       ...(return_to && { return_to: return_to.toString() }),
       ...(organization && { organization: organization.toString() }),
+      ...(identity_schema && { identity_schema: identity_schema.toString() }),
       ...(after_verification_return_to && {
         after_verification_return_to: after_verification_return_to.toString(),
       }),
@@ -66,13 +69,13 @@ export const createRegistrationRoute: RouteCreator =
         const initLoginQuery = new URLSearchParams({
           return_to:
             (return_to && return_to.toString()) || flow.return_to || "",
+          ...(flow.identity_schema && {
+            identity_schema: flow.identity_schema.toString(),
+          }),
+          ...(flow.oauth2_login_request?.challenge && {
+            login_challenge: flow.oauth2_login_request.challenge,
+          }),
         })
-        if (flow.oauth2_login_request?.challenge) {
-          initLoginQuery.set(
-            "login_challenge",
-            flow.oauth2_login_request.challenge,
-          )
-        }
 
         res.render("registration", {
           nodes: flow.ui.nodes,

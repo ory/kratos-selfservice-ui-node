@@ -8,4 +8,4 @@ jobs:
     # Always check the actor is Dependabot to prevent your workflow from failing on non-Dependabot PRs
     if: ${{ github.actor == 'dependabot[bot]' }}
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v5

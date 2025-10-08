@@ -1,0 +1,12 @@
+- id: kratos-admin-access
+  match:
+    url: <http|https>://<your-host>/admin/<.*>
+    methods: ["GET", "POST", "PUT", "DELETE"]
+  authenticators:
+    - anonymous:
+        enabled: false
+  authorizer:
+    allow:
+      enabled: true
+  mutators:
+    - noop

@@ -40,6 +40,7 @@
     "express-jwt": "8.4.1",
     "express-winston": "4.2.0",
     "jwks-rsa": "3.0.1",
+    "pem-jwk": "^2.0.0",
     "winston": "3.10.0"
   },
   "devDependencies": {
@@ -65,5 +66,6 @@
   "engines": {
     "node": ">=18",
     "npm": ">=8.11.0"
-  }
+  },
+  "keywords": []
 }

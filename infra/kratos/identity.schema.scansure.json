@@ -1,0 +1,36 @@
+{
+    "id": "scansure_v1",
+    "type": "object",
+    "properties": {
+        "traits": {
+            "type": "object",
+            "properties": {
+                "email": {
+                    "title": "Email",
+                    "type": "string",
+                    "format": "email",
+                    "ory.sh/kratos": {
+                        "credentials": {
+                            "password": {
+                                "identifier": true
+                            }
+                        }
+                    }
+                },
+                "tenant_id": {
+                    "title": "Tenant ID",
+                    "type": "string"
+                },
+                "roles": {
+                    "title": "Roles",
+                    "type": "string"
+                }
+            },
+            "required": [
+                "email",
+                "tenant_id",
+                "roles"
+            ]
+        }
+    }
+}

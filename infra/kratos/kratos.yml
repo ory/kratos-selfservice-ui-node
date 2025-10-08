@@ -1,0 +1,29 @@
+version: v0.11.0
+
+dsn: postgres://kratos:kratos@postgres:5432/kratos?sslmode=disable
+
+serve:
+  public:
+    base_url: http://localhost:4433/
+    cors:
+      enabled: true
+  admin:
+    base_url: http://localhost:4434/
+
+selfservice:
+  default_browser_return_url: http://localhost:3000/welcome
+  flows:
+    login:
+      ui_url: http://localhost:3000/login
+    registration:
+      ui_url: http://localhost:3000/registration
+    recovery:
+      ui_url: http://localhost:3000/recovery
+    settings:
+      ui_url: http://localhost:3000/settings
+
+identity:
+  default_schema_id: scansure_v1
+  schemas:
+    - id: scansure_v1
+      url: file:///etc/config/kratos/identity.schema.scansure.json

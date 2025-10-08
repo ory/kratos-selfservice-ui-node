@@ -1,0 +1,60 @@
+version: "3.9"
+
+services:
+  postgres:
+    image: postgres:15
+    container_name: kratos_postgres
+    restart: always
+    environment:
+      POSTGRES_USER: kratos
+      POSTGRES_PASSWORD: kratos
+      POSTGRES_DB: kratos
+    volumes:
+      - ./data/postgres:/var/lib/postgresql/data
+    ports:
+      - "5433:5432"
+
+  kratos-migrate:
+    image: oryd/kratos:latest
+    container_name: kratos_migrate
+    depends_on:
+      - postgres
+    command: migrate sql -e --yes
+    environment:
+      DSN: postgres://kratos:kratos@postgres:5432/kratos?sslmode=disable
+    volumes:
+      - ./kratos.yml:/etc/config/kratos/kratos.yml
+      - ./identity.schema.scansure.json:/etc/config/kratos/identity.schema.scansure.json
+
+  kratos:
+    image: oryd/kratos:latest
+    container_name: kratos
+    restart: unless-stopped
+    depends_on:
+      - kratos-migrate
+    command: serve -c /etc/config/kratos/kratos.yml --dev
+    environment:
+      DSN: postgres://kratos:kratos@postgres:5432/kratos?sslmode=disable
+    volumes:
+      - ./kratos.yml:/etc/config/kratos/kratos.yml
+      - ./identity.schema.scansure.json:/etc/config/kratos/identity.schema.scansure.json
+    ports:
+      - "4433:4433"   # public
+      - "4434:4434"   # admin
+
+  oathkeeper:
+    image: oryd/oathkeeper:latest
+    container_name: kratos-oathkeeper-1
+    restart: unless-stopped
+    depends_on:
+      - kratos
+    command: ["serve", "-c", "/etc/config/oathkeeper/oathkeeper.yml"]
+    environment:
+      LOG_LEVEL: debug
+    ports:
+      - "4455:4455"   # proxy
+      - "4456:4456"   # api
+    volumes:
+      - ./../oathkeeper/oathkeeper.yml:/etc/config/oathkeeper/oathkeeper.yml:ro
+      - ./../oathkeeper/rules.yaml:/etc/config/oathkeeper/rules.yaml:ro
+      - ./../jwks:/etc/config/jwks:ro

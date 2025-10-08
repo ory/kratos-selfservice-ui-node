@@ -1,0 +1,12 @@
+- id: ping-rule
+  upstream:
+    url: "https://httpbin.org/get"
+  match:
+    url: "<^/ping$>"
+    methods: ["GET"]
+  authenticators:
+    - handler: anonymous
+  authorizer:
+    handler: allow
+  mutators:
+    - handler: noop

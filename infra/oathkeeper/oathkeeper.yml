@@ -1,0 +1,44 @@
+serve:
+  proxy:
+    port: 4455
+  api:
+    port: 4456
+
+log:
+  level: info
+
+access_rules:
+  matching_strategy: regexp
+  repositories:
+    - file:///etc/config/oathkeeper/rules.yaml
+
+authenticators:
+  anonymous:
+    enabled: true
+  cookie_session:
+    enabled: true
+    config:
+      check_session_url: http://kratos:4433/sessions/whoami
+  jwt:
+    enabled: true
+    config:
+      # fallback JWKS - rule-level overrides are allowed.
+      jwks_urls:
+        - file:///etc/config/jwks/.well-known/jwks.json
+      scope_strategy: none
+      # Optional defaults:
+      # trusted_issuers: ["local-dev"]
+      # target_audience: ["oathkeeper"]
+      # required_scope: []
+      jwks_ttl: 30s
+      jwks_max_wait: 1s
+
+authorizers:
+  allow:
+    enabled: true
+  deny:
+    enabled: true
+
+mutators:
+  noop:
+    enabled: true

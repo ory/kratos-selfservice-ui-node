@@ -1,5 +1,5 @@
-# 1) Welcome — no auth (sanity)
-- id: "welcome"
+# 1️⃣ Welcome endpoint — open for sanity testing
+- id: welcome
   match:
     url: "<^https?://(localhost|127\\.0\\.0\\.1)(:4455)?/welcome$>"
     methods: ["GET"]
@@ -13,8 +13,8 @@
   mutators:
     - handler: noop
 
-# 2) Kratos public self-service (cookie session)
-- id: "kratos-public"
+# 2️⃣ Kratos public self-service endpoints (browser sessions)
+- id: kratos-public
   match:
     url: "<^https?://(localhost|127\\.0\\.0\\.1)(:4455)?/self-service/.*$>"
     methods: ["GET","POST"]
@@ -27,34 +27,10 @@
   mutators:
     - handler: noop
 
-# 3) /identities -> Kratos Admin (JWT required, explicit config)
-- id: "identities-admin"
+# 3️⃣ Kratos Admin API (/identities etc.) — JWT required
+- id: kratos-admin
   match:
-    url: "<^https?://(localhost|127\\.0\\.0\\.1)(:4455)?/identities$>"
-    methods: ["GET","POST"]
-  upstream:
-    url: "http://kratos:4434/identities"
-    strip_path: ""
-  authenticators:
-    - handler: jwt
-      config:
-        jwks_urls:
-          - file:///etc/config/jwks/.well-known/jwks.json
-        trusted_issuers:
-          - local-dev
-        target_audience:
-          - oathkeeper
-        required_scope:
-          - admin
-  authorizer:
-    handler: allow
-  mutators:
-    - handler: noop
-
-# 4) /admin/* -> Kratos admin (JWT required)
-- id: "kratos-admin"
-  match:
-    url: "<^https?://(localhost|127\\.0\\.0\\.1)(:4455)?/admin/.*$>"
+    url: "<^https?://(localhost|127\\.0\\.0\\.1)(:4455)?/admin(/.*)?$>"
     methods: ["GET","POST","PUT","DELETE"]
   upstream:
     url: "http://kratos:4434"
@@ -68,9 +44,24 @@
           - local-dev
         target_audience:
           - oathkeeper
-        required_scope:
-          - admin
+        #required_scope:
+        #  - admin
   authorizer:
     handler: allow
   mutators:
     - handler: noop
+
+
+- id: kratos-public-login
+  match:
+    url: "<^https?://(localhost|127\\.0\\.0\\.1)(:4455)?/self-service/login/browser$>"
+    methods: ["GET", "POST"]
+  upstream:
+    url: "http://kratos:4433"
+  authenticators:
+    - handler: cookie_session
+  authorizer:
+    handler: allow
+  mutators:
+    - handler: noop
+

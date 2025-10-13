@@ -1,0 +1,20 @@
+# 4️⃣ Protected API route (JWT required)
+- id: api-protected
+  match:
+    url: <^https?://(localhost|127\.0\.0\.1)(:4455)?/api/protected$>
+    methods: ["GET"]
+  authenticators:
+    - handler: jwt
+      config:
+        jwks_urls:
+          - file:///etc/config/jwks/.well-known/jwks.json
+        trusted_issuers:
+          - local-dev
+        target_audience:
+          - oathkeeper
+  authorizer:
+    handler: allow
+  mutators:
+    - handler: noop
+  upstream:
+    url: http://kratos:4433

@@ -23,7 +23,8 @@
     "start": "nodemon",
     "test": "exit 0",
     "format:check": "prettier --check .",
-    "prepublishOnly": "npm run build"
+    "prepublishOnly": "npm run build",
+    "mint:jwt": "node mint-jwt.js"
   },
   "prettier": "ory-prettier-styles",
   "dependencies": {
@@ -41,7 +42,8 @@
     "express-winston": "4.2.0",
     "jwks-rsa": "3.0.1",
     "pem-jwk": "^2.0.0",
-    "winston": "3.10.0"
+    "winston": "3.10.0",
+    "jsonwebtoken": "^9.0.2"
   },
   "devDependencies": {
     "@trivago/prettier-plugin-sort-imports": "4.3.0",

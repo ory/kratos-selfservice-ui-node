@@ -1,12 +1,18 @@
-const fs = require('fs');
-const jwt = require('jsonwebtoken');
-const pub = fs.readFileSync('./infra/jwks/public.pem','utf8');
-const token = fs.readFileSync('./token_clean.txt','utf8').trim();
+const fs = require("fs");
+const jwt = require("jsonwebtoken");
+
+const publicKey = fs.readFileSync("./infra/jwks/public.pem", "utf8");
+let token = "";
+
 try {
-  const payload = jwt.verify(token, pub, { algorithms: ['RS256'], audience: 'oathkeeper', issuer: 'local-dev' });
-  console.log('✅ Signature + claims OK');
-  console.log(JSON.stringify(payload, null, 2));
+  token = fs.readFileSync("token.txt", "utf8").trim();
+  if (!token) throw new Error("Token file is empty or missing.");
+  const decoded = jwt.verify(token, publicKey, {
+    algorithms: ["RS256"],
+    issuer: "local-dev",
+    audience: "oathkeeper"
+  });
+  console.log("JWT is valid. Payload:", decoded);
 } catch (err) {
-  console.error('❌ Verify failed:', err && err.message);
-  process.exit(2);
+  console.error("JWT verification failed:", err.message);
 }

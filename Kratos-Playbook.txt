@@ -1,0 +1,646 @@
+Part B — Verbatim runbook/playbook entries for every Jira backlog row
+Below are the runbook/playbook plain‑text entries. Each entry begins with the required header "Story <IssueId> — <Summary>" and then includes the exact subsections you requested. Do not reword the headings; the content under each heading is explicit step‑by‑step developer guidance (file paths, commands, sample method signatures, SQL, test commands). Use these runbooks as the step‑by‑step implementation guide for each Jira item. (For space and clarity, the runbook entries are ordered in the same sequence as the CSV.)
+Story EPIC-SCAN-SEC-000 — ScanSure — Security & Production Closeout
+Sub-task: Program Epic coordination
+Goal: Coordinate and validate completion of all MUST/CRITICAL tasks to close security gap.
+Developer checklist:
+Create a new Jira Epic EPIC-SCAN-SEC-000 and import CSV backlog rows.
+Confirm all Stories/Sub-tasks import correctly and Parent field maps Epic→Story→Sub-task.
+Create a workspace folder infra/runbook/ and add README_DEPLOY_STAGE.md placeholder. Acceptance checks:
+Epic present in Jira and all Children linked.
+README_DEPLOY_STAGE.md exists in repo root infra/runbook/. Example developer notes:
+Keep a single source of truth repo branch scansure/closeout. Unit test checklist:
+N/A for Epic coordination. Deployment command(s):
+N/A
+Story ST-SCAN-001 — Kratos Identity Schema
+Sub-task: Create Kratos identity schema file
+Goal: Create JSON schema file for Kratos identities (tenant_id + roles required).
+Developer checklist:_
+File path: infra/kratos/identity.schema.scansure.json
+Create JSON schema with schema_id "scansure_v1" and required trait fields: { "id": "scansure_v1", "title": "ScanSure identity schema", "type": "object", "properties": { "traits": { "type": "object", "properties": { "email": { "type": "string", "format": "email" }, "tenant_id": { "type": "string", "minLength": 1 }, "roles": { "type": "array", "items": { "type": "string" } } }, "required": ["email","tenant_id","roles"] } } }
+Commit file: git add infra/kratos/identity.schema.scansure.json && git commit -m "Add Kratos identity schema scansure_v1" Acceptance checks:
+File present in repo and passes JSON lint: jq empty infra/kratos/identity.schema.scansure.json Example developer notes:
+Keep schema_id stable; Kratos references by id. Unit test checklist:
+Validate with jsonschema CLI (if available): python -m json.tool infra/kratos/identity.schema.scansure.json Deployment command(s):
+N/A (file creation only)_
+Sub-task: Apply Kratos schema via admin API
+Goal: POST schema to Kratos admin endpoint and validate whoami behavior.
+Developer checklist:
+Script path: runbook/kratos-apply-schema.sh
+Script contents (example): #!/usr/bin/env bash set -euo pipefail KRATOS_ADMIN="
+K
+R
+A
+T
+O
+S
+A
+D
+M
+I
+N
+U
+R
+L
+:
+−
+h
+t
+t
+p
+:
+/
+/
+k
+r
+a
+t
+o
+s
+−
+a
+d
+m
+i
+n
+:
+4434
+"
+S
+C
+H
+E
+M
+A
+J
+S
+O
+N
+=
+"
+i
+n
+f
+r
+a
+/
+k
+r
+a
+t
+o
+s
+/
+i
+d
+e
+n
+t
+i
+t
+y
+.
+s
+c
+h
+e
+m
+a
+.
+s
+c
+a
+n
+s
+u
+r
+e
+.
+j
+s
+o
+n
+"
+c
+u
+r
+l
+−
+s
+S
+−
+X
+P
+O
+S
+T
+"
+KRATOS 
+A
+​
+ DMIN 
+U
+​
+ RL:−http://kratos−admin:4434"SCHEMA 
+J
+​
+ SON="infra/kratos/identity.schema.scansure.json"curl−sS−XPOST"KRATOS_ADMIN/identities/schemas"
+-H "Content-Type: application/json"
+--data-binary @"$SCHEMA_JSON" -o /tmp/kratos-schema-res.json || (echo "Failed to post schema" && exit 1) jq . /tmp/kratos-schema-res.json
+Export env: export KRATOS_ADMIN_URL="https://kratos-admin.scansure"
+Apply: bash runbook/kratos-apply-schema.sh
+Create test identity using KRATOS_ADMIN_URL /identities POST with schema_id scansure_v1 and traits including tenant_id, roles.
+Use Kratos public login flow to create a session, then GET /sessions/whoami against KRATOS_PUBLIC_URL to confirm traits. Acceptance checks:
+curl -sS "$KRATOS_ADMIN_URL/identities" returns 201 on creating test identity.
+curl -sS "$KRATOS_PUBLIC_URL/sessions/whoami" returns JSON including traits.tenant_id and traits.roles. Example developer notes:
+If schema exists update endpoint may be required (PUT vs POST depending on Kratos version). Unit test checklist:
+Automated test: server/tests/kratosSchemaApply.spec.js can use nock to mock admin API. Deployment command(s):
+bash runbook/kratos-apply-schema.sh
+Story ST-SCAN-002 — Server middleware: requireAdmin.audit
+Sub-task: Implement requireAdmin.audit.js
+Goal: Add middleware to validate server-side whoami and emit JSON audit logs.
+Developer checklist:
+File path: kratos-selfservice-ui/src/lib/requireAdmin.audit.js
+Example middleware (Node/Express/Next API handler): const fetch = require('node-fetch'); const pino = require('pino'); const logger = pino(); module.exports = function requireAdminAudit(handler) { return async (req, res) => { const sessionCookie = req.cookies['ory_kratos_session'] || ''; const whoamiRes = await fetch(${process.env.KRATOS_PUBLIC_URL}/sessions/whoami, { headers: { Cookie: ory_kratos_session=${sessionCookie} } }); if (whoamiRes.status !== 200) { logger.info({action:'admin_access','result':'unauthenticated','ip':req.ip}, 'admin: unauthenticated'); return res.status(403).json({ error: 'Unauthenticated' }); } const whoami = await whoamiRes.json(); const roles = whoami.identity.traits.roles || []; const tenantId = whoami.identity.traits.tenant_id; if (!roles.includes('platform.admin')) { logger.info({actor_id: whoami.identity.id, actor_email: whoami.identity.traits.email, tenant_id: tenantId, action: req.path, result:'forbidden', ip: req.ip}); return res.status(403).json({ error: 'Forbidden' }); } // Attach actor to req for downstream handlers req.actor = { id: whoami.identity.id, email: whoami.identity.traits.email, tenant_id: tenantId, roles }; logger.info({actor_id:req.actor.id, actor_email:req.actor.email, tenant_id:req.actor.tenant_id, action:req.path, result:'allowed', ip:req.ip}); return handler(req, res); }; };
+Export default middleware or module.exports based on project. Acceptance checks:
+Add unit tests to server/tests/requireAdmin.audit.spec.js mocking whoami responses and asserting 403/200 and that pino JSON has required fields.
+Manual test: call admin API route without cookie -> 403; with non-admin -> 403; with admin session -> 200 and audit log posted. Example developer notes:
+Use structured JSON pino logger, not console.log. Unit test checklist:
+Mock fetch to return 200 with identity payloads and assert behavior.
+Coverage: ensure middleware tested for unauthenticated, forbidden, allowed paths. Deployment command(s):
+No deploy; include module in admin routes by requiring and wrapping handlers.
+Sub-task: Protect all admin routes
+Goal: Apply middleware to all admin API routes.
+Developer checklist:
+File path pattern: kratos-selfservice-ui/pages/api/admin/*.js
+Example usage: const requireAdmin = require('../../lib/requireAdmin.audit'); async function handler(req, res) { /* admin logic */ } module.exports = requireAdmin(handler);
+Run lint: npm run lint
+Test flows: curl -X POST to /api/admin/tenants without cookie -> 403 Acceptance checks:
+All admin API endpoints return 403 when unauthenticated/insufficient role. Example developer notes:
+For Next.js API routes wrap exported default handler. Unit test checklist:
+Add integration tests hitting admin routes using supertest and mock cookies.*
+Story ST-SCAN-003 — Tenant Onboarding API (transactional)
+Sub-task: Implement DB transaction scaffolding
+Goal: Add transactional DB code to create tenant row and rollback on failure.
+Developer checklist:
+File path: server/lib/db/transactions.js
+Example using node-postgres and pg-promise or knex transaction: async function createTenantWithTransaction(db, tenantData, actions) { return await db.transaction(async trx => { const tenant = await trx('tenants').insert(tenantData).returning('*'); await actions.afterCreate(trx, tenant[0]); return tenant[0]; }); }
+Provide SQL migration snippet: CREATE TABLE tenants (id UUID PRIMARY KEY DEFAULT gen_random_uuid(), name TEXT NOT NULL, created_at TIMESTAMP WITH TIME ZONE DEFAULT now());
+Add migration to infra/db/migrations/... Acceptance checks:
+On simulated error after tenant insert, transaction rolls back; tenants table remains unchanged. Example developer notes:
+Choose one ORM (knex/TypeORM/Prisma) and be consistent across code. Unit test checklist:
+Unit test that mocks db transaction and asserts rollback on thrown error. Deployment command(s):
+Apply DB migration: psql $DATABASE_URL -f infra/db/migrations/001_create_tenants.sql*_
+Sub-task: Implement createKratosIdentity()
+Goal: Implement server function that calls Kratos admin /identities to create identity with tenant trait.
+Developer checklist:
+File path: server/services/kratosClient.js
+Example function signature: async function createKratosIdentity({email, name, tenantId, roles = ['tenant.owner']}) { /* returns identity */ }
+Example POST payload: { "schema_id": "scansure_v1", "traits": { "email": "user@example.com", "tenant_id": "tenant-1234", "roles": ["tenant.owner"] }, "credentials": { /* optional passsword or oidc config */ } }
+Use KRATOS_ADMIN_URL and admin token from runtime secrets; do not embed token.
+Retry logic: 3 attempts with exponential backoff for transient 500 responses. Acceptance checks:
+Function returns created identity object and contains identity.id and identity.traits.
+Unit tests simulate 201 response and 409 duplicate handling. Example developer notes:
+Catch 409 responses and translate to an "identity exists" code for caller. Unit test checklist:
+Mock HTTP with nock to simulate 201 and 409 responses. Deployment command(s):
+N/A (code only)_
+Sub-task: Call keto-bootstrap service
+Goal: After creating identity, POST to idempotent keto-bootstrap service to create relation tuples.
+Developer checklist:
+API call example in tenants.js: const res = await fetch(${process.env.KETO_BOOTSTRAP_URL}/bootstrap, { method: 'POST', headers:{ 'Content-Type':'application/json'}, body: JSON.stringify({ tenantId }) }); const body = await res.json(); if (res.status >= 400) throw new Error('Keto bootstrap failed'); // body.status == 'created' | 'exists'
+If bootstrap fails, rollback DB transaction and (optionally) delete Kratos identity if created. Acceptance checks:
+In staging, onboarding creates tenant row, Kratos identity, and keto tuples verified. Example developer notes:
+Make bootstrap idempotent to avoid complex compensating transactions. Unit test checklist:
+Mock bootstrap endpoint to return exists and created; assert API handles both correctly. Deployment command(s):
+N/A (code only)
+Story ST-SCAN-004 — Idempotent Keto bootstrap service
+Sub-task: Bootstrap check & create logic
+Goal: Implement HTTP POST /bootstrap which checks existing relation tuple and creates if missing; returns idempotent status.
+Developer checklist:
+File path: infra/keto/bootstrap/server.js
+Dockerfile at infra/keto/bootstrap/Dockerfile
+Example POST /bootstrap handler (Node/Express): POST /bootstrap Body: { tenantId: "tenant-1234" } Steps:
+Read KETO_ADMIN_URL from env and token from file /mnt/secrets/keto_admin_token
+Call GET 
+K
+E
+T
+O
+A
+D
+M
+I
+N
+U
+R
+L
+/
+a
+d
+m
+i
+n
+/
+r
+e
+l
+a
+t
+i
+o
+n
+−
+t
+u
+p
+l
+e
+s
+?
+s
+u
+b
+j
+e
+c
+t
+=
+t
+e
+n
+a
+n
+t
+:
+KETO 
+A
+​
+ DMIN 
+U
+​
+ RL/admin/relation−tuples?subject=tenant:{tenantId}&... (Keto admin check endpoint)
+If tuple exists return {status:'exists'}
+Else POST relation-tuple create payload and return {status:'created'}
+Return 201 for created, 200 for exists, 5xx for error. Acceptance checks:
+Re-running POST for same tenant returns 200 with {status:'exists'} (or 409 handled gracefully). Example developer notes:
+Keep Dockerfile small and node:18-alpine base. Unit test checklist:
+Use nock to mock Keto admin APIs and test both branches. Deployment command(s):
+Build locally: docker build -t scansure/keto-bootstrap:local infra/keto/bootstrap
+Push to registry per CI workflow.
+Story ST-SCAN-005 — AuthZ adapter + Envoy mTLS pattern
+Sub-task: Create Envoy configmap and listener
+Goal: Provide envoy-config.yaml requiring client TLS certs and forwarding X‑Forwarded‑Client‑Cert to adapter.
+Developer checklist:
+File path: infra/authz-adapter/envoy-config.yaml
+Set downstream_tls_context.require_client_certificate: true and set common TLS settings.
+Example basic listener snippet: static_resources: listeners: - name: listener_https address: { socket_address: { address: 0.0.0.0, port_value: 443 } } filter_chains: - transport_socket: name: envoy.transport_sockets.tls typed_config: "@type": type.googleapis.com/envoy.extensions.transport_sockets.tls.v3.DownstreamTlsContext require_client_certificate: true common_tls_context: tls_certificates: [...]
+ConfigMap manifest to mount into envoy pod. Acceptance checks:
+Envoy starts Ready and rejects connection without client cert. Example developer notes:
+Use certs from cert-manager issued for envoy. Unit test checklist:
+Start envoy locally with config and use openssl s_client to test TLS handshake with/without client cert. Deployment command(s):
+kubectl apply -f infra/authz-adapter/envoy-config.yaml_
+Sub-task: Implement adapter server
+Goal: Adapter parses X‑Forwarded‑Client‑Cert header, validates CN, and calls Keto admin /admin/relation-tuples/check.
+Developer checklist:
+File path: infra/authz-adapter/src/server.js
+Example pseudocode: const express = require('express'); const fetch = require('node-fetch'); const app = express(); app.use(express.json()); app.post('/check', async (req, res) => { const xfcc = req.header('x-forwarded-client-cert') || req.header('X-Forwarded-Client-Cert'); const cn = parseCnFromXfcc(xfcc); // implement robust parser if (!isTrustedCN(cn)) { logAudit({ actor_cn: cn, result: 'forbidden', reason: 'untrusted_cn' }); return res.json({ allowed: false }); } const subject = user:${cn}; // map as per Relay const ketoRes = await fetch(${process.env.KETO_ADMIN_URL}/admin/relation-tuples/check, { method: 'POST', headers: { 'Authorization': Bearer ${fs.readFileSync('/mnt/secrets/keto_admin_token','utf8')}, 'Content-Type':'application/json' }, body: JSON.stringify({ subject, relation: 'access', object: tenant:${req.body.resourceTenant} }) }); const allowed = (await ketoRes.json()).allowed; logAudit({ actor_cn: cn, result: allowed ? 'allowed' : 'denied' }); return res.json({ allowed }); });
+Add logging (pino) and OTLP export. Acceptance checks:
+Adapter returns {allowed:true} for permitted requests and {allowed:false} for denied.
+Audit logs include actor_id (CN), tenant_id, action, result, ip. Example developer notes:
+Sanitize any fields when logging to avoid PII leakage. Unit test checklist:
+Use supertest and nock to test adapter behavior with mocked Keto endpoints. Deployment command(s):
+docker build -t myregistry/scansure-authz-adapter:latest infra/authz-adapter
+kubectl apply -f infra/authz-adapter/deployment.yaml_
+Sub-task: Kubernetes deployment for adapter+envoy
+Goal: Create Deployment/Service YAML mounting secrets and certs.
+Developer checklist:
+File path: infra/authz-adapter/deployment.yaml
+Ensure volumes mount:
+Secret mounting oathkeeper-server-tls (cert/key)
+CSI mount path /mnt/secrets/keto_admin_token
+Service type ClusterIP and proper selector for Oathkeeper upstream cluster. Acceptance checks:
+Deployment enters Ready state and env variables point to correct endpoints. Example developer notes:
+Use readinessProbe on adapter to indicate start completion. Unit test checklist:
+kubectl apply -f infra/authz-adapter/deployment.yaml then kubectl get pods -n scansure Deployment command(s):
+kubectl apply -f infra/authz-adapter/deployment.yaml
+kubectl rollout status deployment/scansure-authz-adapter -n scansure
+Story ST-SCAN-006 — Oathkeeper declarative rules & CI deploy (OIDC→Vault)
+Sub-task: Add tenant-isolation rules file
+Goal: Add rules to enforce tenant isolation and admin endpoints.
+Developer checklist:
+File path: infra/charts/oathkeeper/templates/rules/tenant-isolation.json
+Example rule (simplified): [ { "id": "admin-api", "description": "Protect admin APIs", "match": { "url": "/api/admin/<.>", "methods":["GET","POST","PUT","DELETE"] }, "authenticators": [{ "handler":"cookie_session" }], "authorizer": { "handler":"remote_json", "config": { "url":"https://authz-adapter.scansure/check" } }, "mutators": [{ "handler":"noop" }] }, { "id": "tenant-resources", "match": { "url": "/api/tenant/<.>", "methods":["GET","POST"] }, "authenticators": [{ "handler":"cookie_session" }], "authorizer": { "handler":"remote_json", "config": { "url":"https://authz-adapter.scansure/check" } }, "mutators": [{ "handler":"noop" }] } ]
+Commit file and link rulesConfigMap in Chart values. Acceptance checks:
+Oathkeeper loads the rules on startup and /rules endpoint shows configured rules. Example developer notes:
+Use placeholders for domain names; CI will replace via values.yaml. Unit test checklist:
+Validate JSON schema: jq empty infra/charts/oathkeeper/templates/rules/tenant-isolation.json Deployment command(s):
+N/A (rules file commit)
+Sub-task: Add GitHub Actions OIDC→Vault workflow
+Goal: CI workflow retrieves secrets from Vault using OIDC and deploys Oathkeeper with helm.
+Developer checklist:
+File path: .github/workflows/deploy-oathkeeper.yml
+Workflow steps:
+name: Login to Vault via OIDC uses: hashicorp/vault-action@v2 with: role: ${{ secrets.VAULT_ROLE }}
+name: Fetch helm values run: vault kv get -format=json secret/scansure/helm-values | jq -r .data > helm_values.yaml
+name: Helm upgrade/install run: helm upgrade --install oathkeeper infra/charts/oathkeeper -f helm_values.yaml --namespace scansure
+name: Smoke check run: curl -sSfL https://oathkeeper.scansure/health/ready
+Rollback on failure using helm rollback or fail workflow to prevent promotion. Acceptance checks:
+Workflow runs successfully in CI environment with OIDC configured. Example developer notes:
+Configure GitHub Actions OIDC trust in Vault per Vault docs. Unit test checklist:
+Run workflow in a test repo or dry-run steps locally. Deployment command(s):
+N/A (CI pipeline commit)
+Story ST-SCAN-007 — Secrets at runtime: Vault + Secrets Store CSI
+Sub-task: Create Vault policy & role for GitHub OIDC
+Goal: Create Vault policy scansure/ci and OIDC role for GitHub Actions to assume.
+Developer checklist:
+File path: infra/vault/policies/scansure-ci.hcl path "secret/data/scansure/*" { capabilities = ["read","list"] }
+Create role JSON infra/vault/roles/github-oidc-role.json referencing GitHub OIDC issuer and subject constraints.
+Apply in Vault: vault policy write scansure-ci infra/vault/policies/scansure-ci.hcl vault write auth/oidc/role/github-scansure.role -<<EOF { "role_type":"jwt", ... } EOF Acceptance checks:
+GitHub Action can request token via its OIDC and fetch secrets. Example developer notes:
+Test with a short-lived action to verify token exchange. Unit test checklist:
+Simulate in CI with a test GitHub Action. Deployment command(s):
+vault policy write scansure-ci infra/vault/policies/scansure-ci.hcl*_
+Sub-task: Create SecretProviderClass manifest
+Goal: Add SecretProviderClass to mount secrets into pods via CSI driver.
+Developer checklist:
+File path: infra/k8s/secretproviderclass-scansure.yaml
+Example spec: apiVersion: secrets-store.csi.x-k8s.io/v1 kind: SecretProviderClass metadata: { name: scansure-vault-spc } spec: provider: vault parameters: roleName: "scansure-ci-role" vaultAddress: "https://vault.scansure" objects: | - objectName: "kratos_admin_token" secretPath: "secret/data/scansure/kratos/admin" objectType: "secret" - objectName: "keto_admin_token" secretPath: "secret/data/scansure/keto/admin" objectType: "secret"
+Apply: kubectl apply -f infra/k8s/secretproviderclass-scansure.yaml Acceptance checks:
+Create a test pod referencing the SecretProviderClass and confirm secrets available at /mnt/secrets. Example developer notes:
+Ensure CSI driver installed in cluster and Vault provider configured. Unit test checklist:
+kubectl apply test pod manifest; inside pod cat /mnt/secrets/keto_admin_token Deployment command(s):
+kubectl apply -f infra/k8s/secretproviderclass-scansure.yaml
+Story ST-SCAN-008 — Certificates: cert-manager ClusterIssuer & TLS certs
+Sub-task: Add ClusterIssuer manifest
+Goal: Create ClusterIssuer for cert-manager using ACME or internal CA.
+Developer checklist:
+File: infra/cert-manager/clusterissuer.yaml
+Example ACME ClusterIssuer snippet (Let's Encrypt staging example): apiVersion: cert-manager.io/v1 kind: ClusterIssuer metadata: name: letsencrypt-staging spec: acme: server: https://acme-staging-v02.api.letsencrypt.org/directory email: admin@scansure.example privateKeySecretRef: { name: letsencrypt-staging-account-key } solvers: [...]
+kubectl apply -f infra/cert-manager/clusterissuer.yaml Acceptance checks:
+kubectl get clusterissuer returns READY True. Example developer notes:
+Use internal CA in private clusters if external ACME not allowed. Unit test checklist:
+cert-manager pod logs show issuer ready. Deployment command(s):
+kubectl apply -f infra/cert-manager/clusterissuer.yaml
+Sub-task: Add Certificate manifests
+Goal: Create Certificate manifests for oathkeeper and kratos services.
+Developer checklist:
+Files: infra/cert-manager/certificate-oathkeeper.yaml and certificate-kratos.yaml
+Example Certificate: apiVersion: cert-manager.io/v1 kind: Certificate metadata: name: oathkeeper-tls spec: secretName: oathkeeper-server-tls dnsNames: ["oathkeeper.scansure"] issuerRef: { name: letsencrypt-staging, kind: ClusterIssuer }
+Apply and wait: kubectl apply -f infra/cert-manager/certificate-oathkeeper.yaml; kubectl wait --for=condition=Ready certificate/oathkeeper-tls --timeout=120s Acceptance checks:
+Certificate status Ready and secret oathkeeper-server-tls exists. Example developer notes:
+Adjust dnsNames for your cluster domain. Unit test checklist:
+kubectl get secret oathkeeper-server-tls -n scansure Deployment command(s):
+kubectl apply -f infra/cert-manager/certificate-oathkeeper.yaml
+Story ST-SCAN-009 — Admin API Helm chart & NetworkPolicy
+Sub-task: Create Helm chart scaffold for admin API
+Goal: Add Helm chart for admin API with values for image, replicas, env.
+Developer checklist:
+Path: infra/charts/admin-api/
+Create Chart.yaml, values.yaml, templates/deployment.yaml, templates/service.yaml, templates/ingress.yaml
+Use values.yaml keys for image.repository, image.tag, service.port, resources, env.
+Validate: helm lint infra/charts/admin-api Acceptance checks:
+helm template infra/charts/admin-api -f infra/charts/admin-api/values.yaml renders without errors. Example developer notes:
+Add readinessProbe and livenessProbe to deployment template. Unit test checklist:
+helm template and kubeval (if present) to validate manifests. Deployment command(s):
+helm upgrade --install admin-api infra/charts/admin-api -n scansure -f infra/charts/admin-api/values.yaml
+Sub-task: Add NetworkPolicy manifest
+Goal: Restrict ingress to admin API to oathkeeper namespace and specific IP sources.
+Developer checklist:
+File: infra/k8s/networkpolicy-admin.yaml
+Example NP: apiVersion: networking.k8s.io/v1 kind: NetworkPolicy metadata: name: admin-api-ingress spec: podSelector: { matchLabels: { app: admin-api } } ingress: - from: - namespaceSelector: { matchLabels: { name: "oathkeeper" } } - podSelector: { matchLabels: { role: "admin" } } policyTypes: ["Ingress"]
+Apply and test connectivity: attempt curl from an allowed pod vs disallowed pod. Acceptance checks:
+Allowed pods can reach admin API; disallowed pods cannot. Example developer notes:
+Ensure cluster CNI supports NetworkPolicy enforcement. Unit test checklist:
+Use kubectl run debug pod in same/different namespace to test connectivity. Deployment command(s):
+kubectl apply -f infra/k8s/networkpolicy-admin.yaml
+Story ST-SCAN-010 — Observability: OTLP Collector & structured audit logs
+Sub-task: Collector config and deployment
+Goal: Deploy OTLP collector to receive logs and traces.
+Developer checklist:
+File: infra/observability/collector-config.yaml and infra/observability/collector-deployment.yaml
+Use OpenTelemetry collector config with receivers: otlp (grpc/http), exporters: logging, jaeger, or a hosted backend endpoint; processors: batch.
+Apply: kubectl apply -f infra/observability/collector-deployment.yaml Acceptance checks:
+Collector pod Ready and /metrics returns 200; test sending a log to OTLP returns 200. Example developer notes:
+Use dedicated namespace observability. Unit test checklist:
+Use otel-cli or a small node script to send a test log to http://collector:4318/v1/logs Deployment command(s):
+kubectl apply -f infra/observability/collector-deployment.yaml
+Sub-task: Wire server & adapter to OTLP
+Goal: Configure pino/otel exporter to send JSON logs to OTLP.
+Developer checklist:
+File: kratos-selfservice-ui/src/lib/logging-to-otlp.js and infra/authz-adapter/src/logging.js
+Example: Install @opentelemetry/sdk-trace-node and @opentelemetry/exporter-collector-grpc or use pino-http + pino-otlp plugin.
+Configure env: OTEL_EXPORTER_OTLP_ENDPOINT=http://collector:4318
+Validate by generating an audit log and checking collector received it. Acceptance checks:
+Audit events with fields actor_id, actor_email, tenant_id, action, result, ip are visible in collector logs. Example developer notes:
+Do not log secrets or full tokens. Unit test checklist:
+Unit test to ensure logger attaches required audit fields. Deployment command(s):
+N/A (code commit)
+Story ST-SCAN-011 — Playwright E2E: onboarding → isolation verification
+Sub-task: Write onboarding E2E test
+Goal: Create Playwright test to create tenant via admin UI and verify Kratos identity & Keto tuples.
+Developer checklist:
+File: infra/tests/playwright/onboard-tenant.spec.ts
+Test steps:
+Launch browser and navigate to https://admin.scansure/login
+Authenticate as admin (use test admin credentials or token)
+Fill create tenant form and submit
+Await success toast and capture tenantId from response or DB
+Call KRATOS_ADMIN_URL /identities/:id or public whoami for created user and assert traits.tenant_id equals tenantId
+Call KETO_ADMIN_URL /admin/relation-tuples?subject=... to verify required tuple exists
+Run locally: npx playwright test infra/tests/playwright/onboard-tenant.spec.ts --headed Acceptance checks:
+Test finishes with assertions that Kratos identity has tenant trait and Keto tuple exists. Example developer notes:
+Use environment variables in Playwright config for endpoints. Unit test checklist:
+Use mocked services in local unit-style runs for faster feedback. Deployment command(s):
+npx playwright test infra/tests/playwright/onboard-tenant.spec.ts_
+Sub-task: Write cross-tenant denial test
+Goal: Attempt a cross-tenant resource access and expect denial and audit event.
+Developer checklist:
+File: infra/tests/playwright/cross-tenant.spec.ts
+Test steps:
+Create tenant A and tenant B via admin API (or pre-seed).
+Create userA with tenant A and userB with tenant B identities.
+Login as userA; attempt to access resource owned by tenant B endpoint.
+Expect 403 response and verify OTLP/collector has audit event with result 'denied' and correct actor/tenant ids.
+Run: npx playwright test infra/tests/playwright/cross-tenant.spec.ts Acceptance checks:
+403 returned for cross-tenant access and audit event exists. Example developer notes:
+Tests might require DB fixtures to be cleared between runs. Unit test checklist:
+N/A (E2E). Deployment command(s):
+npx playwright test infra/tests/playwright/cross-tenant.spec.ts
+Story ST-SCAN-012 — Admin UI hardening & cookie/security headers
+Sub-task: Add security headers in Next config
+Goal: Configure Next.js to set HSTS, CSP and other security headers.
+Developer checklist:
+File: kratos-selfservice-ui/next.config.js
+Example snippet: module.exports = { async headers() { return [ { source: '/(.*)', headers: [ { key: 'Strict-Transport-Security', value: 'max-age=63072000; includeSubDomains; preload' }, { key: 'Content-Security-Policy', value: "default-src 'self'; script-src 'self' 'unsafe-inline'; connect-src 'self' https://collector.scansure" }, { key: 'X-Frame-Options', value: 'DENY' }, { key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' } ] } ]; } };
+Commit and build: npm run build
+Test headers: curl -I https://admin.scansure/ Acceptance checks:
+Response headers include HSTS and CSP as configured. Example developer notes:
+Adjust CSP to include any external CDNs used. Unit test checklist:
+Automated header check in CI with curl -I and assert header presence. Deployment command(s):
+npm run build && npm run start (or helm deploy)*
+Sub-task: Configure cookies + CSRF for admin API
+Goal: Ensure cookies have Secure, HttpOnly and SameSite flags; add CSRF verification middleware.
+Developer checklist:
+File: kratos-selfservice-ui/src/lib/csrf.js and adjust cookie set code (server side)
+Set cookie options example: res.cookie('ory_kratos_session', token, { httpOnly: true, secure: true, sameSite: 'Lax', path: '/' });
+Implement CSRF token issuance endpoint: GET /api/admin/csrf -> issues token in response header or cookie.
+Middleware checks incoming POSTs for X-CSRF-Token matching cookie value. Acceptance checks:
+POST without CSRF token returns 403; valid token passes. Example developer notes:
+For APIs consumed by XHR, send CSRF token in header X-CSRF-Token. Unit test checklist:
+Unit tests for CSRF middleware using supertest. Deployment command(s):
+N/A (code changes then redeploy)
+Story ST-SCAN-013 — Unit tests & coverage for server components
+Sub-task: Unit tests for requireAdmin.audit middleware
+Goal: Unit test middleware behaviors and audit log emission.
+Developer checklist:
+File: server/tests/requireAdmin.audit.spec.js
+Tests:
+Mock fetch to KRATOS_PUBLIC_URL/sessions/whoami returning 401 -> expect 403
+Mock whoami with roles not including platform.admin -> expect 403 and audit log entry
+Mock admin whoami -> expect handler executed and audit log entry
+Run tests: npm run test -- server/tests/requireAdmin.audit.spec.js Acceptance checks:
+Tests pass and coverage for middleware >= 80% Example developer notes:
+Use jest and nock for HTTP mocks. Unit test checklist:
+Ensure CI runs jest and outputs coverage report. Deployment command(s):
+npm test
+Sub-task: Unit tests for kratosClient and createKratosIdentity
+Goal: Test payload and error handling for kratosClient.
+Developer checklist:
+File: server/tests/kratosClient.spec.js
+Tests:
+201 response returns identity; 409 returns handled duplicate; 500 triggers retry/backoff
+Use nock to intercept KRATOS_ADMIN_URL calls. Acceptance checks:
+Tests pass and code handles duplicate identity creation gracefully. Example developer notes:
+Simulate network timeouts to test retry behavior. Unit test checklist:
+Jest test success and coverage reports. Deployment command(s):
+npm test
+Sub-task: Unit tests for keto-bootstrap logic
+Goal: Ensure idempotent bootstrap behaves correctly.
+Developer checklist:
+File: infra/keto/bootstrap/tests/bootstrap.spec.js
+Tests:
+When Keto admin returns tuple present -> function returns 'exists'
+When tuple absent -> function posts and returns 'created'
+Mock Keto admin endpoints via nock. Acceptance checks:
+All tests pass and bootstrap code returns expected status. Example developer notes:
+Simulate 500 responses to ensure retry/backoff acceptable. Unit test checklist:
+Run npm test in infra/keto/bootstrap directory or monorepo configuration.
+Story ST-SCAN-014 — CI pipelines: admin API, authz adapter, Playwright E2E
+Sub-task: Build and push adapter image in CI
+Goal: Create GitHub Action to build and push adapter image to registry using OIDC→Vault or GHCR token.
+Developer checklist:
+File: .github/workflows/build-adapter.yml
+Steps:
+Check out repo
+Authenticate to registry (GHCR or ECR) via OIDC or secrets
+Build: docker build -t ghcr.io/
+g
+i
+t
+h
+u
+b
+.
+r
+e
+p
+o
+s
+i
+t
+o
+r
+y
+o
+w
+n
+e
+r
+/
+s
+c
+a
+n
+s
+u
+r
+e
+−
+a
+u
+t
+h
+z
+−
+a
+d
+a
+p
+t
+e
+r
+:
+github.repository 
+o
+​
+ wner/scansure−authz−adapter:{{ github.sha }} infra/authz-adapter
+Push image Acceptance checks:
+Image appears in registry and is able to be pulled by cluster. Example developer notes:
+Use cache layers to speed builds. Unit test checklist:
+Use local docker build to smoke test. Deployment command(s):
+N/A (CI)
+Sub-task: Deploy admin API via CI pipeline
+Goal: Create deploy-admin.yml that uses Vault secrets and helm to deploy admin API and wait readiness.
+Developer checklist:
+File: .github/workflows/deploy-admin.yml
+Steps:
+Vault login via OIDC
+Fetch helm values
+helm upgrade --install admin-api infra/charts/admin-api -f helm_values.yaml --namespace scansure
+Wait for deployment: kubectl rollout status deployment/admin-api -n scansure --timeout=300s Acceptance checks:
+Deployment rolls out successfully and health endpoints return 200. Example developer notes:
+Use helm diff before apply for safer deployments. Unit test checklist:
+Run workflow in staging repo. Deployment command(s):
+N/A (CI)_
+Sub-task: Run Playwright E2E in CI
+Goal: Create e2e.yml to run Playwright tests after deployments.
+Developer checklist:
+File: .github/workflows/e2e.yml
+Steps:
+Wait for deployments to finish
+Run npx playwright test --config infra/tests/playwright/playwright.config.ts
+Upload artifacts on failures Acceptance checks:
+Playwright suite completes and artifacts available on failures. Example developer notes:
+Use matrix to run tests across browsers if desired. Unit test checklist:
+N/A (E2E) Deployment command(s):
+N/A (CI)
+Story ST-SCAN-015 — Final verification & runbook consolidation
+Sub-task: Execute certification checklist
+Goal: Execute final verification checklist in staging and collect evidence.
+Developer checklist:
+File: infra/runbook/VERIFICATION_CHECKLIST.md (create)
+Checklist steps:
+cert-manager: kubectl get certificate -n scansure
+Vault secrets: verify pods mount tokens: kubectl exec -n scansure <pod> -- cat /mnt/secrets/keto_admin_token
+Kratos: create test identity -> curl KRATOS_PUBLIC_URL/sessions/whoami and assert traits.tenant_id exists
+Admin API: test unauthenticated -> 403; admin session -> 200
+Keto bootstrap: call /bootstrap and verify tuple via Keto admin list call
+Authz adapter: simulate Oathkeeper call and assert allowed/denied
+Oathkeeper: curl https://oathkeeper.scansure/health/ready
+OTLP: check collector has audit log entries for test actions
+Playwright: run infra/tests/playwright suite and collect artifacts
+Final signoff in ticket comments with evidence links
+Commands (examples included above in item steps) Acceptance checks:
+All items pass; screenshots and logs uploaded into Jira ticket or shared artifact store. Example developer notes:
+Keep proof attachments as artifacts in CI runs (Playwright artifacts, log snippets). Unit test checklist:
+N/A (verification) Deployment command(s):
+As listed per checklist items above.
+Final checklist (what you must provide now so we can start deployment/testing)
+CLUSTER_DOMAIN (e.g., scansure.example)
+KRATOS_PUBLIC_URL and KRATOS_ADMIN_URL
+KETO_ADMIN_URL and API type (v0.6 or v0.8, etc.)
+VAULT_ADDR and VAULT_OIDC_ROLE (or AppRole details)
+DATABASE_URL
+ADAPTER_IMAGE or permission to use example registry image
+GitHub OIDC configuration privileges for CI runs
+Any internal CA or ACME account credentials for cert-manager if needed

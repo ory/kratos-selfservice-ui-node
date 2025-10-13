@@ -55,6 +55,7 @@ services:
       - "4455:4455"   # proxy
       - "4456:4456"   # api
     volumes:
-      - ./../oathkeeper/oathkeeper.yml:/etc/config/oathkeeper/oathkeeper.yml:ro
-      - ./../oathkeeper/rules.yaml:/etc/config/oathkeeper/rules.yaml:ro
-      - ./../jwks:/etc/config/jwks:ro
+      - ${PWD}/infra/oathkeeper/oathkeeper.yml:/etc/config/oathkeeper/oathkeeper.yml:ro
+      - ${PWD}/infra/oathkeeper/rules.yaml:/etc/config/oathkeeper/rules.yaml:ro
+      - ${PWD}/infra/jwks:/etc/config/jwks:ro
+      - ${PWD}/infra/jwks/.well-known:/etc/config/jwks/.well-known:ro

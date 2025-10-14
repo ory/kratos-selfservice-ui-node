@@ -1,19 +1,19 @@
 import express from "express"
-import adminRouter from "./routes/admin"
+import cors from "cors"
 import requireAdminAudit from "./lib/requireAdmin.audit"
-
+import adminRouter from "./routes/adminRouter"
+import tenantsRouter from "./routes/tenantsRouter"
 
 const app = express()
 
+app.use(cors())
 app.use(express.json())
 
-// ✅ Protected admin route
 app.use("/admin", requireAdminAudit, adminRouter)
+app.use("/admin/tenants", requireAdminAudit, tenantsRouter)
 
-// ✅ Health check
 app.get("/health", (req, res) => res.json({ status: "ok" }))
 
-// ✅ Start the server
 app.listen(4000, () => {
-    console.log("✅ Admin API running on http://localhost:4000")
+    console.log("🚀 Admin API running at http://localhost:4000")
 })

@@ -1,5 +1,12 @@
 import { Router, Request, Response } from "express"
-import { createKratosIdentity } from "../lib/kratosClient"
+import {
+    createKratosIdentity,
+    updateKratosIdentity,
+    deleteKratosIdentity,
+    getKratosIdentityByEmail,
+    KratosIdentity,
+} from "../lib/kratosClient"
+import { bootstrapTenantRoles } from "../lib/ketoClient"
 import pino from "pino"
 import path from "path"
 import fs from "fs"
@@ -22,23 +29,77 @@ router.post("/onboard", async (req: Request, res: Response) => {
     }
 
     try {
-        const identity = await createKratosIdentity({ email, tenant_id, roles })
+        const existing = await getKratosIdentityByEmail(email)
 
-        logger.info({
-            event: "tenant.onboard",
-            actor: req.user?.sub,
-            tenant_id,
-            email,
-            roles,
-            result: "success",
-            path: req.path,
-            ip: req.ip,
-        })
+        let identity: KratosIdentity
 
-        res.status(201).json({
-            message: "Tenant onboarded successfully",
-            identity,
-        })
+        if (existing) {
+            await updateKratosIdentity(existing.id, {
+                email,
+                tenant_id,
+                roles: roles.join(","),
+            })
+
+            identity = existing
+
+            logger.info({
+                event: "tenant.onboard",
+                actor: req.user?.sub,
+                tenant_id,
+                email,
+                roles,
+                result: "updated",
+                path: req.path,
+                ip: req.ip,
+            })
+        } else {
+            identity = await createKratosIdentity({ email, tenant_id, roles })
+
+            logger.info({
+                event: "tenant.onboard",
+                actor: req.user?.sub,
+                tenant_id,
+                email,
+                roles,
+                result: "created",
+                path: req.path,
+                ip: req.ip,
+            })
+        }
+
+        try {
+            const status = await bootstrapTenantRoles(tenant_id)
+
+            logger.info({
+                event: "keto.bootstrap",
+                actor: req.user?.sub,
+                tenant_id,
+                result: status,
+                path: req.path,
+                ip: req.ip,
+            })
+
+            return res.status(201).json({
+                message: existing ? "Identity updated successfully" : "Tenant onboarded successfully",
+                identity,
+            })
+        } catch (ketoErr: any) {
+            if (!existing) {
+                await deleteKratosIdentity(identity.id)
+            }
+
+            logger.error({
+                event: "keto.bootstrap",
+                actor: req.user?.sub,
+                tenant_id,
+                result: "rollback",
+                error: ketoErr.message,
+                path: req.path,
+                ip: req.ip,
+            })
+
+            return res.status(500).json({ error: "Keto bootstrap failed. Identity rolled back." })
+        }
     } catch (err: any) {
         logger.error({
             event: "tenant.onboard",
@@ -52,7 +113,7 @@ router.post("/onboard", async (req: Request, res: Response) => {
             ip: req.ip,
         })
 
-        res.status(500).json({ error: err.message })
+        return res.status(500).json({ error: err.message })
     }
 })
 

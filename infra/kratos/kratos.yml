@@ -27,3 +27,29 @@ identity:
   schemas:
     - id: scansure_v1
       url: file:///etc/config/kratos/identity.schema.scansure.json
+
+log:
+  level: debug
+  format: json
+
+hashers:
+  argon2:
+    parallelism: 1
+    memory: "131072KB"
+    iterations: 2
+    salt_length: 16
+    key_length: 16
+
+courier:
+  smtp:
+    connection_uri: smtp://localhost:1025
+
+secrets:
+  cookie:
+    - changemeplease1234567890
+
+session:
+  lifespan: "3600s"
+  cookie:
+    persistent: true
+    same_site: Lax

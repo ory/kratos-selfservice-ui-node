@@ -10,7 +10,7 @@ services:
       POSTGRES_PASSWORD: kratos
       POSTGRES_DB: kratos
     volumes:
-      - ./data/postgres:/var/lib/postgresql/data
+      - ../data/postgres:/var/lib/postgresql/data
     ports:
       - "5433:5432"
 
@@ -19,12 +19,12 @@ services:
     container_name: kratos_migrate
     depends_on:
       - postgres
-    command: migrate sql -e --yes
+    command: ["migrate", "sql", "-e", "--yes"]
     environment:
       DSN: postgres://kratos:kratos@postgres:5432/kratos?sslmode=disable
     volumes:
-      - ./kratos.yml:/etc/config/kratos/kratos.yml
-      - ./identity.schema.scansure.json:/etc/config/kratos/identity.schema.scansure.json
+      - ../kratos/kratos.yml:/etc/config/kratos/kratos.yml
+      - ../kratos/identity.schema.scansure.json:/etc/config/kratos/identity.schema.scansure.json
 
   kratos:
     image: oryd/kratos:latest
@@ -32,15 +32,15 @@ services:
     restart: unless-stopped
     depends_on:
       - kratos-migrate
-    command: serve -c /etc/config/kratos/kratos.yml --dev
+    command: ["serve", "-c", "/etc/config/kratos/kratos.yml", "--dev"]
     environment:
       DSN: postgres://kratos:kratos@postgres:5432/kratos?sslmode=disable
     volumes:
-      - ./kratos.yml:/etc/config/kratos/kratos.yml
-      - ./identity.schema.scansure.json:/etc/config/kratos/identity.schema.scansure.json
+      - ../kratos/kratos.yml:/etc/config/kratos/kratos.yml
+      - ../kratos/identity.schema.scansure.json:/etc/config/kratos/identity.schema.scansure.json
     ports:
-      - "4433:4433"   # public
-      - "4434:4434"   # admin
+      - "4433:4433"
+      - "4434:4434"
 
   oathkeeper:
     image: oryd/oathkeeper:latest
@@ -52,10 +52,23 @@ services:
     environment:
       LOG_LEVEL: debug
     ports:
-      - "4455:4455"   # proxy
-      - "4456:4456"   # api
+      - "4455:4455"
+      - "4456:4456"
     volumes:
-      - ${PWD}/infra/oathkeeper/oathkeeper.yml:/etc/config/oathkeeper/oathkeeper.yml:ro
-      - ${PWD}/infra/oathkeeper/rules.yaml:/etc/config/oathkeeper/rules.yaml:ro
-      - ${PWD}/infra/jwks:/etc/config/jwks:ro
-      - ${PWD}/infra/jwks/.well-known:/etc/config/jwks/.well-known:ro
+      - ../oathkeeper/oathkeeper.yml:/etc/config/oathkeeper/oathkeeper.yml:ro
+      - ../oathkeeper/rules.yaml:/etc/config/oathkeeper/rules.yaml:ro
+      - ../jwks:/etc/config/jwks:ro
+      - ../jwks/.well-known:/etc/config/jwks/.well-known:ro
+
+  keto:
+    image: oryd/keto:v0.11
+    container_name: keto
+    restart: unless-stopped
+    command: ["serve", "--config", "/etc/config/keto.yml"]
+    ports:
+      - "4466:4466"
+      - "4467:4467"
+    volumes:
+      - ../keto/keto.yml:/etc/config/keto.yml:ro
+    environment:
+      DSN: memory

@@ -1,5 +1,5 @@
 {
-    "id": "scansure_v1",
+    "$id": "scansure_v1",
     "type": "object",
     "properties": {
         "traits": {
@@ -23,7 +23,10 @@
                 },
                 "roles": {
                     "title": "Roles",
-                    "type": "string"
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
                 }
             },
             "required": [

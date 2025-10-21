@@ -1,19 +1,8 @@
-import express from "express"
-import cors from "cors"
-import requireAdminAudit from "./lib/requireAdmin.audit"
-import adminRouter from "./routes/adminRouter"
-import tenantsRouter from "./routes/tenantsRouter"
+// src/server.ts
+import app from "./app";
 
-const app = express()
+const PORT = process.env.PORT || 4000;
 
-app.use(cors())
-app.use(express.json())
-
-app.use("/admin", requireAdminAudit, adminRouter)
-app.use("/admin/tenants", requireAdminAudit, tenantsRouter)
-
-app.get("/health", (req, res) => res.json({ status: "ok" }))
-
-app.listen(4000, () => {
-    console.log("🚀 Admin API running at http://localhost:4000")
-})
+app.listen(PORT, () => {
+    console.log(`🚀 Admin API running at http://localhost:${PORT}`);
+});

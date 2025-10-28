@@ -1,0 +1,24 @@
+replicaCount: 2
+
+image:
+  repository: your-registry/scansure/admin-api
+  tag: latest
+  pullPolicy: IfNotPresent
+
+service:
+  type: ClusterIP
+  port: 3000
+
+resources:
+  requests:
+    cpu: "200m"
+    memory: "256Mi"
+  limits:
+    cpu: "1"
+    memory: "1Gi"
+
+env:
+  KRATOS_PUBLIC_URL: https://kratos-public.identity.svc.cluster.local
+  KETO_ADMIN_TOKEN_FILE: /mnt/secrets/keto-admin-token
+
+secretProviderClass: scansure-secrets-prod

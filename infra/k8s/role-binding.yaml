@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: scansure-vault-role-examples
+  namespace: scansure
+data:
+  create_role_example: |
+    vault write auth/kubernetes/role/scansure-role \
+      bound_service_account_names="scansure-admin-sa,scansure-authz-sa" \
+      bound_service_account_namespaces="scansure" \
+      policies="scansure-app-policy" \
+      ttl="24h"

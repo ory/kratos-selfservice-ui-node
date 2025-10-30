@@ -53,3 +53,7 @@ session:
   cookie:
     persistent: true
     same_site: Lax
+admin:
+    access_token_strategy:
+      static:
+        value: kratos-admin-token-123

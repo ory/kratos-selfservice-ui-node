@@ -1,0 +1,20 @@
+name: Vault OIDC Auth Test
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  vault-auth:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Authenticate to Vault
+        run: |
+          response=$(curl --silent --request POST \
+            --data '{"jwt": "${{ secrets.GITHUB_TOKEN }}", "role": "github-actions"}' \
+            http://vault.vault.svc.cluster.local:8200/v1/auth/jwt/login)
+          echo "VAULT_TOKEN=$(echo $response | jq -r .auth.client_token)" >> $GITHUB_ENV

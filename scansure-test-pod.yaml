@@ -1,0 +1,22 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: scansure-test
+  namespace: scansure
+spec:
+  serviceAccountName: default
+  containers:
+    - name: app
+      image: busybox
+      command: [ "/bin/sh", "-c", "sleep 3600" ]
+      volumeMounts:
+        - name: secrets-store
+          mountPath: "/mnt/secrets-store"
+          readOnly: true
+  volumes:
+    - name: secrets-store
+      csi:
+        driver: secrets-store.csi.k8s.io
+        readOnly: true
+        volumeAttributes:
+          secretProviderClass: "scansure-vault-spc"

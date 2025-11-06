@@ -1,0 +1,131 @@
+# Copyright (c) HashiCorp, Inc.
+# SPDX-License-Identifier: BUSL-1.1
+
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: csi
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: vault-csi-provider
+  namespace: csi
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: vault-csi-provider-clusterrole
+rules:
+- apiGroups:
+  - ""
+  resources:
+  - serviceaccounts/token
+  verbs:
+  - create
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: vault-csi-provider-clusterrolebinding
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: vault-csi-provider-clusterrole
+subjects:
+- kind: ServiceAccount
+  name: vault-csi-provider
+  namespace: csi
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: vault-csi-provider-role
+rules:
+- apiGroups: [""]
+  resources: ["secrets"]
+  verbs: ["get"]
+  resourceNames:
+  - vault-csi-provider-hmac-key
+# 'create' permissions cannot be restricted by resource name:
+# https://kubernetes.io/docs/reference/access-authn-authz/rbac/#referring-to-resources
+- apiGroups: [""]
+  resources: ["secrets"]
+  verbs: ["create"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: vault-csi-provider-rolebinding
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: vault-csi-provider-role
+subjects:
+- kind: ServiceAccount
+  name: vault-csi-provider
+  namespace: csi
+---
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  labels:
+    app.kubernetes.io/name: vault-csi-provider
+  name: vault-csi-provider
+  namespace: csi
+spec:
+  updateStrategy:
+    type: RollingUpdate
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: vault-csi-provider
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: vault-csi-provider
+    spec:
+      serviceAccountName: vault-csi-provider
+      tolerations:
+      containers:
+        - name: provider-vault-installer
+          image: hashicorp/vault-csi-provider:1.6.0
+          imagePullPolicy: Always
+          args:
+            - -endpoint=/provider/vault.sock
+            - -log-level=info
+          resources:
+            requests:
+              cpu: 50m
+              memory: 100Mi
+            limits:
+              cpu: 50m
+              memory: 100Mi
+          volumeMounts:
+            - name: providervol
+              mountPath: "/provider"
+          livenessProbe:
+            httpGet:
+              path: "/health/ready"
+              port: 8080
+              scheme: "HTTP"
+            failureThreshold: 2
+            initialDelaySeconds: 5
+            periodSeconds: 5
+            successThreshold: 1
+            timeoutSeconds: 3
+          readinessProbe:
+            httpGet:
+              path: "/health/ready"
+              port: 8080
+              scheme: "HTTP"
+            failureThreshold: 2
+            initialDelaySeconds: 5
+            periodSeconds: 5
+            successThreshold: 1
+            timeoutSeconds: 3
+      volumes:
+        - name: providervol
+          hostPath:
+            path: "/var/run/secrets-store-csi-providers"
+      nodeSelector:
+        kubernetes.io/os: linux

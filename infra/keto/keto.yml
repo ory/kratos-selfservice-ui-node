@@ -13,11 +13,3 @@ serve:
 
 namespaces:
   - name: tenant_roles
-read:
-    access_token_strategy:
-      static:
-        value: keto-read-token-123
-write:
-    access_token_strategy:
-      static:
-        value: keto-write-token-123

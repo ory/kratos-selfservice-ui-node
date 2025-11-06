@@ -5,6 +5,10 @@ on:
     branches:
       - main
 
+permissions:
+  id-token: write
+  contents: read
+
 jobs:
   vault-auth:
     runs-on: ubuntu-latest
@@ -12,9 +16,25 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
+      - name: Install jq
+        run: sudo apt-get install jq -y
+
+      - name: Request GitHub OIDC token
+        id: oidc
+        run: |
+          echo "OIDC_TOKEN=$(curl -s -H \"Authorization: bearer $ACTIONS_ID_TOKEN_REQUEST_TOKEN\" \
+            \"$ACTIONS_ID_TOKEN_REQUEST_URL\" | jq -r .value)" >> $GITHUB_ENV
+
       - name: Authenticate to Vault
         run: |
+          echo "Authenticating to Vault..."
           response=$(curl --silent --request POST \
-            --data '{"jwt": "${{ secrets.GITHUB_TOKEN }}", "role": "github-actions"}' \
-            http://vault.vault.svc.cluster.local:8200/v1/auth/jwt/login)
+            --data "{\"jwt\": \"$OIDC_TOKEN\", \"role\": \"github-actions\"}" \
+            https://vault.yourdomain.com/v1/auth/jwt/login)
+          echo "Vault response: $response"
           echo "VAULT_TOKEN=$(echo $response | jq -r .auth.client_token)" >> $GITHUB_ENV
+
+      - name: (Optional) Read secret from Vault
+        run: |
+          curl --header "X-Vault-Token: $VAULT_TOKEN" \
+            https://vault.yourdomain.com/v1/secret/data/github/kratos_admin_token

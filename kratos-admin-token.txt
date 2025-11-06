@@ -1,0 +1,4 @@
+admin:
+  access_token_strategy:
+    static:
+      file: /etc/secrets/kratos-admin-token.txt

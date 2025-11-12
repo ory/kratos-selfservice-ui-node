@@ -1,12 +1,8 @@
-version: v0.11.0
-
 dsn: postgres://kratos:kratos@postgres:5432/kratos?sslmode=disable
 
 serve:
   public:
     base_url: http://localhost:4433/
-    cors:
-      enabled: true
   admin:
     base_url: http://localhost:4434/
 
@@ -32,24 +28,6 @@ log:
   level: debug
   format: json
 
-hashers:
-  argon2:
-    parallelism: 1
-    memory: "131072KB"
-    iterations: 2
-    salt_length: 16
-    key_length: 16
-
-courier:
-  smtp:
-    connection_uri: smtp://localhost:1025
-
 secrets:
   cookie:
     - changemeplease1234567890
-
-session:
-  lifespan: "3600s"
-  cookie:
-    persistent: true
-    same_site: Lax

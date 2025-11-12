@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kratos
+  namespace: scansure
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: kratos
+  template:
+    metadata:
+      labels:
+        app: kratos
+    spec:
+      serviceAccountName: vault-auth
+      containers:
+        - name: kratos
+          image: oryd/kratos:v0.11.0
+          ports:
+            - containerPort: 4433
+            - containerPort: 4434
+          command: ["kratos"]
+          args: ["serve", "-c", "/etc/config/kratos/kratos.yaml"]
+          volumeMounts:
+            - name: secrets-store
+              mountPath: /mnt/secrets-store
+              readOnly: true
+            - name: kratos-config
+              mountPath: /etc/config/kratos
+              readOnly: true
+          env:
+            - name: KRATOS_ADMIN_TOKEN_PATH
+              value: /mnt/secrets-store/kratos_admin_token
+            - name: DSN
+              value: postgres://kratos:kratos@postgres:5432/kratos?sslmode=disable
+      volumes:
+        - name: secrets-store
+          csi:
+            driver: secrets-store.csi.k8s.io
+            readOnly: true
+            volumeAttributes:
+              secretProviderClass: scansure-vault-spc
+        - name: kratos-config
+          configMap:
+            name: kratos-config

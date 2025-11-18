@@ -65,5 +65,10 @@
   "engines": {
     "node": ">=18",
     "npm": ">=8.11.0"
+  },
+  "overrides": {
+    "express-handlebars": {
+      "glob": "11.1.0"
+    }
   }
 }

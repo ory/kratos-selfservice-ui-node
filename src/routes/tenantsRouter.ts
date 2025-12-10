@@ -40,19 +40,8 @@ router.post("/onboard", async (req: Request, res: Response) => {
 
         if (existing) {
             await updateKratosIdentity(existing.id, { email, tenant_id, roles });
-            const existingRoles = Array.isArray(existing.traits.roles) ? existing.traits.roles : [];
-            const mergedRoles = Array.from(new Set([...existingRoles, ...roles]));
+            identity = existing;
 
-            const existingTenants = Array.isArray(existing.traits.tenant_id)
-                ? existing.traits.tenant_id
-                : [existing.traits.tenant_id];
-            const mergedTenants = Array.from(new Set([...existingTenants, tenant_id]));
-
-            identity = await updateKratosIdentity(existing.id, {
-                email,
-                roles: mergedRoles,
-                tenant_id: mergedTenants
-            });
             logger.info({
                 event: "tenant.onboard",
                 actor: req.user?.sub,

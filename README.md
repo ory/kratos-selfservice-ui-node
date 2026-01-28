@@ -8,7 +8,7 @@ registration, account settings, account recovery, account verification).
 
 If you only want to add authentication to your app, and not customize the login,
 registration, account recovery, ... screens, please check out the
-[Ory Kratos Quickstart](https://www.ory.sh/kratos/docs/quickstart).
+[Ory Kratos Quickstart](https://www.ory.com/kratos/docs/quickstart).
 
 ## Configuration
 
@@ -71,7 +71,7 @@ This mode relies on the browser's ability to send cookies regardless of the
 port. Cookies set for `127.0.0.1:4433` will thus also be sent when requesting
 `127.0.0.1:4455`. For environments where applications run on separate
 subdomains, check out
-[Multi-Domain Cookies](https://www.ory.sh/kratos/docs/guides/multi-domain-cookies)
+[Multi-Domain Cookies](https://www.ory.com/kratos/docs/guides/multi-domain-cookies)
 
 To authenticate incoming requests, this app uses ORY Kratos' `whoami` API to
 check whether the session is valid or not.
@@ -102,11 +102,11 @@ environment varialbe `export CONFORMITY_FAKE_CLAIMS=1`
 ### Test with ORY Kratos
 
 The easiest way to test this app with a local installation of ORY Kratos is to
-have the [ORY Kratos Quickstart](https://www.ory.sh/kratos/docs/quickstart/)
+have the [ORY Kratos Quickstart](https://www.ory.com/kratos/docs/quickstart/)
 running. This is what that would look like:
 
 ```shell script
-# start the quickstart using docker compose as explained in the tutorial: https://www.ory.sh/kratos/docs/quickstart/
+# start the quickstart using docker compose as explained in the tutorial: https://www.ory.com/kratos/docs/quickstart/
 export KRATOS_PUBLIC_URL=http://127.0.0.1:4433/
 export PORT=4455
 

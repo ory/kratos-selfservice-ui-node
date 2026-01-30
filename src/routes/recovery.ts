@@ -50,6 +50,7 @@ export const createRecoveryRoute: RouteCreator =
         )
 
         res.render("recovery", {
+          nodes: flow.ui.nodes,
           card: UserAuthCard(
             {
               flow,

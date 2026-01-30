@@ -58,6 +58,7 @@ export const createVerificationRoute: RouteCreator =
 
           // Render the data using a view (e.g. Jade Template):
           res.render("verification", {
+            nodes: flow.ui.nodes,
             card: UserAuthCard(
               {
                 flow,

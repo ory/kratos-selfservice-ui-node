@@ -41,9 +41,12 @@ clean-sdk:
 	rm -rf node_modules/@ory/client/
 	npm i
 
+PRETTIER_VERSION=$(shell cat package.json | jq -r '.devDependencies["prettier"] // .dependencies["prettier"]')
+
 format: .bin/ory node_modules
 	.bin/ory dev headers copyright --type=open-source --exclude=.prettierrc.js --exclude=types
-	npm exec -- prettier --write .
+	@echo "Prettier Version: $(PRETTIER_VERSION)"
+	npx --package=prettier@$(PRETTIER_VERSION)  prettier . --write
 
 licenses: .bin/licenses node_modules  # checks open-source licenses
 	.bin/licenses

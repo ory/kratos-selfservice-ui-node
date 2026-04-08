@@ -50,14 +50,14 @@ export const createWelcomeRoute: RouteCreator =
           content:
             "Jump start your project and complete the quickstart tutorial to get a broader overview of Ory Network.",
           action:
-            "https://www.ory.sh/docs/getting-started/integrate-auth/expressjs",
+            "https://www.ory.com/docs/getting-started/integrate-auth/expressjs",
           target: "_blank",
         }),
         CardGradient({
           heading: "User flows",
           content:
             "Implement flows that users perform themselves as opposed to administrative intervention.",
-          action: "https://www.ory.sh/docs/kratos/self-service",
+          action: "https://www.ory.com/docs/kratos/self-service",
           target: "_blank",
         }),
         CardGradient({
@@ -65,14 +65,14 @@ export const createWelcomeRoute: RouteCreator =
           content:
             "Every identity can have its own model - get to know the ins and outs of Identity Schemas.",
           action:
-            "https://www.ory.sh/docs/kratos/manage-identities/identity-schema",
+            "https://www.ory.com/docs/kratos/manage-identities/identity-schema",
           target: "_blank",
         }),
         CardGradient({
           heading: "Sessions",
           content:
             "Ory Network manages sessions for you - get to know how sessions work.",
-          action: "https://www.ory.sh/docs/kratos/session-management/overview",
+          action: "https://www.ory.com/docs/kratos/session-management/overview",
           target: "_blank",
         }),
         CardGradient({
@@ -80,7 +80,7 @@ export const createWelcomeRoute: RouteCreator =
           content:
             "Implementing these pages in your language and framework of choice is straightforward using our SDKs.",
           action:
-            "https://www.ory.sh/docs/kratos/bring-your-own-ui/configure-ory-to-use-your-ui",
+            "https://www.ory.com/docs/kratos/bring-your-own-ui/configure-ory-to-use-your-ui",
           target: "_blank",
         }),
       ].join("\n"),

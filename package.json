@@ -31,7 +31,7 @@
     "trailingComma": "all"
   },
   "dependencies": {
-    "@ory/client": "1.22.26",
+    "@ory/client": "1.22.37",
     "@ory/elements-markup": "0.9.0",
     "@redtea/format-axios-error": "2.1.1",
     "accept-language-parser": "1.5.0",

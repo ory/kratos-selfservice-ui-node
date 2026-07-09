@@ -56,6 +56,16 @@ Ory OAuth2 requires more setup to get CSRF cookies on the `/consent` endpoint.
   name without the `__Host-` prefix.
 - `TRUSTED_CLIENT_IDS` (optional): A list of trusted client ids. They can be set
   to skip the consent screen.
+- `SESSION_EXTRA_TRAITS_ID_TOKEN` (optional): Comma-separated list of Kratos
+  identity trait names to propagate verbatim into `session.id_token` during the
+  OAuth2 consent flow. Any trait present on `identity.traits` under one of the
+  listed names is copied to the ID token; missing traits are skipped. Useful
+  when downstream apps rely on identity attributes that aren't part of the
+  built-in `email` / `profile` claim mapping (e.g. `groups`, `department`,
+  `tenant_id`). Example: `SESSION_EXTRA_TRAITS_ID_TOKEN=groups,department`.
+- `SESSION_EXTRA_TRAITS_ACCESS_TOKEN` (optional): Same as above but for
+  `session.access_token`. Set both if the trait needs to be readable from both
+  tokens.
 
 Getting TLS working:
 

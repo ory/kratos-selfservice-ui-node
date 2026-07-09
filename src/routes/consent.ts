@@ -12,6 +12,27 @@ import { AcceptOAuth2ConsentRequestSession } from "@ory/client"
 import { UserConsentCard } from "@ory/elements-markup"
 import { Request, Response, NextFunction } from "express"
 
+// Parses a comma-separated env var into a list of trait names to propagate
+// from `identity.traits` into the corresponding session token map.
+const parseTraitList = (raw: string | undefined): string[] =>
+  (raw || "")
+    .split(",")
+    .map((s) => s.trim())
+    .filter((s) => s.length > 0)
+
+const copyTraitsInto = (
+  target: Record<string, unknown>,
+  traits: Record<string, unknown> | undefined,
+  names: string[],
+): void => {
+  if (!traits) return
+  for (const name of names) {
+    if (Object.prototype.hasOwnProperty.call(traits, name)) {
+      target[name] = traits[name]
+    }
+  }
+}
+
 const extractSession = (
   req: Request,
   grantScope: string[],
@@ -63,6 +84,22 @@ const extractSession = (
       )
     }
   }
+
+  // Propagate additional identity traits into the session tokens, based on
+  // operator-provided allowlists. Applied unconditionally (no scope gate) so
+  // downstream apps get the trait even when the OIDC client requested only
+  // openid. Missing traits are skipped silently.
+  copyTraitsInto(
+    session.id_token as Record<string, unknown>,
+    identity.traits as Record<string, unknown> | undefined,
+    parseTraitList(process.env.SESSION_EXTRA_TRAITS_ID_TOKEN),
+  )
+  copyTraitsInto(
+    session.access_token as Record<string, unknown>,
+    identity.traits as Record<string, unknown> | undefined,
+    parseTraitList(process.env.SESSION_EXTRA_TRAITS_ACCESS_TOKEN),
+  )
+
   return session
 }
 

@@ -67,6 +67,13 @@ Ory OAuth2 requires more setup to get CSRF cookies on the `/consent` endpoint.
   `session.access_token`. Set both if the trait needs to be readable from both
   tokens.
 
+  **Note:** unlike the built-in `email` / `profile` claims (which are only added
+  when the OIDC client requests the corresponding scope), traits listed in these
+  env vars are propagated unconditionally into every issued token, regardless of
+  which scopes the client asked for. Only enable this when the trait should
+  always be present and its exposure to any OIDC client of this UI is
+  acceptable.
+
 Getting TLS working:
 
 - `TLS_CERT_PATH` (optional): Path to certificate file. Should be set up

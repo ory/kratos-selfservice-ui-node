@@ -4,18 +4,11 @@ on:
   pull_request:
   push:
 
-env:
-  CGO_ENABLED: "0"
-
 jobs:
   format:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
-      - uses: actions/setup-go@v6
-        with:
-          check-latest: true
-          go-version-file: go.mod
       - run: make format
       - name: Indicate formatting issues
         run: git diff HEAD --exit-code --color

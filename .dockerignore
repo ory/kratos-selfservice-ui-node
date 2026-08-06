@@ -1,3 +1,15 @@
-node_modules/
+.circleci
+.dockerignore
+.git*
+.prettier*
+.reference-ignore
+CODE_OF_CONDUCT.md
+contrib
+CONTRIBUTING.md
+Dockerfile*
 lib/
-.git
+Makefile
+node_modules/
+nodemon.json
+openapitools.json
+SECURITY.md

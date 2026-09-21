@@ -8,7 +8,10 @@ import {
   setSession,
 } from "../pkg"
 import { oidcConformityMaybeFakeSession } from "./stub/oidc-cert"
-import { AcceptOAuth2ConsentRequestSession } from "@ory/client"
+import {
+  AcceptOAuth2ConsentRequestSession,
+  OAuth2ConsentRequest,
+} from "@ory/client"
 import { UserConsentCard } from "@ory/elements-markup"
 import { Request, Response, NextFunction } from "express"
 
@@ -37,6 +40,23 @@ const copyTraitsInto = (
       target[name] = traits[name]
     }
   }
+}
+
+// Hydra echoes back only the audiences the client explicitly requested, so a
+// client that requests none gets an empty `aud` and any resource server that
+// validates the audience rejects the token. With
+// GRANT_CLIENT_AUDIENCE_WHEN_UNREQUESTED set, fall back to the client's own
+// registered audience allow-list, which the operator controls. Off by default:
+// a client registered for several audiences would be granted all of them.
+const grantAudience = (body: OAuth2ConsentRequest): string[] | undefined => {
+  const requested = body.requested_access_token_audience
+  if (requested && requested.length > 0) {
+    return requested
+  }
+  if (process.env.GRANT_CLIENT_AUDIENCE_WHEN_UNREQUESTED !== "true") {
+    return requested
+  }
+  return body.client?.audience || []
 }
 
 const extractSession = (
@@ -161,8 +181,7 @@ export const createConsentRoute: RouteCreator =
                 grant_scope: grantScope,
 
                 // ORY Hydra checks if requested audiences are allowed by the client, so we can simply echo this.
-                grant_access_token_audience:
-                  body.requested_access_token_audience,
+                grant_access_token_audience: grantAudience(body),
 
                 // The session allows us to set session data for id and access tokens
                 session,
@@ -263,8 +282,7 @@ export const createConsentPostRoute: RouteCreator =
                 session: oidcConformityMaybeFakeSession(grantScope, session),
 
                 // ORY Hydra checks if requested audiences are allowed by the client, so we can simply echo this.
-                grant_access_token_audience:
-                  body.requested_access_token_audience,
+                grant_access_token_audience: grantAudience(body),
 
                 // This tells hydra to remember this consent request and allow the same client to request the same
                 // scopes from the same user, without showing the UI, in the future.

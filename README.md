@@ -74,6 +74,19 @@ Ory OAuth2 requires more setup to get CSRF cookies on the `/consent` endpoint.
   always be present and its exposure to any OIDC client of this UI is
   acceptable.
 
+- `GRANT_CLIENT_AUDIENCE_WHEN_UNREQUESTED` (optional): Set to `true` to grant
+  the client's registered `audience` when the authorization request did not ask
+  for one. By default the consent handler echoes back only
+  `requested_access_token_audience`, so a client that requests no audience
+  receives an access token with an empty `aud`, which any resource server that
+  validates the audience will reject.
+
+  **Note:** the fallback grants every audience the client is registered for.
+  That list is an operator-managed allow-list, so this never grants an audience
+  the client could not have requested itself, but leave it off if a client is
+  registered for more than one audience and those audiences should stay
+  distinct.
+
 Getting TLS working:
 
 - `TLS_CERT_PATH` (optional): Path to certificate file. Should be set up
